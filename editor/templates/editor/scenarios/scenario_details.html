@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scenario {{ scenario.name }}</title>
+  <script src="{% static "editor/vis.min.js" %}"></script>
+  <style>
+    #dumpLoc {
+      border: 1px gray solid;
+      height: 500px;
+      margin-right: 25px;
+      margin-left: 25px;
+    }
+  </style>
+</head>
+<body>
+<a href="../">Back</a>
+<h1>Scenario {{ scenario.name.username }}</h1>
+<table border="1">
+  <tr><td>Author</td><td>{{ scenario.author }}</td></tr>
+  <tr><td>Turns</td><td>{{ scenario.turn_num }}</td></tr>
+  <tr><td>Points</td><td>{{ scenario.point_num }}</td></tr>
+</table>
+<h2>Scenario Graph</h2>
+  <div id="dumpLoc" style="height:500px; border=1px;">Graph Location</div>
+<h2>File</h2>
+  <div id="file">
+    {{ file_data }}
+  </div>
+</body>
+
+<script src="{% static "editor/graph.js" %}"></script>
+<script>
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState == 1) {
+      document.getElementById("dumpLoc").innerHTML = "Downloading Graph";
+    }
+    else if (xhttp.readyState == 4 && xhttp.status == 200) {
+      var dict = JSON.parse(xhttp.responseText);
+      Graph.getData(dict.tables, 
+                    JSON.parse(dict.schema), 
+                    JSON.parse(dict.dump),
+                    dict.split);
+    }
+  }
+  xhttp.open("GET", "graph/", true);
+  xhttp.send()
+</script>
+</html>

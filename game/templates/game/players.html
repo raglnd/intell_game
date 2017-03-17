@@ -1,0 +1,7 @@
+<table border="1">
+{% for player in players %}
+<tr><td>{{ player }}</td></tr>
+{% empty %}
+<tr><td>No Players</td></tr>
+{% endfor %}
+</table>

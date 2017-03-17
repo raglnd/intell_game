@@ -1,0 +1,12 @@
+{% if tablename %}
+<h1>{{ tablename }}</h1>
+<table border="1">
+  {% for obj in object_list %}
+  <tr>
+    <td>{{ obj }}</td>
+    <td><a href="{{ obj.id }}">Update</a></td>
+    <td><a href="{{ obj.id }}/delete">Delete</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}

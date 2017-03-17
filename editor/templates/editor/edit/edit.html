@@ -1,0 +1,713 @@
+<!-- -->
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Scenario Editor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!--Instantiating the JSON class object after the script was referenced -->
+  <script src="{% static "editor/FrontEndtoJSON.js" %}"></script>
+  <script src="{% static "editor/vis.min.js" %}"></script>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-5"> <!-- instructions -->
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Instructions:</h4></div>
+          <div class="panel-body">
+            <div class="tab-content">
+
+<div id="TitleInstr" class="tab-pane fade in active">
+
+          <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+          Form Navigation</a>
+          </h4>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse">
+          <div class="panel-body">
+  			<p>To navigate between entry forms ("Title", "Characters", 
+              "Locations", and "Events") for the scenario, click on the 
+              associated tab at the bottom of the screen and follow the 
+              instructions on the lefthand side of the screen to fill out 
+              the entry form. Any of the four forms may be accessed and 
+              edited at any time, as long as the current form does not 
+              contain any unsaved information.</p>
+          </div>
+          </div>
+          </div>
+
+          <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+          Entering Title Information</a>
+          </h4>
+          </div>
+          <div id="collapse2" class="panel-collapse collapse">
+          <div class="panel-body">
+              <ol>
+                  <li>Type the desired title for the scenario in the 
+                  "Scenario Title" text field.</li>
+                  <li>Select the desired number of turns for the scenario
+                  from the "Turns" dropdown.</li>
+                  <li>Select the desired number of INTELL Points that
+                  players will receive at the beginning of a game from the
+                  "Starting Points" dropdown.</li>
+              </ol>
+          </div>
+          </div>
+          </div>
+
+          </div>
+  		<!-- Chars Tab instructions -->
+  		<div id="CharsInstr" class="tab-pane fade">
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+        Form Navigation</a>
+        </h4>
+        </div>
+        <div id="collapse3" class="panel-collapse collapse">
+        <div class="panel-body">
+  			<p>To navigate between entry forms ("Title", "Characters",
+              "Locations", and "Events") for the scenario, click on the
+              associated tab at the bottom of the screen and follow the
+              instructions on the lefthand side of the screen to fill out
+              the entry form. Any of the four forms may be accessed and
+              edited at any time, as long as the current form does not
+              contain any unsaved information.</p>
+            </div>
+            </div>
+            </div>
+
+
+         <div class="panel panel-default">
+         <div class="panel-heading">
+         <h4 class="panel-title">
+         <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+         Adding a New Character</a>
+         </h4>
+         </div>
+         <div id="collapse4" class="panel-collapse collapse">
+         <div class="panel-body">
+              <ol>
+                  <li>Type an individual character's name in the "Name"
+                  text field.</li>
+                  <li>If the character is to be key to the scenario,
+                  meaning termination of the character by a certain turn
+                  will result in a win, check the "Key" checkbox. Leave
+                  the "Key" checkbox unchecked if the character is not a
+                  key character.</li>
+                  <li>(Optional) Add notes about the character in the
+                  "Notes" text field.</li>
+                  <li>Click the "Add" button to populate the "Characters"
+                  list on the lefthand side of the screen with the
+                  character's name.</li>
+              </ol>
+            </div>
+            </div>
+            </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">
+        Editing an Existing Character</a>
+        </h4>
+        </div>
+        <div id="collapse5" class="panel-collapse collapse">
+        <div class="panel-body">
+              <ol>
+                  <li>Click a character's name that appears on the 
+                  "Characters" list on the lefthand side of the screen.
+                  This should highlight the name to show which character
+                  has been selected, and will also populate the "Name"
+                  text field, "Key" checkbox, and "Notes" text field
+                  with the associated character's information.</li>
+                  <li>Change the "Name" text field, "Key" checkbox, and
+                  "Notes" field as desired. See "Adding a New Character"
+                  above for more detail on interfacing with these
+                  fields.</li>
+                  <li>Once the character's information has been edited as
+                  desired, click the "Edit" button to save the new
+                  information.</li>
+              </ol>
+        </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">
+        Deleting an Existing Character</a>
+        </h4>
+       </div>
+        <div id="collapse6" class="panel-collapse collapse">
+        <div class="panel-body">
+              <ol>
+                  <li>Click a character's name that appears on the
+                  "Characters" list on the lefthand side of the screen.
+                  This should highlight the name to show which character
+                  has been selected, and will also populate the "Name"
+                  text field, "Key" checkbox, and "Notes" text field with
+                  the associated character's information.</li>
+                  <li>Click the "Delete" button to remove the character
+                  and associated information from the "Characters" 
+                  list.</li>
+              </ol>
+        </div>
+        </div>
+        </div>
+
+  		</div>
+  		<!-- Locs Tab instructions -->
+  		<div id="LocsInstr" class="tab-pane fade">
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">
+        Form Navigation</a>
+        </h4>
+        </div>
+        <div id="collapse7" class="panel-collapse collapse">
+        <div class="panel-body">
+  			<p>To navigate between entry forms ("Title", "Characters", 
+              "Locations", and "Events") for the scenario, click on the 
+              associated tab at the bottom of the screen and follow the 
+              instructions on the lefthand side of the screen to fill out 
+              the entry form. Any of the four forms may be accessed and 
+              edited at any time, as long as the current form does not 
+              contain any unsaved information.</p>
+        </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8">
+        Adding a New Location</a>
+        </h4>
+        </div>
+        <div id="collapse8" class="panel-collapse collapse">
+        <div class="panel-body">
+              <ol>
+                  <li>Click a point on the map where a location is
+                  desired.</li>
+                  <li>The x-coordinate and y-coordinate of the point
+                  clicked will populate the "X" and "Y" columns in the
+                  top (highlighted) row in the "Locations" table below
+                  the map. These coordinates may be changed by typing
+                  different values in the "X" and "Y" text fields for the
+                  highlighted row.</li>
+                  <li>Enter a name for the location in the "Name" column
+                  of the highlighted row of the "Locations" table.</li>
+                  <li>Click the "Add" button to save the location
+                  information to the table.</li>
+              </ol>
+        </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse9">
+        Editing an Existing Location</a>
+        </h4>
+        </div>
+        <div id="collapse9" class="panel-collapse collapse">
+        <div class="panel-body">
+              <ol>
+                  <li>Click a location that appears on the "Locations"
+                  table below the map. This should highlight the clicked
+                  location's row in the table.</li>
+                  <li>Change the location's name in the "Name" text field
+                  and/or the position of the location on the map by
+                  typing in the associated "X" and "Y" text fields. See "Adding a New
+                  Location" above for more detail on interfacing with these fields.</li>
+                  <li>Click the "Edit" button to update the location
+                  information in the table.</li>
+              </ol>
+        </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse10">
+        Deleting an Existing Location</a>
+        </h4>
+        </div>
+        <div id="collapse10" class="panel-collapse collapse">
+        <div class="panel-body">
+              <ol>
+                  <li>Click a location that appears on the "Locations"
+                  table below the map. This should highlight the clicked
+                  location's row in the table.</li>
+                  <li>Click the "Delete" button to remove the location
+                  and associated information from the "Locations"
+                  table.</li>
+              </ol>
+        </div>
+        </div>
+        </div>
+
+  		</div>
+  		<!-- Events Tab instructions -->
+  		<div id="EventsInstr" class="tab-pane fade">
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse11">
+        Form Navigation</a>
+        </h4>
+        </div>
+        <div id="collapse11" class="panel-collapse collapse">
+        <div class="panel-body">
+  			<p>To navigate between entry forms ("Title", "Characters", 
+              "Locations", and "Events") for the scenario, click on the 
+              associated tab at the bottom of the screen and follow the 
+              instructions on the lefthand side of the screen to fill out 
+              the entry form. Any of the four forms may be accessed and 
+              edited at any time, as long as the current form does not 
+              contain any unsaved information.</p>
+        </div>
+        </div>
+        </div>
+        
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse12">
+        Adding a New Event</a>
+        </h4>
+        </div>
+        <div id="collapse12" class="panel-collapse collapse">
+        <div class="panel-body">
+        <ol>
+            <li>Type a name for the event in the "Title" text field.</li>
+            <li>If the event is to be key to the scenario, meaning it provides information
+            that is directly related to the plot, check the "Key" checkbox. Leave the "Key"
+            checkbox unchecked if the event is not a key event.</li>
+            <li>If the event is to be secret, meaning that it will not be revealed to a 
+            player unless if the player has investigated a particular character or
+            location, check the "Secret" checkbox. Leave the "Secret" checkbox unchecked if
+            the event is not a secret event.</li>
+            <li>Type the snippet of information that will be presented to the player(s) 
+            during game play in the "Snippet" text field.</li>
+            <li>Select the turn that the snippet will appear or have the chance of being
+            revealed from the "Turn" dropdown.</li>
+            <li>(Adding Tags) If the snippet contains information about a specific character
+            and/or location within the game, select the associated tag type from the 
+            "Tag Type" dropdown and select the targeted character or location from the 
+            "Target" dropdown. Click "Add" to save the tag to the snippet. The tag should
+            appear on the "Event Tags/Target" table to the left. Repeat this process until
+            all desired character and location tags have been added for the current 
+            event.</li>
+            <li>Click "Add" to save the event. The event should appear in the "Events" list
+            to the left.</li>
+        </ol>
+        </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse13">
+        Editing an Existing Event</a>
+        </h4>
+        </div>
+        <div id="collapse13" class="panel-collapse collapse">
+        <div class="panel-body">
+        <ol>
+            <li>Click an event that appears on the "Events" list to the left. This should
+            highlight the clicked event on the "Events" list and populate the event fields
+            to the right with the associated event's information. This should also populate
+            the "Event Tag/Target" table below with the associated event's tags.</li>
+            <li>Change the event's name in the "Name" text field, check or uncheck the
+            "Key" and/or "Secret" checkboxes, and change the information in the "Snippet"
+            text field as desired. See "Adding a New Event" above for more detail on
+            interfacing with these fields.</li>
+            <li>To edit or delete tags, select a tag from the "Event Tag/Target" table. This
+            should highlight the clicked row in the table and populate the "Tag Type" and 
+            "Target" dropdowns with the tag's associated information.</li>
+            <li>Change the information in the "Tag Type" and "Target" dropdowns as
+            desired. See "Adding a New Event" above for more detail on interfacing with
+            these fields. Click the "Edit" button to update the selected tag's information
+            in the "Event Tag/Target" table or click the "Delete" button to delete the 
+            selected tag, if desired.</li>
+            <li>Once the selected event's information and all associated tags for the 
+            selected event have been edited as desired, click the "Edit" button to update 
+            the event's information.</li>
+        </ol>
+        </div>
+        </div>
+        </div>
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse14">
+        Deleting an Existing Event</a>
+        </h4>
+        </div>
+        <div id="collapse14" class="panel-collapse collapse">
+        <div class="panel-body">
+        <ol>
+            <li>Click an event that appears on the "Events" list to the left. This should
+            highlight the clicked event on the "Events" list and populate the event fields
+            to the right with the associated event's information. This should also populate
+            the "Event Tag/Target" table below with the associated event's tags.</li>
+            <li>Click the "Delete" button to remove the event and associated information
+            from the "Events" list. This will also delete all event tags associated with
+            the selected event.</li>
+        </ol>
+        </div>
+        </div>
+        </div>
+        </div>
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-7"> <!-- window -->
+      <div class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="tab-content">
+              <!-- Title Tab contents -->
+              <div id="TitleTitle" class="tab-pane fade in active">
+                <h4>Title</h4>
+              </div>
+              <!-- Chars Tab contents -->
+              <div id="CharsTitle" class="tab-pane fade">
+                <h4>Characters</h4>
+              </div>
+              <!-- Locs Tab contents -->
+              <div id="LocsTitle" class="tab-pane fade">
+                <h4>Locations</h4>
+              </div>
+              <!-- Events Tab contents -->
+              <div id="EventsTitle" class="tab-pane fade">
+                <h4>Events</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="tab-content">
+              <!-- Title Tab contents -->
+              <div id="TitleTab" class="tab-pane fade in active">
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label for="titleBox">Title:</label>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="titleBox">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label for="turnSpin">Turns:</label>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="turnSpin" value="20" name="turnSpin">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <label for="pointSpin">Starting INTELL Points:</label>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" id="pointSpin" value="25" name="pointSpin">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Chars Tab contents -->
+              <div id="CharsTab" class="tab-pane fade">
+              <div class="row">
+                <div class="col-sm-5">
+                  <div id="charsTable" class="table-responsive">
+                  <table class="table table-hover, table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Characters</th>
+                      </tr>
+                    </thead>
+                    <tbody id="charsTableBody">
+                    
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+                <div class="col-sm-7">
+                  <!-- Chars Input -->
+                  <div id="charInput" class="form-group">
+                    <label for="charNameBox">Name:</label>
+                    <input type="text" class="form-control" id="charNameBox">
+                    
+                    <div class="checkbox"><!-- Key Box-->
+                      <label><input id="keyCharBox" type="checkbox" value="">Key</label>
+                    </div>
+                    
+                    <label for="charComment">Comment:</label>
+                    <textarea class="form-control" rows="6" id="charComment"></textarea>
+                    
+                    <div class="row"> <!--Buttons -->
+                      <div class="col-sm-4">
+                        <button id="charAddBtn" type="button" class="btn btn-block" onclick="currEdit.add_char()">Add</button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="charEditBtn" type="button" class="btn btn-block" disabled=true  onclick="currEdit.edit_char()">Edit</button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="charDelBtn" type="button" class="btn btn-block" disabled=true onclick="currEdit.del_char()">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <!-- Locs Tab contents -->
+              <div id="LocsTab" class="tab-pane fade">
+                <div class="row">
+                  <img id="locMap" src="{% static "Img/map.png" %}" class="img-responsive thumbnail" alt="Map">
+                </div>
+				<div class="row"><!--table input-->
+                    <div class="form-group col-xs-6">
+                        <input id="locNameInput" class="form-control" type="text" placeholder="Location Name">
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <input id="locXinput" class="form-control" type="text" placeholder="X Coord">
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <input id="locYinput" class="form-control" type="text" placeholder="Y Coord">
+                    </div>
+                </div>
+                <div class="row"> <!--Buttons -->
+                  <div class="col-sm-4">
+                    <button id="locAddBtn" type="button" class="btn btn-block" onclick="currEdit.add_loc()">Add</button>
+                  </div>
+                  <div class="col-sm-4">
+                    <button id="locEditBtn" type="button" class="btn btn-block" disabled=true  onclick="currEdit.edit_loc()">Edit</button>
+                  </div>
+                  <div class="col-sm-4">
+                    <button id="locDelBtn" type="button" class="btn btn-block" disabled=true onclick="currEdit.del_loc()">Delete</button>
+                  </div>
+                </div>
+                <div class="row"><!--Table-->
+                <div id="locsTable" class="table-responsive">
+                <table class="table table-hover, table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>X</th>
+                      <th>Y</th>
+                    </tr>
+                  </thead>
+                  <tbody id="locsTableBody">
+                  
+                  </tbody>
+                </table>
+                </div>
+                </div>
+              </div>
+              <!-- Events Tab contents -->
+              <div id="EventsTab" class="tab-pane fade" >
+                <div class="row">
+                  <div class="col-sm-5">
+                    <div id="eventTable" class="table-responsive">
+                    <table class="table table-hover, table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Events</th>
+                        </tr>
+                      </thead>
+                      <tbody id="eventsTableBody">
+                        
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                  <div class="col-sm-7">
+                    <div id="eventInputs" class="form-group">
+                      <div class="row">
+                        <label class="control-label col-sm-2" for="eventNameBox">Name:</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="eventNameBox">
+                        </div>
+                      </div>
+                      <div class="row"><!-- Check boxes -->
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-4">
+                          <div id="eventKeyBox" class="checkbox">
+                            <label><input type="checkbox" value="" id="eventKeyBoxIn">Key</label>
+                          </div>
+                        </div>
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-4">                      
+                          <div id="eventSecretBox" class="checkbox" data-toggle="collapse" data-target="#secretCollapse">
+                            <label><input type="checkbox" value="" id='eventSecretBoxIn'>Secret</label>
+                          </div>
+                        </div>
+                      </div>
+					  <div class="row">
+                        <label class="control-label col-sm-2" for ="turnTagSel">Turn:</label>
+                        <div class="col-sm-10">
+                          <select class="form-control" id="turnTagSel">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                            <option>13</option>
+                            <option>14</option>
+                            <option>15</option>
+                            <option>16</option>
+                            <option>17</option>
+                            <option>18</option>
+                            <option>19</option>
+                            <option>20</option>
+                          </select>
+                        </div>
+                      </div>
+                      <label for="snippet">Snippet:</label>
+                      <textarea class="form-control" rows="3" id="snippet"></textarea>
+                      <div id="secretCollapse" class="collapse">
+                        <label for"secretSnippet">Secret Snippet:</label>
+                        <textarea class="form-control" rows="3" id="secretSnippet"></textarea>
+                      </div>
+                    </div>
+                    <div class="row"> <!--Buttons -->
+                      <div class="col-sm-4">
+                        <button id="eventAddBtn" type="button" class="btn btn-block" onclick="currEdit.add_event()">Add</button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="eventEditBtn" type="button" class="btn btn-block" disabled=true onclick="currEdit.edit_event()">Edit</button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="eventDelBtn" type="button" class="btn btn-block" disabled=true  onclick="currEdit.del_event()">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-5">
+                    <div id="eventTagTable" class="table-responsive">
+                    <table class="table table-hover, table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Event Tag</th>
+                          <th>Target</th>
+                        </tr>
+                      </thead>
+                      <tbody id="eventsTagBody">
+                        
+                      </tbody>
+                    </table>
+                    </div>
+                  </div>
+                  <div class="col-sm-7">
+                    <div id="eventTagInput" class="form-group">
+                      
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <label for="tagTypeSel">Tag Type:</label>
+                        </div>
+                        <div class="col-sm-9">
+                          <select class="form-control" id="tagTypeSel" onclick="currEdit.populateTagTargets()">
+                            <option>Character</option>
+                            <option>Location</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <label class="control-label col-sm-2" for="targetSel">Target:</label>
+                        </div>
+                        <div class="col-sm-9">
+                          <select class="form-control" id="targetSel">
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row"> <!--Buttons -->
+                      <div class="col-sm-4">
+                        <button id="eventTagAddBtn" type="button" class="btn btn-block" onclick="currEdit.add_eventTag()">Add</button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="eventTagEditBtn" type="button" class="btn btn-block" disabled=true onclick="currEdit.edit_eventTag()">Edit</button>
+                      </div>
+                      <div class="col-sm-4">
+                        <button id="eventTagDelBtn" type="button" class="btn btn-block" disabled=true  onclick="currEdit.del_eventTag()">Delete</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer"> <!--Navigation -->
+            <ul class="nav nav-pills nav-justified">
+              <li class="active"><a data-target="#TitleInstr, #TitleTitle, #TitleTab" data-toggle="pill" href="#Title">Title</a></li>
+              <li><a data-target="#CharsInstr, #CharsTitle, #CharsTab" data-toggle="pill" href="#Chars">Characters</a></li>
+              <li><a data-target="#LocsInstr, #LocsTitle, #LocsTab" data-toggle="pill" href="#Locs">Locations</a></li>
+              <li><a data-target="#EventsInstr, #EventsTitle, #EventsTab" data-toggle="pill" href="#Events" onclick="currEdit.populateTagTargets()">Events</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+          <div class="col-sm-4">
+            <button id="saveBtn" type="button" class="btn btn-block" onclick="currEdit.submitJSON()">Save</button>
+          </div>
+          <div class="col-sm-4">
+            <button id="openBtn" type="button" class="btn btn-block">Open</button>
+          </div>
+          <div class="col-sm-4">
+            <button id="closeBtn" type="button" class="btn btn-block">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Where the dump contents are going to go... -->
+<div style="height:400px;" id="dumpLoc">Dump Object Location</div>
+</body>
+<script src="{% static 'editor/graph.js' %}"></script>
+</html>

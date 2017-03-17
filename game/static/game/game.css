@@ -1,0 +1,10 @@
+.table-responsive {
+    height: 200px !important;
+    overflow: scroll;
+}
+
+.countdown {
+    font-family: monospace;
+    color: red;
+    text-align:  center;
+}

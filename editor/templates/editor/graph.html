@@ -1,0 +1,22 @@
+{% load staticfiles %}
+{% if json_dump %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.14.0/vis.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.14.0/vis.min.js" rel="stylesheet" type="text/css"></link>
+<style type="text/css">
+  #graph {
+    border: 1px solid lightgray;
+  }
+</style>
+<!--<h1>Prototype Database Graph</h1>
+<a href="./">back</a><br>-->
+<div id="graph">
+<script type="text/javascript" src="{% static 'protoedit/graph.js' %}"></script>
+<script type="text/javascript">
+{% with json_dump as dump %}
+{{ dump|safe }}
+{% endwith %}
+</script>
+{% else %}
+  <p>No JSON dump</p>
+{% endif %}

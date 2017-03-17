@@ -1,0 +1,418 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>INTELL</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static "game/game.css" %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="{% static "game/js.cookie-2.1.0.min.js" %}"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Map</h4>
+          </div>
+          <div class="panel-body">
+            <img id="mapDisplay" src="{% static "Img/map.png" %}" 
+                 class="img-responsive thumbnail" alt="Map">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Timer</h4>
+          </div>
+          <div class="panel-body">
+            <p id="timerDisplay" class="countdown">{{ timerDisplay }}</p>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>INTELL <a href="/game/games">Back to game list</a></h4>
+            </div>
+              <div class="table-responsive">
+                <table class="table table-striped" id="messagesDisplay">
+                  <thead>
+                    <tr><th>Turn</th><th>Text</th></tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Turn</h4>
+          </div>
+          <div class="panel-body">
+              <p id="turnDisplay">{{ turnDisplay }}</p>
+            </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>Points</h4>
+            </div>
+            <div class="panel-body">
+              <p id="pointsDisplay">{{ pointsDisplay }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6"> <!--Info Window-->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Info</h4>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped" id="snippetTable">
+              <thead><tr><th>Turn</th><th>Description</th></tr></thead>
+                <!--use list + style id-->
+                <!--Insert snippets into paragraph tags? -->
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6"> <!--Agents Window-->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4>Agents</h4>
+          </div>
+          <div class="panel-body">
+          <div class="form-group">
+            <div class="row bg-success text-center" id="loggedAct"></div>
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <div class="row">
+                  <label class="control-label col-sm-2" for="agentSel">
+                    Agent:
+                  </label>
+                  <p id="agentWarn" class="bg-danger"></p>
+                  <div class="col-sm-5">
+                    <select class="form-control" id="agentSel">
+                      <option value="none"></option>
+                      {% for agent in agents %}
+                      <option value="{{ agent.id }}">{{ agent }}</option>
+                      {% empty %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row"><p> </p></div>
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-8">
+                <div class="row">
+                  <label class="control-label col-sm-2" for="targetSel">
+                    Target:
+                  </label>
+                  <div class="col-sm-5">
+                    <select class="form-control" id="targetSel">
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row"><p> </p></div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-3">
+                <button id="tailBtn" type="button" 
+                        class="btn btn-default btn-block">Tail</button>
+              </div>
+              <div class="col-sm-3">
+                <button id="investigateBtn" type="button" 
+                        class="btn btn-default btn-block">Investigate</button>
+              </div>
+              <div class="col-sm-3">
+                <button id="checkBtn" type="button" 
+                        class="btn btn-default btn-block">Check Info</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-3">
+                <button id="misInfoBtn" type="button" 
+                        class="btn btn-default btn-block">Misinform</button>
+              </div>
+              <div class="col-sm-3">
+                <button id="recruitBtn" type="button" 
+                        class="btn btn-default btn-block">Recruit</button>
+              </div>
+              <div class="col-sm-3">
+                <button id="apprehendBtn" type="button" 
+                        class="btn btn-default btn-block">Apprehend</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-3">
+                <button id="researchBtn" type="button" 
+                        class="btn btn-default btn-block active">Research</button>
+              </div>
+              <div class="col-sm-3">
+                <button id="terminateBtn" type="button" 
+                        class="btn btn-default btn-block">Terminate</button>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+  <!-- Action Modals -->
+  <!-- Tail Modal -->
+  <div class="modal fade" id="tailModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Tail Action</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="tailCharSel">Select a character</label>
+            <select class="form-control" id="tailCharSel">
+            </select>
+            <button type="submit" class="btn btn-default" id="confirmTail"
+                    data-dismiss="modal">
+              Choose
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Investigate Modal -->
+  <div class="modal fade" id="investigateModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Investigate Action</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="investigateLocSel">Select a location</label>
+            <select class="form-control" id="investigateLocSel">
+            </select>
+            <button type="submit" class="btn btn-default" id="confirmInvestigate"
+                    data-dismiss="modal">
+              Choose
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check Modal -->
+  <div class="modal fade" id="checkModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Check Action</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="checkDescSel">Select a snippet</label>
+            <select class="form-control" id="checkDescSel">
+            </select>
+            <button type="submit" class="btn btn-default" id="confirmCheck"
+                    data-dismiss="modal">
+              Choose
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Misinform Modal -->
+  <div class="modal fade" id="misinfModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Misinform Action</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="misinfChar">Select a character</label>
+            <select class="form-control" id="misinfCharSel">
+            </select>
+            <label for="misinfLoc">Select a location</label>
+            <select class="form-control" id="misinfLocSel">
+            </select>
+            <label for="misinfDesc">Provide a description</label>
+            <textarea class="form-control" rows="4" id="misinfDescText"></textarea>
+            <button type="submit" class="btn btn-default" id="confirmMisinf"
+                    data-dismiss="modal">
+              Choose
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recruit Modal -->
+  <div class="modal fade" id="recruitModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Recruit Action</h4>
+        </div>
+        <div class="modal-body">
+          <p>Confirm choosing recruit action</p>
+          <button type="submit" class="btn btn-default" id="confirmRecruit"
+                  data-dismiss="modal">
+            Choose
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apprehend Modal -->
+  <div class="modal fade" id="apprehendModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Apprehend Action</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="apprehendCharSel">Select a character</label>
+            <select class="form-control" id="apprehendCharSel">
+            </select>
+            <button type="submit" class="btn btn-default" id="confirmApprehend"
+                    data-dismiss="modal">
+              Choose
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Research Modal -->
+  <div class="modal fade" id="researchModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Research Action</h4>
+        </div>
+        <div class="modal-body">
+          <p>Confirm choosing research action</p>
+          <button type="submit" class="btn btn-default" id="confirmResearch"
+                  data-dismiss="modal">
+            Choose
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminate Modal -->
+  <div class="modal fade" id="terminateModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal Content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Terminate Action</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="terminateAgentSel">
+            <select class="form-control" id="terminateAgentSel">
+            </select>
+            <button type="submit" class="btn btn-default" id="confirmTerminate"
+                    data-dismiss="modal">
+              Choose
+            </button>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!--#include virtual="gameinstr.html"-->
+
+</body>
+<script src="{% static "game/actions.js" %}"></script>
+<script src="{% static "game/status.js" %}"></script>
+<script src="{% static "game/snippets.js" %}"></script>
+<script src="{% static "game/game.js" %}"></script>
+
+</html>

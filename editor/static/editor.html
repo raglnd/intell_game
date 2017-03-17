@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Scenario Editor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-5"> <!-- instructions -->
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h4>Instructions:</h4></div>
+					<div class="panel-body">
+						<div class="tab-content">
+							<!-- Title Tab instructions -->
+							<div id="TitleInstr" class="tab-pane fade in active">
+								<p>title</p>
+							</div>
+							<!-- Chars Tab instructions -->
+							<div id="CharsInstr" class="tab-pane fade">
+								<p>chars</p>
+							</div>
+							<!-- Locs Tab instructions -->
+							<div id="LocsInstr" class="tab-pane fade">
+								<p>locs</p>
+							</div>
+							<!-- Events Tab instructions -->
+							<div id="EventsInstr" class="tab-pane fade">
+								<p>events</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-7"> <!-- window -->
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="tab-content">
+							<!-- Title Tab contents -->
+							<div id="TitleTitle" class="tab-pane fade in active">
+								<h4>Title</h4>
+							</div>
+							<!-- Chars Tab contents -->
+							<div id="CharsTitle" class="tab-pane fade">
+								<h4>Characters</h4>
+							</div>
+							<!-- Locs Tab contents -->
+							<div id="LocsTitle" class="tab-pane fade">
+								<h4>Locations</h4>
+							</div>
+							<!-- Events Tab contents -->
+							<div id="EventsTitle" class="tab-pane fade">
+								<h4>Events</h4>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="tab-content">
+							<!-- Title Tab contents -->
+							<div id="TitleTab" class="tab-pane fade in active">
+								<div class="form-group">
+									<label for="titleBox">Title:</label>
+									<input type="text" class="form-control" id="titleBox">
+									<label for="turnSpin">Turns:</label>
+									<input type="text" class="form-control" id="turnSpin" value="20" name="turnSpin">
+									<label for="pointSpin">Starting INTELL Points:</label>
+									<input type="text" class="form-control" id="pointSpin" value="25" name="pointSpin">
+								</div>
+							</div>
+							<!-- Chars Tab contents -->
+							<div id="CharsTab" class="tab-pane fade">
+							<div class="row">
+								<div class="col-sm-5">
+									<div id="charsTable" class="table-responsive">
+									<table class="table table-hover, table-bordered">
+										<thead>
+											<tr>
+												<th>Characters</th>
+											</tr>
+										</thead>
+										<tbody>
+											
+										</tbody>
+									</table>
+									</div>
+								</div>
+								<div class="col-sm-7">
+									<!-- Chars Input -->
+									<div id="charInput" class="form-group">
+										<label for="charNameBox">Name:</label>
+										<input type="text" class="form-control" id="charNameBox">
+										
+										<div class="checkbox"><!-- Key Box-->
+											<label><input id="keyCharBox" type="checkbox" value="">Key:</label>
+										</div>
+										
+										<label for="charComment">Comment:</label>
+										<textarea class="form-control" rows="6" id="charComment"></textarea>
+										
+										<div class="row"> <!--Buttons -->
+											<div class="col-sm-4">
+												<button id="charAddBtn" type="button" class="btn btn-block">Add</button>
+											</div>
+											<div class="col-sm-4">
+												<button id="charEditBtn" type="button" class="btn btn-block">Edit</button>
+											</div>
+											<div class="col-sm-4">
+												<button id="charDelBtn" type="button" class="btn btn-block">Delete</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							</div>
+							<!-- Locs Tab contents -->
+							<div id="LocsTab" class="tab-pane fade">
+								<div class="row">
+									<img id="locMap" src="img/map.png" class="img-responsive thumbnail" alt="Map">
+								</div>
+								<div class="row"> <!--Buttons -->
+									<div class="col-sm-4">
+										<button id="locAddBtn" type="button" class="btn btn-block">Add</button>
+									</div>
+									<div class="col-sm-4">
+										<button id="locEditBtn" type="button" class="btn btn-block">Edit</button>
+									</div>
+									<div class="col-sm-4">
+										<button id="locDelBtn" type="button" class="btn btn-block">Delete</button>
+									</div>
+								</div>
+								<div class="row"><!--Table-->
+								<div id="locsTable" class="table-responsive">
+								<table class="table table-hover, table-bordered">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>X</th>
+											<th>Y</th>
+										</tr>
+									</thead>
+									<tbody>
+										
+									</tbody>
+								</table>
+								</div>
+								</div>
+							</div>
+							<!-- Events Tab contents -->
+							<div id="EventsTab" class="tab-pane fade">
+								<div class="row">
+									<div class="col-sm-5">
+										<div id="eventTable" class="table-responsive">
+										<table class="table table-hover, table-bordered">
+											<thead>
+												<tr>
+													<th>Events</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+											</tbody>
+										</table>
+										</div>
+									</div>
+									<div class="col-sm-7">
+										<div id="eventInputs" class="form-group">
+											<label for="eventNameBox">Name:</label>
+											<input type="text" class="form-control" id="eventNameBox">
+											<div class="row"><!-- Check boxes -->
+												<div class="col-sm-6">
+													<div id="eventKeyBox" class="checkbox">
+														<label><input type="checkbox" value="">Key</label>
+													</div>
+												</div>
+												<div class="col-sm-6">											
+													<div id="eventKeyBox" class="checkbox">
+														<label><input type="checkbox" value="">Secret</label>
+													</div>
+												</div>
+											</div>
+											<label for="snippet">Snippet:</label>
+											<textarea class="form-control" rows="3" id="snippet"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-5">
+										<div id="eventTagTable" class="table-responsive">
+										<table class="table table-hover, table-bordered">
+											<thead>
+												<tr>
+													<th>Event Tag</th>
+													<th>Target</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+											</tbody>
+										</table>
+										</div>
+									</div>
+									<div class="col-sm-7">
+										<div id="eventTagInput" class="form-group">
+											<label for ="turnTagSel">Select Turn:</label>
+											<select class="form-control" id="turnTagSel">
+												<option>0</option>
+											</select>
+											<label for="tagTypeSel">Select Tag Type:</label>
+											<select class="form-control" id="tagTypeSel">
+												<option>Character</option>
+												<option>Location</option>
+											</select>
+											<label for="targetSel">Select Target</label>
+											<select class="form-control" id="targetSel">
+											</select>
+										</div>
+										<div class="row"> <!--Buttons -->
+											<div class="col-sm-4">
+												<button id="" type="button" class="btn btn-block">Add</button>
+											</div>
+											<div class="col-sm-4">
+												<button id="" type="button" class="btn btn-block">Edit</button>
+											</div>
+											<div class="col-sm-4">
+												<button id="" type="button" class="btn btn-block">Delete</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer"> <!--Navigation -->
+						<ul class="nav nav-pills nav-justified">
+							<li class="active"><a data-target="#TitleInstr, #TitleTitle, #TitleTab"data-toggle="pill" href="#Title">Title</a></li>
+							<li><a data-target="#CharsInstr, #CharsTitle, #CharsTab" data-toggle="pill" href="#Chars">Characters</a></li>
+							<li><a data-target="#LocsInstr, #LocsTitle, #LocsTab" data-toggle="pill" href="#Locs">Locations</a></li>
+							<li><a data-target="#EventsInstr, #EventsTitle, #EventsTab" data-toggle="pill" href="#Events">Events</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

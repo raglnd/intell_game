@@ -1,0 +1,23 @@
+{% if tableselect %}
+<h1>Editor</h1>
+<a href="../">Back</a>
+
+<div id="tableselect">
+<table border="1">
+  <tr>
+    <td>Table</td>
+    <td></td>
+    <td></td>
+  </tr>
+  {% for table in tableselect %}
+  <tr>
+    <td>{{ table }}</td>
+    <td><a href="{{ table }}/add">Add</a></td>
+    <td><a href="{{ table }}/">View</a></td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% else %}
+Missing something
+{% endif %}

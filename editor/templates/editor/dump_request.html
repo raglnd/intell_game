@@ -1,0 +1,32 @@
+<h1>Request Headers</h1>
+<table border="1">
+<tr>
+  <td>key</td>
+  <td>value</td>
+</tr>
+{% for key,value in request.items %}
+<tr>
+  <td>{{ key }}</td>
+  <td>{{ value }}</td>
+</tr>
+{% empty %}
+<p>No headers found</p>
+{% endfor %}
+</table>
+
+<h1>Request Files</h1>
+{{ files }}
+
+<h1>Request Meta</h1>
+<table border="1">
+<tr>
+  <td>keys</td>
+  <td>value</td>
+</tr>
+{% for key,value in meta.items %}
+<tr>
+  <td>{{ key }}</td>
+  <td>{{ value }}<td>
+</tr>
+{% endfor %}
+</table>

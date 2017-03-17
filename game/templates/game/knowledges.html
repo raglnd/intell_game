@@ -1,0 +1,7 @@
+<table border="1">
+{% for knowledge in knowledges %}
+<tr><td>{{ knowledge }}</td></tr>
+{% empty %}
+<tr><td>No Knowledges</td></tr>
+{% endfor %}
+</table>

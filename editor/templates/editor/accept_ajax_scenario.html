@@ -1,0 +1,11 @@
+{% load staticfiles %}
+{% if json_dump %}
+<div id="graph">
+<script>
+{% with json_dump as dump %}
+{{ dump|safe }}
+{% endwith %}
+</script>
+{% else %}
+<p> No JSON dump </p>
+{% endif %}

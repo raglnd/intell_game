@@ -1,0 +1,7 @@
+<table border="1">
+{% for agent in agents %}
+<tr><td>{{ agent }}</td></tr>
+{% empty %}
+<tr><td>No Agents</td></tr>
+{% endfor %}
+</table>
