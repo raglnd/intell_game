@@ -155,8 +155,8 @@ class EventTestCase(TestCase):
         self.assertEqual(tsmiDesc.text, "John believes things are gitting silly and the sgt major agrees")
         self.assertEqual(tsmiDesc.hidden, True)
         self.assertEqual(tsmiDesc.key, True)
-		
-	def test_single_happenedat(self):
+        
+    def test_single_happenedat(self):
         '''test HappenedAt with 1-1 event-location'''
         e0 = Event.objects.get(turn=0)
         HA = HappenedAt.objects.get(event=e0)
@@ -175,9 +175,9 @@ class EventTestCase(TestCase):
         self.assertEqual(location.name, "Bolton Pet Shop")
         self.assertEqual(location.x, 20)
         self.assertEqual(location.y, 30)
-		
-	
-	def test_multiple_happenedat(self):
+        
+
+    def test_multiple_happenedat(self):
         '''test HappenedAt with 1-M event-location'''
         e1 = Event.objects.get(turn=1)
         ha = HappenedAt.objects.filter(event=e1)
@@ -206,8 +206,8 @@ class EventTestCase(TestCase):
         self.assertEqual(bpsLoc.name, "Bolton Pet Shop")
         self.assertEqual(bpsLoc.x, 20)
         self.assertEqual(bpsLoc.y, 30)
-	
-	def test_single_involved(self):
+
+    def test_single_involved(self):
         '''test Involved with 1-1 event-character'''
         e0 = Event.objects.get(turn=0)
         I = Involved.objects.get(event=e0)
@@ -218,8 +218,8 @@ class EventTestCase(TestCase):
         self.assertEqual(character.key, True)
         self.assertEqual(character.notes, "Michael is a pet shop owner")
 
-		
-	def test_multiple_involved(self):
+        
+    def test_multiple_involved(self):
         '''test Involved with 1-M event-character'''
         e1 = Event.objects.get(turn=1)
         I = Involved.objects.filter(event=e1)
