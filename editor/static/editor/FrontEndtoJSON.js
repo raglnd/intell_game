@@ -73,7 +73,20 @@
  *  change and will likely to do so prior to the completion of this project
  */
 
- const FileSaver = require('./FileSaver.min');
+ save: function(filename, data) {
+    var blob = new Blob([data], {type: 'text/csv'});
+    if(window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(blob, filename);
+    }
+    else{
+        var elem = window.document.createElement('a');
+        elem.href = window.URL.createObjectURL(blob);
+        elem.download = filename;        
+        document.body.appendChild(elem);
+        elem.click();        
+        document.body.removeChild(elem);
+    }
+}
 
 /*
 
@@ -1036,8 +1049,7 @@ function toJSONClass() {
         var fileUpload = JSON.stringify(finalarr);
 
 		var filename = this.name + ".json";
-		var blob = new Blob([fileUpload], {type: "text/plain;charset=utf-8"});
-		FileSaver.saveAs(blob, filename);
+		save(fileUpload, filename);
     }
 
 
