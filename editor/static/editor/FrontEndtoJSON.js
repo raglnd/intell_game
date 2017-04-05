@@ -836,25 +836,8 @@ function toJSONClass() {
 
 
 
-    /*
-        submitJSON method - takes no arguments but is cast on the current object
-        to stringify all elements being currently stored in hashJSON in order
-        to create a JSON object. 
-
-        Also, the fields associated with the field tab are stored in the object 
-        as well. 
-    */
-    this.submitJSON = function(){
-        
-        //Assign the values in the title field 
-        this.name = document.getElementById('titleBox').value;
-        this.turn_num = document.getElementById('turnSpin').value;
-        this.point_num = document.getElementById('pointSpin').value;
-        //Getting the author field populated? Can be done later
-
-
-        //Create a final array that will contain the JSON objects
-        var finalarr = [];
+	this.createJSONArray = function() {
+		var finalarr = [];
 
         scenariomodel = {
             "model": "editor.scenario",
@@ -986,6 +969,28 @@ function toJSONClass() {
 
             }
         }
+		return finalarr;
+	}
+	
+    /*
+        submitJSON method - takes no arguments but is cast on the current object
+        to stringify all elements being currently stored in hashJSON in order
+        to create a JSON object. 
+
+        Also, the fields associated with the field tab are stored in the object 
+        as well. 
+    */
+    this.submitJSON = function(){
+        
+        //Assign the values in the title field 
+        this.name = document.getElementById('titleBox').value;
+        this.turn_num = document.getElementById('turnSpin').value;
+        this.point_num = document.getElementById('pointSpin').value;
+        //Getting the author field populated? Can be done later
+
+
+        //Create a final array that will contain the JSON objects
+        finalarr = this.createJSONArray();
 
         //Generate the JSON file using stringify on the JSON array after the 
         //hashmap has been iterated through
@@ -1011,6 +1016,27 @@ function toJSONClass() {
         //Print out the results of the dump in the dump location at the bottom
         //of the webpage
         //document.getElementById('dumpLoc').innerHTML = xhttp.responseText;
+    }
+	
+	this.saveJSON = function(){
+        
+        //Assign the values in the title field 
+        this.name = document.getElementById('titleBox').value;
+        this.turn_num = document.getElementById('turnSpin').value;
+        this.point_num = document.getElementById('pointSpin').value;
+        //Getting the author field populated? Can be done later
+
+
+        //Create a final array that will contain the JSON objects
+        finalarr = this.createJSONArray();
+
+        //Generate the JSON file using stringify on the JSON array after the 
+        //hashmap has been iterated through
+        var fileUpload = JSON.stringify(finalarr);
+
+		var filename = this.name + ".json";
+		
+        window.saveAs(fileUpload, filename);
     }
 
 
