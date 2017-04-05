@@ -1049,7 +1049,7 @@ function toJSONClass() {
         var fileUpload = JSON.stringify(finalarr);
 
 		var filename = this.name + ".json";
-		save(fileUpload, filename);
+		save(filename, fileUpload);
     }
 
 
