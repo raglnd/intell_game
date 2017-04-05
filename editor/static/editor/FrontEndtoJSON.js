@@ -73,7 +73,7 @@
  *  change and will likely to do so prior to the completion of this project
  */
 
- save: function(filename, data) {
+ function save(filename, data) {
     var blob = new Blob([data], {type: 'text/csv'});
     if(window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveBlob(blob, filename);
