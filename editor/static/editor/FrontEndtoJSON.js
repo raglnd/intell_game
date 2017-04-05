@@ -73,6 +73,7 @@
  *  change and will likely to do so prior to the completion of this project
  */
 
+ const FileSaver = require('./FileSaver.min');
 
 /*
 
@@ -1035,8 +1036,8 @@ function toJSONClass() {
         var fileUpload = JSON.stringify(finalarr);
 
 		var filename = this.name + ".json";
-		
-        window.saveAs(fileUpload, filename);
+		var blob = new Blob([fileUpload], {type: "text/plain;charset=utf-8"});
+		FileSaver.saveAs(blob, filename);
     }
 
 
