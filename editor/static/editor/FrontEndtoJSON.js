@@ -128,6 +128,51 @@ function toJSONClass() {
     this.hashJSON = [];
 
 
+/*
+  	Suggested Characters (modified by YJ) 
+*/
+    this.get_sugChar = function() {  
+
+        //Fetch the desired attributes for the character from the database
+        var charName = document.getElementById('charNameBox').value;
+        var isKey = document.getElementById('keyCharBox').checked;
+        var charNotes = document.getElementById('charComment').value;
+
+        //Create a character object to match with the fixture.json format
+        var charObj = {
+            model:"editor.character",
+            pk:this.CharKey, 
+            fields:{
+                name: charName,
+                key: isKey,
+                notes: charNotes
+            }
+        };
+
+	//Need to add the character object to the table as well... --> delete last suggested character
+	var totalRows = document.getElementById('sugCharsTableBody').rows.length-1;
+	if(totalRows > 0){ // if table isn't empty
+		// modified from del_char function
+		//delete the table element
+        	var table = document.getElementById("sugCharsTableBody");
+        	table.deleteRow(0);
+		
+        	//clear the input fields
+		document.getElementById('charNameBox').value = "";
+		document.getElementById('keyCharBox').checked = false;
+		document.getElementById('charComment').value = "";
+	}
+        var newCharElement = document.getElementById("sugCharsTableBody").insertRow(0);
+        cell = newCharElement.insertCell(0);
+        cell.innerHTML = charName;
+
+        //EventListener used when a row in the character table is selected 
+        newCharElement.addEventListener("click", function(){selSugChar(charObj);});
+
+	document.getElementById('charEditBtn').disabled = true;
+	document.getElementById('charDelBtn').disabled = true;
+    }
+
     /*
         add_char takes no arguments and is called when the add button is selected
         in the character tab.
@@ -1054,6 +1099,40 @@ var currEdit = new toJSONClass();
 var prevChar =0;
 var prevLoc =0;
 var prevEvent=0;
+
+/*
+    Suggested Character Selection Highlight (modified by YJ)
+*/
+function selSugChar(charObj) {
+
+    //Store current/total rows in order to determine which row is hilighted
+    var currRow = charObj.pk;
+    var totalRows = document.getElementById('sugCharsTableBody').rows.length-1;
+    //Need to account for case in which the preevious character is deleted
+    if(this.prevChar>totalRows){
+        this.prevChar = totalRows;
+    }
+    
+    //Set fields to those associated with the selected object
+    document.getElementById('charNameBox').value = charObj.fields.name;
+    document.getElementById('keyCharBox').checked = charObj.fields.key;
+    document.getElementById('charComment').value = charObj.fields.notes;
+
+    //Disable the edit/delete buttons and highlight the selected row
+    document.getElementById('charEditBtn').disabled = true;
+    document.getElementById('charDelBtn').disabled = true;
+
+    //Highlight the currently selected item reseting the background of an object
+    //that is no longer selected
+    document.getElementById('sugCharsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
+    if (this.prevChar != null && this.prevChar != currRow) {
+        document.getElementById('sugCharsTableBody').rows[totalRows-this.prevChar].cells[0].style.backgroundColor='white';
+    }
+    this.prevChar = currRow;
+
+    //set the current object to the currently selected one
+    window.currSelObj = charObj;
+}
 
 /*
     Used to handle highlighting and row selection for the character table

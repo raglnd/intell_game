@@ -25,7 +25,7 @@ SECRET_KEY = 'wy(!z#d)u#3ie9qe76jqm23b-vjmg$0ap7))#fgw*nskzu(nm-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['intell-ga.me']
+ALLOWED_HOSTS = ['74.143.218.34', '192.168.1.107']
 
 
 # Application definition

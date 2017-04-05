@@ -453,7 +453,7 @@
                 <div class="col-sm-5">
                   <div id="charsTable" class="table-responsive">
                   <table class="table table-hover, table-bordered">
-                    <thead>
+                   <thead>
                       <tr>
                         <th>Characters</th>
                       </tr>
@@ -461,6 +461,18 @@
                     <tbody id="charsTableBody">
                     
                     </tbody>
+		    <!-- Suggested Characters (modified by YJ) -->
+                      <tr>
+                        <th></th>
+                      </tr>
+		    <thead>
+		      <tr>
+			<th>Suggested Characters</th>
+		      </tr>
+		    </thead>
+		    <tbody id="sugCharsTableBody">
+				<td><button id="charSugBtn" type="button" class="btn btn-block" onclick="currEdit.get_sugChar()">Get</button></td>							
+		    </tbody>
                   </table>
                   </div>
                 </div>
