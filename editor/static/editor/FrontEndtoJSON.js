@@ -1051,6 +1051,18 @@ function toJSONClass() {
 		var filename = this.name + ".json";
 		save(filename, fileUpload);
     }
+	
+	this.loadJSON = function(){
+		
+		// Need to figure out how to load a file from user localName
+		var file = document.getElementById("filePicker").files[0];
+		
+		// Need to clear out all the current data
+		
+		// Need to go thtough the loaded file, adding chars, locs, events, etc.
+		// Look at the various add_char functions for what to do.
+		// Possibly rewrite them for code reuse.
+	}
 
 
     //method to populate the target selection when character/location is slected
