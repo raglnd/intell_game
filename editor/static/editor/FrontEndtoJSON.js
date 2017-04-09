@@ -1058,6 +1058,24 @@ function toJSONClass() {
 	this.processJSON = function(file) {
 		console.log(file);
 		
+		fr = new FileReader();
+		fr.onload = function() {
+			try {
+				JSON = JSON.parse(fr.result);
+			}
+			catch (err) {
+				// Could not parse.
+				return false;
+			}
+			
+			for (var key in JSON)
+			{
+				console.log(key);
+				console.log(JSON[key]);
+				console.log("next");
+			}
+		};
+		fr.readAsText(file);
 				
 		// Need to clear out all the current data
 		
@@ -1076,7 +1094,7 @@ function toJSONClass() {
 		function loop(inputVar, callback) {
 		
 			if (inputVar[0].files.length == 0) {
-				setTimeout(loop, 0, inputVar, callback);
+				setTimeout(loop, 10, inputVar, callback);
 			}
 			else {
 				callback(inputVar[0].files[0]);
