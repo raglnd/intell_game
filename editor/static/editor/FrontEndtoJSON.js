@@ -1055,7 +1055,9 @@ function toJSONClass() {
 	this.loadJSON = function(){
 		
 		// Need to figure out how to load a file from user localName
-		var file = document.getElementById("filePicker").files[0];
+		var input = $(document.createElement('input'));
+        input.attr("type", "file");
+        input.trigger('click');
 		
 		// Need to clear out all the current data
 		
