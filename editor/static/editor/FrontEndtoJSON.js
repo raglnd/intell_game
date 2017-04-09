@@ -141,6 +141,8 @@ function toJSONClass() {
     //hashMap to contain input received from the user  
     this.hashJSON = [];
 
+    // Need var for input
+	this.input = 0;
 
     /*
         add_char takes no arguments and is called when the add button is selected
@@ -1057,19 +1059,19 @@ function toJSONClass() {
     	while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
 	}
 
+	this.processJSON = function() {
+		console.log(this.input[0].files[0]);
+	}
+
 	this.loadJSON = function(){
 		
 		// Need to figure out how to load a file from user localName
-		var input = $(document.createElement('input'));
-        input.attr("type", "file");
-        //input.attr("onsubmit", "this.processJSON(input[0].files[0]);");
-        input.trigger('click');
+		this.input = $(document.createElement('input'));
+        this.input.attr("type", "file");
+        this.input.onsubmit = this.processJSON;
+        
+        this.input.trigger('click');
 
-		while(input[0].files.length === 0) {
-			this.sleepFor(100);
-		}
-
-		console.log(input[0].files[0]);
 		
 		// Need to clear out all the current data
 		
