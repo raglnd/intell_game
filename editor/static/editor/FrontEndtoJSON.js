@@ -142,7 +142,8 @@ function toJSONClass() {
     this.hashJSON = [];
 
     // Need var for input
-	this.input = 0;
+	this.input = $(document.createElement('input'));
+    this.input.attr("type", "file");    
 
     /*
         add_char takes no arguments and is called when the add button is selected
@@ -1072,9 +1073,7 @@ function toJSONClass() {
 
 	this.loadJSON = function(){
 		
-		// Need to figure out how to load a file from user localName
-		this.input = $(document.createElement('input'));
-        this.input.attr("type", "file");       
+		// Need to figure out how to load a file from user localName   
         this.input.trigger('click');
 	}
 
