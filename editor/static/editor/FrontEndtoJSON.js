@@ -1060,8 +1060,8 @@ function toJSONClass() {
     	while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
 	}
 
-	this.processJSON = function() {
-		console.log(this.input[0].files[0]);
+	this.processJSON = function(file) {
+		console.log(file);
 		
 				
 		// Need to clear out all the current data
@@ -1077,6 +1077,17 @@ function toJSONClass() {
 		
 		// Need to figure out how to load a file from user localName   
         this.input.trigger('click');
+		
+		loop();
+		
+		function loop() {
+			if (this.input[0].files.length == 0) {
+				setTimeout(loop, 0);
+			}
+			else {
+				this.processJSON(this.input[0].files[0]);
+			}
+		}
 	}
 
 
