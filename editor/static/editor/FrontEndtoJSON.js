@@ -143,7 +143,9 @@ function toJSONClass() {
 
     // Need var for input
 	this.input = $(document.createElement('input'));
-    this.input.attr("type", "file");    
+    this.input.attr("type", "file");   
+	this.input.addEventListener('submit', this.processJSON);
+	
 
     /*
         add_char takes no arguments and is called when the add button is selected
