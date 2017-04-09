@@ -1061,23 +1061,21 @@ function toJSONClass() {
 
 	this.processJSON = function() {
 		console.log(this.input[0].files[0]);
+		
+				
+		// Need to clear out all the current data
+		
+		// Need to go thtough the loaded file, adding chars, locs, events, etc.
+		// Look at the various add_char functions for what to do.
+		// Possibly rewrite them for code reuse.
 	}
 
 	this.loadJSON = function(){
 		
 		// Need to figure out how to load a file from user localName
 		this.input = $(document.createElement('input'));
-        this.input.attr("type", "file");
-        this.input.onsubmit = this.processJSON;
-        
+        this.input.attr("type", "file");       
         this.input.trigger('click');
-
-		
-		// Need to clear out all the current data
-		
-		// Need to go thtough the loaded file, adding chars, locs, events, etc.
-		// Look at the various add_char functions for what to do.
-		// Possibly rewrite them for code reuse.
 	}
 
 
