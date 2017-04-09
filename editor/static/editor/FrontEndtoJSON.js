@@ -1052,12 +1052,24 @@ function toJSONClass() {
 		save(filename, fileUpload);
     }
 	
+	this.sleepFor = function(sleepDuration){
+    	var now = new Date().getTime();
+    	while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+	}
+
 	this.loadJSON = function(){
 		
 		// Need to figure out how to load a file from user localName
 		var input = $(document.createElement('input'));
         input.attr("type", "file");
+        //input.attr("onsubmit", "this.processJSON(input[0].files[0]);");
         input.trigger('click');
+
+		while(input[0].files.length === 0) {
+			this.sleepFor(100);
+		}
+
+		console.log(input[0].files[0]);
 		
 		// Need to clear out all the current data
 		
