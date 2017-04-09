@@ -1055,11 +1055,6 @@ function toJSONClass() {
 		save(filename, fileUpload);
     }
 	
-	this.sleepFor = function(sleepDuration){
-    	var now = new Date().getTime();
-    	while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
-	}
-
 	this.processJSON = function(file) {
 		console.log(file);
 		
@@ -1071,21 +1066,20 @@ function toJSONClass() {
 		// Possibly rewrite them for code reuse.
 	}
 
-	this.input.onSubmit = this.processJSON;
-
 	this.loadJSON = function(){
 		
 		// Need to figure out how to load a file from user localName   
         this.input.trigger('click');
 		
-		loop();
+		loop(this.input, this.processJSON);
 		
-		function loop() {
-			if (this.input[0].files.length == 0) {
-				setTimeout(loop, 0);
+		function loop(inputVar, callback) {
+		
+			if (inputVar[0].files.length == 0) {
+				setTimeout(loop, 0, inputVar, callback);
 			}
 			else {
-				this.processJSON(this.input[0].files[0]);
+				callback(inputVar[0].files[0]);
 			}
 		}
 	}
