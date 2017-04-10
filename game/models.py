@@ -111,7 +111,7 @@ class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 	started = models.BooleanField(default=False)
 	# gameOver = models.BooleanField(default=False)
-	self.gameOver = False
+	gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
 	next_turn = models.DateTimeField(null=True)
