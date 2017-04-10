@@ -1074,7 +1074,7 @@ function toJSONClass() {
 		console.log(file);
 		
 		fr = new FileReader();
-		fr.onload = function() {
+		fr.onload = function().apply(this) {
 			try {
 				JSONobj = JSON.parse(fr.result);
 			}
