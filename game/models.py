@@ -303,6 +303,7 @@ class Game(models.Model):
 	def start_next_turn(self):
 		if (self.gameOver == True):
 			#Destroy the game
+			pass
 
 		# next turn
 		self.turn += 1
