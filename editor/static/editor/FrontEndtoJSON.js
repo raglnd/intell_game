@@ -1070,25 +1070,6 @@ function toJSONClass() {
 		save(filename, fileUpload);
     }
 	
-	this.loadFile = function(file) {
-		console.log(file);
-		
-		fr = new FileReader();
-		fr.onload = (function(cla) {
-			try {
-				JSONobj = JSON.parse(fr.result);
-			}
-			catch (err) {
-				// Could not parse.
-				return false;
-			}
-			
-			cla.processJSON(JSONobj);
-		})(this);
-		
-		fr.readAsText(file);
-	}
-	
 	this.processJSON = function(JSONObj) {
 
 		// Need to reset the current data
@@ -1188,6 +1169,25 @@ function toJSONClass() {
 		}
 	}
 
+	this.loadFile = function(file) {
+		console.log(file);
+		
+		fr = new FileReader();
+		fr.onload = (function(cla) {
+			try {
+				JSONobj = JSON.parse(fr.result);
+			}
+			catch (err) {
+				// Could not parse.
+				return false;
+			}
+			
+			cla.processJSON(JSONobj);
+		})(this);
+		
+		fr.readAsText(file);
+	}
+	
 	this.loadJSON = function(){
 		
 		// Need to figure out how to load a file from user localName   
