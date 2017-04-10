@@ -1174,15 +1174,17 @@ function toJSONClass() {
 		
 		fr = new FileReader();
 		fr.onload = (function(cla) {
-			try {
-				JSONobj = JSON.parse(fr.result);
+			return function() {
+				try {
+					JSONobj = JSON.parse(fr.result);
+				}
+				catch (err) {
+					// Could not parse.
+					return false;
+				}
+				
+				cla.processJSON(JSONobj);
 			}
-			catch (err) {
-				// Could not parse.
-				return false;
-			}
-			
-			cla.processJSON(JSONobj);
 		})(this);
 		
 		fr.readAsText(file);
