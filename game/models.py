@@ -108,23 +108,23 @@ methods
     start_next_turn - does turn proccessing
 '''
 class Game(models.Model):
-    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
-    started = models.BooleanField(default=False)
+	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+	started = models.BooleanField(default=False)
 	gameOver = models.BooleanField(default=False)
-    creator = models.ForeignKey(User, null=True)
-    turn = models.IntegerField(default=0)
+	creator = models.ForeignKey(User, null=True)
+	turn = models.IntegerField(default=0)
 	maxTurns = models.IntegerField(default=20)
-    next_turn = models.DateTimeField(null=True)
-    turn_length = models.DurationField(default=timedelta(days=1))
+	next_turn = models.DateTimeField(null=True)
+	turn_length = models.DurationField(default=timedelta(days=1))
 
-    # TODO: make these configured in game create?
-    #       would require more fields default values are same
-    ACTION_COSTS = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-                    "recruit": 3, "apprehend": 5, "terminate": 5,
-                    "research": -2}
-    ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-                        "recruit": 1, "apprehend": .85, "terminate": .7,
-                        "research": 1}
+	# TODO: make these configured in game create?
+	#       would require more fields default values are same
+	ACTION_COSTS = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
+					"recruit": 3, "apprehend": 5, "terminate": 5,
+					"research": -2}
+	ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
+						"recruit": 1, "apprehend": .85, "terminate": .7,
+						"research": 1}
 
     def __str__(self):
         return "Game using scenario %s" % (self.scenario.name)
@@ -132,11 +132,11 @@ class Game(models.Model):
     def detail_html(self):
         return "scenario: "+str(self.scenario)
 
-    def get_users(self):
-        users = []
-        for player in self.player_set.all():
-            users += [player.user]
-        return users
+	def get_users(self):
+		users = []
+		for player in self.player_set.all():
+			users += [player.user]
+		return users
     '''
     add_player
         I: player - a user object
@@ -145,12 +145,12 @@ class Game(models.Model):
             and the player is not in the game already
             otherwise no change
     '''
-    def add_player(self, user):
-        if user not in self.get_users():
-            player = Player(user=user, 
-                            game=self, 
-                            points=self.scenario.point_num)
-            player.save()
+	def add_player(self, user):
+		if user not in self.get_users():
+			player = Player(user=user, 
+							game=self, 
+							points=self.scenario.point_num)
+			player.save()
 
     '''
     time_till
