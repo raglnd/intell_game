@@ -540,14 +540,14 @@ function toJSONClass() {
         //Check if we need to check through character or location obejects 
         if(tagTypeinput == 0){
             for(key in this.charHash){
-                if(this.hashJSON[this.charHash[key]].pk == selTarget.value){
+                if(this.hashJSON[this.charHash[key]].pk == selTarget){
                     currTarget = this.hashJSON[this.charHash[key]];
                 }
             }
         }
         else{
             for(key in this.locHash){
-                if(this.hashJSON[this.locHash[key]].pk == selTarget.value){
+                if(this.hashJSON[this.locHash[key]].pk == selTarget){
                     currTarget = this.hashJSON[this.locHash[key]];
                 }
             }
@@ -579,8 +579,8 @@ function toJSONClass() {
             tagmodel: currModel,
             tagpk: currTagKey,
             targetpk: currTarget.pk,
-            tagtypeinput:tagType,
-            targetinput:selTarget
+            tagtypeinput: tagType,
+            targetinput: document.getElementById('targetSel')
         };
 		
 		this.tagKey++;
@@ -611,7 +611,7 @@ function toJSONClass() {
     this.add_eventTag = function(){
         
         var tagTypeinput = document.getElementById('tagTypeSel').selectedIndex;
-        var selTarget = document.getElementById('targetSel');
+        var selTarget = document.getElementById('targetSel').value;
 		
 		this._add_eventTag(tagTypeinput, selTarget);
 
