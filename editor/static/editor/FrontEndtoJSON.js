@@ -1168,6 +1168,9 @@ function toJSONClass() {
 					JSONobj[key].fields.location_id;
 				}
 			}
+			catch(err) {
+				console.log(err);
+			}
 		}
 	}
 
