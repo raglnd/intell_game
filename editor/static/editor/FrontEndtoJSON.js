@@ -1173,8 +1173,10 @@ function toJSONClass() {
 		console.log(file);
 		
 		fr = new FileReader();
-		fr.onload = (function(cla) {
+		console.log(this);
+		fr.onload = (function(x) {
 			return function() {
+				console.log(x);
 				try {
 					JSONobj = JSON.parse(fr.result);
 				}
@@ -1183,7 +1185,7 @@ function toJSONClass() {
 					return false;
 				}
 				
-				cla.processJSON(JSONobj);
+				x.processJSON(JSONobj);
 			}
 		})(this);
 		
