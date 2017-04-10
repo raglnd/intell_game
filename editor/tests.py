@@ -2,7 +2,6 @@
     INTELL The Craft of Intelligence
         https://github.com/dylan-wright/cs499-intell/
         https://intellproject.com
-
     editor/tests.py
         EventTestCase
             test_create_event
@@ -16,7 +15,6 @@
             test_create_description
         IntegrationTestCase
             test_sending_fixture_with_title
-
     TODO:   Document additions.
 '''
 

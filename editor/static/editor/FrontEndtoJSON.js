@@ -145,6 +145,64 @@ function toJSONClass() {
 	this.input = $(document.createElement('input'));
     this.input.attr("type", "file");   
 
+/*
+  	Suggested Characters (added by YJ) 
+		Functions like add_char, but with edits
+
+	This function, when run, will add one suggested character
+	name from the database into the character name field.
+*/
+    this.get_sugChar = function() {  
+
+        //Fetch the desired attribute (charName) from the database
+	// Coded with help from http://www.tutorialspoint.com/ajax/ajax_database.htm
+	var ajaxRequest;
+        ajaxRequest = new XMLHttpRequest();
+
+	var charName = document.getElementById('charNameBox');
+	charName.value = ajaxRequest.responseText;
+	var isKey = document.getElementById('keyCharBox').checked = false; // default
+	var charNotes = document.getElementById('charComment').value = ""; // default
+
+	ajaxRequest.open("GET", "../../static/editor/databaseAccess.php", true);
+	ajaxRequest.send(); // this db section not currently functional
+
+        //Create a character object to be used when selSugChar (below) is run
+        var charObj = {
+            model:"editor.character",
+            pk:this.CharKey, 
+            fields:{
+                name: charName.value,
+                key: isKey,
+                notes: charNotes
+            }
+        };
+
+	// Add suggestion character to table --> delete last suggested character
+	var totalRows = document.getElementById('sugCharsTableBody').rows.length-1;
+	if(totalRows > 0){ // if table isn't empty
+		// modified from del_char function
+		//delete the table element
+        	var table = document.getElementById("sugCharsTableBody");
+        	table.deleteRow(0);
+		
+        	//clear the input fields
+		document.getElementById('charNameBox').value = "";
+		document.getElementById('keyCharBox').checked = false;
+		document.getElementById('charComment').value = "";
+	}
+        var newCharElement = document.getElementById("sugCharsTableBody").insertRow(0);
+        cell = newCharElement.insertCell(0);
+        cell.innerHTML = charName.value;
+
+        //EventListener used when a row in the character table is selected 
+        newCharElement.addEventListener("click", function(){selSugChar(charObj);});
+
+	// suggested character cannot be edited or deleted --> can add to scenario
+	document.getElementById('charEditBtn').disabled = true; // default
+	document.getElementById('charDelBtn').disabled = true; // default
+    }
+
 	this._add_char = function(charName, isKey, charNotes) {
 		//Create a character object to match with the fixture.json format
         var charObj = {
@@ -717,6 +775,63 @@ function toJSONClass() {
 		document.getElementById('eventTagEditBtn').disabled = true;
 		document.getElementById('eventTagDelBtn').disabled = true;
     }
+
+    /*
+  	Suggested Locations (added by YJ)
+		Functions like add_loc and get_sugChar, but with edits 
+
+	This function, when run, will take one location's data
+	from the database and place it in the table for the user
+	to potentially add to their scenario.
+    */
+    this.get_sugLoc = function() {
+
+	// will eventually take this from the database but currently
+	// fills in info from user input boxes
+	var locName = document.getElementById('locNameInput').value;
+        var locCoordX = document.getElementById('locXinput').value;
+        var locCoordY = document.getElementById('locYinput').value;
+
+	//Create a location object to be used by selSugLoc (below)
+        var locObj = {
+            model:"editor.location",
+            pk:this.locKey,
+            fields:{
+                name: locName,
+                x: locCoordX,
+                y: locCoordY
+            }
+        };	
+
+	// Add suggestion location to table --> delete last suggested location
+	var totalRows = document.getElementById('sugLocsTableBody').rows.length-1;
+	if(totalRows > 0){ // if table isn't empty
+		// modified from del_char function
+		//delete the table element
+        	var table = document.getElementById("sugLocsTableBody");
+        	table.deleteRow(0);
+	}
+
+	var newLocElement = document.getElementById("sugLocsTableBody").insertRow(0);
+        nameCell = newLocElement.insertCell(0);
+        xCell = newLocElement.insertCell(1);
+        yCell = newLocElement.insertCell(2);
+		
+        //EventListener used when a row in the locations table is selected 
+        newLocElement.addEventListener("click", function(){selSugLoc(locObj);});
+        
+        nameCell.innerHTML = locName;
+        xCell.innerHTML = locCoordX;
+        yCell.innerHTML = locCoordY;
+	
+	// return input fields to default and disable edit/delete buttons
+	document.getElementById('locNameInput').value = "";
+        document.getElementById('locXinput').value = "";
+        document.getElementById('locYinput').value = "";	
+	document.getElementById('locEditBtn').disabled = true;
+	document.getElementById('locDelBtn').disabled = true;
+    }
+
 
 	this._add_loc = function (locName, locCoordX, locCoordY) {
 		//Create a location object to match with the fixture.json format
@@ -1292,6 +1407,45 @@ var prevLoc =0;
 var prevEvent=0;
 
 /*
+    Suggested Character Selection Highlight (added by YJ)
+	Functions like selChar and selSugChar, but with edits
+
+    When run, function will highlight the selected suggestion
+    and show suggestion's information in input boxes
+*/
+function selSugChar(charObj) {
+
+    //Store current/total rows in order to determine which row is hilighted
+    var currRow = charObj.pk;
+    var totalRows = document.getElementById('sugCharsTableBody').rows.length-1;
+    
+    //Need to account for case in which the previous character is deleted
+    if(this.prevChar>totalRows){
+        this.prevChar = totalRows;
+    }
+    
+    //Set fields to those associated with the selected object
+    document.getElementById('charNameBox').value = charObj.fields.name;
+    document.getElementById('keyCharBox').checked = charObj.fields.key;
+    document.getElementById('charComment').value = charObj.fields.notes;
+
+    //Disable the edit/delete buttons and highlight the selected row
+    document.getElementById('charEditBtn').disabled = true;
+    document.getElementById('charDelBtn').disabled = true;
+
+    //Highlight the currently selected item reseting the background of an object
+    //that is no longer selected
+    document.getElementById('sugCharsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
+    if (this.prevChar != null && this.prevChar != currRow) {
+        document.getElementById('sugCharsTableBody').rows[totalRows-this.prevChar].cells[0].style.backgroundColor='white';
+    }
+    this.prevChar = currRow;
+
+    //set the current object to the currently selected one
+    window.currSelObj = charObj;
+}
+
+/*
     Used to handle highlighting and row selection for the character table
 */
 function selChar(charObj) {
@@ -1299,12 +1453,12 @@ function selChar(charObj) {
     //Store current/total rows in order to determine which row is hilighted
     var currRow = charObj.pk;
     var totalRows = document.getElementById('charsTableBody').rows.length-1;
+    
     //Need to account for case in which the preevious character is deleted
     if(this.prevChar>totalRows){
         this.prevChar = totalRows;
     }
     
-
     //Set fields to those associated with the selected object
     document.getElementById('charNameBox').value = charObj.fields.name;
     document.getElementById('keyCharBox').checked = charObj.fields.key;
@@ -1325,6 +1479,50 @@ function selChar(charObj) {
     //set the current object to the currently selected one
     window.currSelObj = charObj;
 
+}
+
+/*
+    Suggested Location Selection Highlight (added by YJ)
+	Functions like selLoc, but with edits
+
+    When run, function will highlight the selected suggestion
+    and show suggestion's information in input boxes
+
+    Doesn't currently work --> bug with lockey and rowCount
+*/
+function selSugLoc(locObj) {
+    //Store current/total rows in order to determine which row is hilighted
+    var currRow = locObj.pk;
+    var totalRows = document.getElementById('sugLocsTableBody').rows.length -1;
+   
+    //Account the case where previous location was deleted
+    if(this.prevLoc>totalRows){
+        this.prevLoc = totalRows;
+    }
+
+    //Set fields to those associated with the selected object
+    document.getElementById('locNameInput').value = locObj.fields.name;
+    document.getElementById('locXinput').value = locObj.fields.x;
+    document.getElementById('locYinput').value = locObj.fields.y;
+    
+    //Disable the edit/delete buttons and highlight the selected row
+    document.getElementById('locEditBtn').disabled = true;
+    document.getElementById('locDelBtn').disabled = true;
+
+    //Highlight the currently selected item reseting the background of an object
+    //that is no longer selected
+    document.getElementById('sugLocsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
+	document.getElementById('sugLocsTableBody').rows[totalRows-currRow].cells[1].style.backgroundColor='lightblue';
+	document.getElementById('sugLocsTableBody').rows[totalRows-currRow].cells[2].style.backgroundColor='lightblue';
+    if (this.prevLoc != null && this.prevLoc != currRow) {
+        document.getElementById('sugLocsTableBody').rows[totalRows-this.prevLoc].cells[0].style.backgroundColor='white';
+	document.getElementById('sugLocsTableBody').rows[totalRows-this.prevLoc].cells[1].style.backgroundColor='white';
+	document.getElementById('sugLocsTableBody').rows[totalRows-this.prevLoc].cells[2].style.backgroundColor='white';
+    }
+
+    this.prevLoc = currRow;
+    //set current object to the currently selected one
+    window.currSelObj = locObj;
 }
 
 /*
