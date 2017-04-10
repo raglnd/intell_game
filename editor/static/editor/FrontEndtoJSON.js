@@ -1115,56 +1115,58 @@ function toJSONClass() {
 		// Possibly rewrite them for code reuse.
 		for (var key in JSONobj)
 		{
-			console.log(key);
-			console.log(JSONobj[key]);
-			console.log("next");
-			
-			// Need to grab the pk probably. Can ignore, assuming they are in order...
-			// Actually will need to subtract 1 from each id.
-			if (JSONobj[key].model == "editor.scenario") {
+			try {
+				console.log(key);
+				console.log(JSONobj[key]);
+				console.log("next");
 				
-				// Possibly something with the author needs to be done.
+				// Need to grab the pk probably. Can ignore, assuming they are in order...
+				// Actually will need to subtract 1 from each id.
+				if (JSONobj[key].model == "editor.scenario") {
+					
+					// Possibly something with the author needs to be done.
 
-				this.name = JSONobj[key].fields.name;
-				this.turn_num = JSONobj[key].fields.turn_num;
-				this.point_num = JSONobj[key].fields.point_num;
-				
-				document.getElementById('titleBox').value = this.name;
-				document.getElementById('turnSpin').value = this.turn_num;
-				document.getElementById('pointSpin').value = this.point_num;
-			}
-			else if (JSONobj[key].model == "editor.character") {
-				this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes);
-			}
-			else if (JSONobj[key].model == "editor.location") {
-				this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
-			}
-			else if (JSONobj[key].model == "editor.event") {
-				this._add_event("", false, false, "", "", JSONobj[key].fields.turn);
-			}
-			else if (JSONobj[key].model == "editor.description") {
-				
-				// Do something with these.
-				JSONobj[key].fields.text;
-				JSONobj[key].fields.hidden;
-			}
-			else if (JSONobj[key].model == "editor.describedby") {
-				
-				// Do something with these.
-				JSONobj[key].fields.event_id;
-				JSONobj[key].fields.description_id;
-			}
-			else if (JSONobj[key].model == "editor.involved") {
-				this._add_eventTag(0, JSONobj[key].fields.character_id-1);
-				// Do something with these.
-				JSONobj[key].fields.event_id;
-				JSONobj[key].fields.character_id;
-			}
-			else if (JSONobj[key].model == "editor.happenedat") {
-				this._add_eventTag(1, JSONobj[key].fields.location_id-1);
-				// Do something with these.
-				JSONobj[key].fields.event_id;
-				JSONobj[key].fields.location_id;
+					this.name = JSONobj[key].fields.name;
+					this.turn_num = JSONobj[key].fields.turn_num;
+					this.point_num = JSONobj[key].fields.point_num;
+					
+					document.getElementById('titleBox').value = this.name;
+					document.getElementById('turnSpin').value = this.turn_num;
+					document.getElementById('pointSpin').value = this.point_num;
+				}
+				else if (JSONobj[key].model == "editor.character") {
+					this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes);
+				}
+				else if (JSONobj[key].model == "editor.location") {
+					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
+				}
+				else if (JSONobj[key].model == "editor.event") {
+					this._add_event("", false, false, "", "", JSONobj[key].fields.turn);
+				}
+				else if (JSONobj[key].model == "editor.description") {
+					
+					// Do something with these.
+					JSONobj[key].fields.text;
+					JSONobj[key].fields.hidden;
+				}
+				else if (JSONobj[key].model == "editor.describedby") {
+					
+					// Do something with these.
+					JSONobj[key].fields.event_id;
+					JSONobj[key].fields.description_id;
+				}
+				else if (JSONobj[key].model == "editor.involved") {
+					this._add_eventTag(0, JSONobj[key].fields.character_id-1);
+					// Do something with these.
+					JSONobj[key].fields.event_id;
+					JSONobj[key].fields.character_id;
+				}
+				else if (JSONobj[key].model == "editor.happenedat") {
+					this._add_eventTag(1, JSONobj[key].fields.location_id-1);
+					// Do something with these.
+					JSONobj[key].fields.event_id;
+					JSONobj[key].fields.location_id;
+				}
 			}
 		}
 	}
@@ -1173,10 +1175,8 @@ function toJSONClass() {
 		console.log(file);
 		
 		fr = new FileReader();
-		console.log(this);
 		fr.onload = (function(x) {
 			return function() {
-				console.log(x);
 				try {
 					JSONobj = JSON.parse(fr.result);
 				}
@@ -1185,7 +1185,7 @@ function toJSONClass() {
 					return false;
 				}
 				
-				x.processJSON(JSONobj);
+				x.currEdit.processJSON(JSONobj); // Seems odd, but it works...
 			}
 		})(this);
 		
