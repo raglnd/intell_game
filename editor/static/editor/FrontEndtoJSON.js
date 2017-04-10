@@ -1135,14 +1135,15 @@ function toJSONClass() {
 		this.hashJSON = [];
 		
 		
+
+		var EventData = [];
+		
 		// Need to go thtough the loaded file, adding chars, locs, events, etc.
 		// Look at the various add_char functions for what to do.
 		// Possibly rewrite them for code reuse.
 		for (var key in JSONobj)
 		{
 			try {
-				var EventData = [];
-				
 				console.log(key);
 				console.log(JSONobj[key]);
 				console.log("next");
