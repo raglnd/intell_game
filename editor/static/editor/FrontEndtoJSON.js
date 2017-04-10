@@ -1180,7 +1180,7 @@ function toJSONClass() {
 					// JSONobj[key].fields.hidden;
 				}
 				else if (JSONobj[key].model == "editor.describedby") {
-					
+					EventData.push(JSONobj[key]);
 					// Do something with these.
 					// JSONobj[key].fields.event_id;
 					// JSONobj[key].fields.description_id;
