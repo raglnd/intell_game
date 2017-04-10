@@ -110,10 +110,10 @@ methods
 class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 	started = models.BooleanField(default=False)
-	gameOver = models.BooleanField(default=False)
+	# gameOver = models.BooleanField(default=False)
+	self.gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
-	maxTurns = models.IntegerField(default=20)
 	next_turn = models.DateTimeField(null=True)
 	turn_length = models.DurationField(default=timedelta(days=1))
 
@@ -343,7 +343,7 @@ class Game(models.Model):
 				message.save()
 
 		#determine if the game is over or not
-		if ((self.turn > self.maxTurns) and (self.gameOver == False)): #the players ran out of turns to catch the key character
+		if ((self.turn > self.scenario.turn_num) and (self.gameOver == False)): #the players ran out of turns to catch the key character
 			#display a message to all players informing them that they lost
 			for player in self.player_set.all():
 				loseMessage = Message(player=player, turn=self.turn,
