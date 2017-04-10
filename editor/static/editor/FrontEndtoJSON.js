@@ -73,6 +73,20 @@
  *  change and will likely to do so prior to the completion of this project
  */
 
+ function save(filename, data) {
+    var blob = new Blob([data], {type: 'text/csv'});
+    if(window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(blob, filename);
+    }
+    else{
+        var elem = window.document.createElement('a');
+        elem.href = window.URL.createObjectURL(blob);
+        elem.download = filename;        
+        document.body.appendChild(elem);
+        elem.click();        
+        document.body.removeChild(elem);
+    }
+}
 
 /*
 
@@ -127,6 +141,9 @@ function toJSONClass() {
     //hashMap to contain input received from the user  
     this.hashJSON = [];
 
+    // Need var for input
+	this.input = $(document.createElement('input'));
+    this.input.attr("type", "file");   
 
 /*
   	Suggested Characters (added by YJ) 
@@ -186,23 +203,8 @@ function toJSONClass() {
 	document.getElementById('charDelBtn').disabled = true; // default
     }
 
-    /*
-        add_char takes no arguments and is called when the add button is selected
-        in the character tab.
-
-        It receives the values stored in each fo the fields for the character
-        tab, creates a formalized character object and stores the result in the
-        object's hash map.
-    */
-    this.add_char = function() {  
-
-
-        //Fetch the desired attributes for the character
-        var charName = document.getElementById('charNameBox').value;
-        var isKey = document.getElementById('keyCharBox').checked;
-        var charNotes = document.getElementById('charComment').value;
-
-        //Create a character object to match with the fixture.json format
+	this._add_char = function(charName, isKey, charNotes) {
+		//Create a character object to match with the fixture.json format
         var charObj = {
             model:"editor.character",
             pk:this.charKey, 
@@ -240,6 +242,25 @@ function toJSONClass() {
         //incrememnt the keys associated with character object and hash location. 
         this.hashKey++;
         this.charKey++;
+	}
+	
+    /*
+        add_char takes no arguments and is called when the add button is selected
+        in the character tab.
+
+        It receives the values stored in each fo the fields for the character
+        tab, creates a formalized character object and stores the result in the
+        object's hash map.
+    */
+    this.add_char = function() {  
+
+
+        //Fetch the desired attributes for the character
+        var charName = document.getElementById('charNameBox').value;
+        var isKey = document.getElementById('keyCharBox').checked;
+        var charNotes = document.getElementById('charComment').value;
+
+        this._add_char(charName, isKey, charNotes);
 
 		//clear the input fields
 		document.getElementById('charNameBox').value = "";
@@ -335,24 +356,8 @@ function toJSONClass() {
 		document.getElementById('charDelBtn').disabled = true;
     }
 
-    /*
-        add_event takes no arguments and is called when the add button is selected
-        in the event tab.
-
-        it reacts similarly to the add_character method, but with the unique
-        fields associated with the event tab
-    */ 
-    this.add_event = function() {
-       
-        //Get values stored in the current fields 
-        var eventName = document.getElementById('eventNameBox').value;
-        var isKey = document.getElementById('eventKeyBoxIn').checked;
-        var isSecret = document.getElementById('eventSecretBoxIn').checked;
-        var eventSnip = document.getElementById('snippet').value;
-        var secretSnip = document.getElementById('secretSnippet').value;
-        var tagTurn = document.getElementById('turnTagSel').value;
-		
-        //TODO: add some input validation based event tags 
+	this._add_event = function(eventName, isKey, isSecret, eventSnip, secretSnip, tagTurn) {
+		//TODO: add some input validation based event tags 
 
         //Create an event object to match with the fixture.json format
         var eventObj = {
@@ -421,6 +426,30 @@ function toJSONClass() {
         this.hashKey++;
         this.descKey++;
         this.descbyKey++;
+			
+		this.tagKey = 0;
+		this.eventTags.splice(0,this.eventTags.length);
+	}
+	
+	
+    /*
+        add_event takes no arguments and is called when the add button is selected
+        in the event tab.
+
+        it reacts similarly to the add_character method, but with the unique
+        fields associated with the event tab
+    */ 
+    this.add_event = function() {
+       
+        //Get values stored in the current fields 
+        var eventName = document.getElementById('eventNameBox').value;
+        var isKey = document.getElementById('eventKeyBoxIn').checked;
+        var isSecret = document.getElementById('eventSecretBoxIn').checked;
+        var eventSnip = document.getElementById('snippet').value;
+        var secretSnip = document.getElementById('secretSnippet').value;
+        var tagTurn = document.getElementById('turnTagSel').value;
+		
+        this._add_event(eventName, isKey, isSecret, eventSnip, secretSnip, tagTurn);
 		
 		document.getElementById('eventNameBox').value = "";
         document.getElementById('eventKeyBoxIn').checked = "";
@@ -435,14 +464,12 @@ function toJSONClass() {
 		}
 		
 		$('#secretCollapse').collapse('hide');
-		this.tagKey = 0;
 		
 		//Enable the edit/delete buttons and highlight the selected row
 		document.getElementById('eventEditBtn').disabled = true;
 		document.getElementById('eventDelBtn').disabled = true;
 		document.getElementById('eventTagEditBtn').disabled = true;
 		document.getElementById('eventTagDelBtn').disabled = true;
-		this.eventTags.splice(0,this.eventTags.length);
 	}
 
     this.edit_event = function() {
@@ -557,32 +584,28 @@ function toJSONClass() {
 		document.getElementById('eventTagDelBtn').disabled = true;
     }
 
-    this.add_eventTag = function(){
-        
-        var tagTypeinput = document.getElementById('tagTypeSel').selectedIndex;
+	this._add_eventTag = function(tagTypeinput, selTarget) {
         var tagType = '';
         var currModel = '';
         var currTagKey = 0;
         var currTarget;
         var selTag = '';
         var selTargetText = '';
-        var selTarget = document.getElementById('targetSel');
-
-
-        //Iterate through the charactr/location hash arrays to find the key
+		
+		//Iterate through the charactr/location hash arrays to find the key
         //with the desired target name in order to get the pk of that object
         var key;
         //Check if we need to check through character or location obejects 
         if(tagTypeinput == 0){
             for(key in this.charHash){
-                if(this.hashJSON[this.charHash[key]].pk == selTarget.value){
+                if(this.hashJSON[this.charHash[key]].pk == selTarget){
                     currTarget = this.hashJSON[this.charHash[key]];
                 }
             }
         }
         else{
             for(key in this.locHash){
-                if(this.hashJSON[this.locHash[key]].pk == selTarget.value){
+                if(this.hashJSON[this.locHash[key]].pk == selTarget){
                     currTarget = this.hashJSON[this.locHash[key]];
                 }
             }
@@ -614,8 +637,8 @@ function toJSONClass() {
             tagmodel: currModel,
             tagpk: currTagKey,
             targetpk: currTarget.pk,
-            tagtypeinput:tagType,
-            targetinput:selTarget
+            tagtypeinput: tagType,
+            targetinput: document.getElementById('targetSel')
         };
 		
 		this.tagKey++;
@@ -639,11 +662,19 @@ function toJSONClass() {
         //enable row selection 
         newEventTagElement.addEventListener("click", function(){selEventTag(eventTagObj);});
 		
-		document.getElementById('eventTagEditBtn').disabled = true;
-		document.getElementById('eventTagDelBtn').disabled = true;
-		
         //Push the event tag to the array event object uses
         this.eventTags.push(eventTagObj);
+	}
+	
+    this.add_eventTag = function(){
+        
+        var tagTypeinput = document.getElementById('tagTypeSel').selectedIndex;
+        var selTarget = document.getElementById('targetSel').value;
+		
+		this._add_eventTag(tagTypeinput, selTarget);
+
+		document.getElementById('eventTagEditBtn').disabled = true;
+		document.getElementById('eventTagDelBtn').disabled = true;
     }
 
     this.edit_eventTag = function(){
@@ -801,21 +832,9 @@ function toJSONClass() {
 	document.getElementById('locDelBtn').disabled = true;
     }
 
-    /*
-        add_loc takes no arguments and is called when the add button is selected
-        in the locations tab.
 
-        it reacts similarly to the add_loc method, but with the unique
-        fields associated with the location tab
-    */
-    this.add_loc = function() {
-        
-        var locName = document.getElementById('locNameInput').value;
-        var locCoordX = document.getElementById('locXinput').value;
-        var locCoordY = document.getElementById('locYinput').value;
-
-
-        //Create a location object to match with the fixture.json format
+	this._add_loc = function (locName, locCoordX, locCoordY) {
+		//Create a location object to match with the fixture.json format
         var locObj = {
             model:"editor.location",
             pk:this.locKey,
@@ -853,6 +872,21 @@ function toJSONClass() {
         
         this.locKey++;
         this.hashKey++;
+	}
+    /*
+        add_loc takes no arguments and is called when the add button is selected
+        in the locations tab.
+
+        it reacts similarly to the add_loc method, but with the unique
+        fields associated with the location tab
+    */
+    this.add_loc = function() {
+        
+        var locName = document.getElementById('locNameInput').value;
+        var locCoordX = document.getElementById('locXinput').value;
+        var locCoordY = document.getElementById('locYinput').value;
+
+        this._add_loc(locName, locCoordX, locCoordY);
 		
 		document.getElementById('locNameInput').value = "";
         document.getElementById('locXinput').value = "";
@@ -949,25 +983,8 @@ function toJSONClass() {
 
 
 
-    /*
-        submitJSON method - takes no arguments but is cast on the current object
-        to stringify all elements being currently stored in hashJSON in order
-        to create a JSON object. 
-
-        Also, the fields associated with the field tab are stored in the object 
-        as well. 
-    */
-    this.submitJSON = function(){
-        
-        //Assign the values in the title field 
-        this.name = document.getElementById('titleBox').value;
-        this.turn_num = document.getElementById('turnSpin').value;
-        this.point_num = document.getElementById('pointSpin').value;
-        //Getting the author field populated? Can be done later
-
-
-        //Create a final array that will contain the JSON objects
-        var finalarr = [];
+	this.createJSONArray = function() {
+		var finalarr = [];
 
         scenariomodel = {
             "model": "editor.scenario",
@@ -1099,6 +1116,28 @@ function toJSONClass() {
 
             }
         }
+		return finalarr;
+	}
+	
+    /*
+        submitJSON method - takes no arguments but is cast on the current object
+        to stringify all elements being currently stored in hashJSON in order
+        to create a JSON object. 
+
+        Also, the fields associated with the field tab are stored in the object 
+        as well. 
+    */
+    this.submitJSON = function(){
+        
+        //Assign the values in the title field 
+        this.name = document.getElementById('titleBox').value;
+        this.turn_num = document.getElementById('turnSpin').value;
+        this.point_num = document.getElementById('pointSpin').value;
+        //Getting the author field populated? Can be done later
+
+
+        //Create a final array that will contain the JSON objects
+        finalarr = this.createJSONArray();
 
         //Generate the JSON file using stringify on the JSON array after the 
         //hashmap has been iterated through
@@ -1125,6 +1164,205 @@ function toJSONClass() {
         //of the webpage
         //document.getElementById('dumpLoc').innerHTML = xhttp.responseText;
     }
+	
+	this.saveJSON = function(){
+        
+        //Assign the values in the title field 
+        this.name = document.getElementById('titleBox').value;
+        this.turn_num = document.getElementById('turnSpin').value;
+        this.point_num = document.getElementById('pointSpin').value;
+        //Getting the author field populated? Can be done later
+
+
+        //Create a final array that will contain the JSON objects
+        finalarr = this.createJSONArray();
+
+        //Generate the JSON file using stringify on the JSON array after the 
+        //hashmap has been iterated through
+        var fileUpload = JSON.stringify(finalarr);
+
+		var filename = this.name + ".json";
+		save(filename, fileUpload);
+    }
+	
+	// Adds an event and snippets. EventData becomes empty.
+	this.addEventObject = function(EventData) {
+		// eventName, isKey, isSecret, eventSnip, secretSnip, tagTurn
+		if (EventData.length == 0) {
+			// Left intentionally empty.
+		}
+		else if (EventData.length == 1){
+			this._add_event(EventData[0].pk, false, false, "", "", EventData[0].fields.turn);
+			
+			EventData.pop();
+		}
+		else if (EventData.length == 3){
+			this._add_event(EventData[0].pk, false, false, EventData[1].fields.text, "", EventData[0].fields.turn);
+			
+			EventData.pop();
+			EventData.pop();
+			EventData.pop();
+		}
+		else if (EventData.length == 5){
+			this._add_event(EventData[0].pk, false, true, EventData[1].fields.text, EventData[3].fields.text, EventData[0].fields.turn);
+			
+			EventData.pop();
+			EventData.pop();
+			EventData.pop();
+			EventData.pop();
+			EventData.pop();
+		}
+	}
+	
+	this.processJSON = function(JSONObj) {
+
+		// Need to reset the current data
+		// Currently possibly a mem leak
+		//Scenario properties
+		this.name = 'NULL';
+		this.turn_num = 20;
+		this.point_num = 20;
+		this.author = 'NULL';
+
+		//Unique keys for each of the tabs to uniquely identify objects in the 
+		//hashJSON structure
+		this.hashKey = 0;
+		this.charKey = 0;
+		this.eventKey = 0;
+		this.locKey = 0;
+
+		//need event related keys as well...
+		this.descKey = 0;
+		this.descbyKey = 0;
+		this.happatKey = 0;
+		this.involvKey = 0;
+		this.tagKey = 0;
+		
+		//Used for the event listeners 
+		this.currSelObj = {};
+		this.currSelTag = {};
+
+		//Collection of event tags that will be stored in an event object
+		this.eventTags = [];
+
+		//key hashing arrays for the tab keys so that they can be used in the hashJSON structure
+		this.charHash = [];
+		this.eventHash = [];
+		this.locHash = [];
+		
+		//hashMap to contain input received from the user  
+		this.hashJSON = [];
+		
+		
+
+		var EventData = [];
+		
+		// Need to go thtough the loaded file, adding chars, locs, events, etc.
+		// Look at the various add_char functions for what to do.
+		// Possibly rewrite them for code reuse.
+		for (var key in JSONobj)
+		{
+			try {
+				console.log(key);
+				console.log(JSONobj[key]);
+				console.log("next");
+				
+				// Need to grab the pk probably. Can ignore, assuming they are in order...
+				// Actually will need to subtract 1 from each id.
+				if (JSONobj[key].model == "editor.scenario") {
+					
+					// Possibly something with the author needs to be done.
+
+					this.name = JSONobj[key].fields.name;
+					this.turn_num = JSONobj[key].fields.turn_num;
+					this.point_num = JSONobj[key].fields.point_num;
+					
+					document.getElementById('titleBox').value = this.name;
+					document.getElementById('turnSpin').value = this.turn_num;
+					document.getElementById('pointSpin').value = this.point_num;
+				}
+				else if (JSONobj[key].model == "editor.character") {
+					this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes);
+				}
+				else if (JSONobj[key].model == "editor.location") {
+					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
+				}
+				else if (JSONobj[key].model == "editor.event") {
+					this.addEventObject(EventData);
+					
+					EventData.push(JSONobj[key]);
+				}
+				else if (JSONobj[key].model == "editor.description") { // Always followed by a described by
+					EventData.push(JSONobj[key]);
+					// Do something with these.
+					// JSONobj[key].fields.text;
+					// JSONobj[key].fields.hidden;
+				}
+				else if (JSONobj[key].model == "editor.describedby") {
+					EventData.push(JSONobj[key]);
+					// Do something with these.
+					// JSONobj[key].fields.event_id;
+					// JSONobj[key].fields.description_id;
+				}
+				else if (JSONobj[key].model == "editor.involved") {
+					this.addEventObject(EventData);
+					this._add_eventTag(0, JSONobj[key].fields.character_id-1);
+					// Do something with these.
+					//JSONobj[key].fields.event_id;
+					//JSONobj[key].fields.character_id;
+				}
+				else if (JSONobj[key].model == "editor.happenedat") {
+					this.addEventObject(EventData);
+					this._add_eventTag(1, JSONobj[key].fields.location_id-1);
+					// Do something with these.
+					//JSONobj[key].fields.event_id;
+					//JSONobj[key].fields.location_id;
+				}
+			}
+			catch(err) {
+				console.log(err);
+			}
+		}
+	}
+
+	this.loadFile = function(file) {
+		console.log(file);
+		
+		fr = new FileReader();
+		fr.onload = (function(x) {
+			return function() {
+				try {
+					JSONobj = JSON.parse(fr.result);
+				}
+				catch (err) {
+					// Could not parse.
+					return false;
+				}
+				
+				x.currEdit.processJSON(JSONobj); // Seems odd, but it works...
+			}
+		})(this);
+		
+		fr.readAsText(file);
+	}
+	
+	this.loadJSON = function(){
+		
+		// Need to figure out how to load a file from user localName   
+        this.input.trigger('click');
+		
+		loop(this.input, this.loadFile);
+		
+		function loop(inputVar, callback) {
+		
+			if (inputVar[0].files.length == 0) {
+				setTimeout(loop, 10, inputVar, callback);
+			}
+			else {
+				callback(inputVar[0].files[0]);
+			}
+		}
+	}
 
 
     //method to populate the target selection when character/location is slected

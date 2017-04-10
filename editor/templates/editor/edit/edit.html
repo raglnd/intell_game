@@ -716,14 +716,17 @@
       <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
-          <div class="col-sm-4">
-            <button id="saveBtn" type="button" class="btn btn-block" onclick="currEdit.submitJSON()">Save</button>
+          <div class="col-sm-3">
+			<button id="backBtn" type="button" class="btn btn-block" onclick="javascript:window.location=history.back();">Back</button>
           </div>
-          <div class="col-sm-4">
-            <button id="openBtn" type="button" class="btn btn-block">Open</button>
+          <div class="col-sm-3">
+            <button id="openBtn" type="button" class="btn btn-block" onclick="currEdit.loadJSON()">Open</button>
           </div>
-          <div class="col-sm-4">
-            <button id="closeBtn" type="button" class="btn btn-block">Close</button>
+		  <div class="col-sm-3">
+            <button id="saveBtn" type="button" class="btn btn-block" onclick="currEdit.saveJSON()">Save</button>
+          </div>
+          <div class="col-sm-3">
+            <button id="submitBtn" type="button" class="btn btn-block" onclick="currEdit.submitJSON()">Submit</button>
           </div>
         </div>
       </div>
