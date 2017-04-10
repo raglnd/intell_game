@@ -126,25 +126,25 @@ class Game(models.Model):
 						"recruit": 1, "apprehend": .85, "terminate": .7,
 						"research": 1}
 
-    def __str__(self):
-        return "Game using scenario %s" % (self.scenario.name)
+	def __str__(self):
+		return "Game using scenario %s" % (self.scenario.name)
 
-    def detail_html(self):
-        return "scenario: "+str(self.scenario)
+	def detail_html(self):
+		return "scenario: "+str(self.scenario)
 
 	def get_users(self):
 		users = []
 		for player in self.player_set.all():
 			users += [player.user]
 		return users
-    '''
-    add_player
-        I: player - a user object
-        O: player created and
-            is added to the players field if the game has not started
-            and the player is not in the game already
-            otherwise no change
-    '''
+	'''
+	add_player
+		I: player - a user object
+		O: player created and
+			is added to the players field if the game has not started
+			and the player is not in the game already
+			otherwise no change
+	'''
 	def add_player(self, user):
 		if user not in self.get_users():
 			player = Player(user=user, 
@@ -152,194 +152,194 @@ class Game(models.Model):
 							points=self.scenario.point_num)
 			player.save()
 
-    '''
-    time_till
-        I:
-        O:  if next_turn is defined then return the time till the first turn
-            or the time till the next turn
-    '''
-    def time_till(self):
-        now = make_aware(datetime.now())
-        if self.next_turn is not None:
-            # otherwise get large ugly number of seconds
-            till = self.next_turn - now
-            return till.seconds
+	'''
+	time_till
+		I:
+		O:  if next_turn is defined then return the time till the first turn
+			or the time till the next turn
+	'''
+	def time_till(self):
+		now = make_aware(datetime.now())
+		if self.next_turn is not None:
+			# otherwise get large ugly number of seconds
+			till = self.next_turn - now
+			return till.seconds
 
-    '''
-    is_target_valid
-        I:  an action
-        O:  bool representing if the action is valid (acttarget exists in
-            the appropriate table in the appropriate game
-            If an invalid action is sent generate a Message object for
-            the player
-    '''
-    def is_target_valid(self, action):
-        acttype = action.acttype
-        acttarget = action.acttarget
-        player = action.agent_set.all()[0].player
-        message = Message(player=player, turn=self.turn)
+	'''
+	is_target_valid
+		I:  an action
+		O:  bool representing if the action is valid (acttarget exists in
+			the appropriate table in the appropriate game
+			If an invalid action is sent generate a Message object for
+			the player
+	'''
+	def is_target_valid(self, action):
+		acttype = action.acttype
+		acttarget = action.acttarget
+		player = action.agent_set.all()[0].player
+		message = Message(player=player, turn=self.turn)
 
-        # determine target table
-        # this is evil TODO: change it to if/elif/else
-        try:
-            target_table = {"tail": Character,
-                            "investigate": Location,
-                            "check": Description,
-                            "misInfo": None,
-                            "recruit": None,
-                            "apprehend": Character,
-                            "research": None,
-                            "terminate": Agent}[acttype]
-        except (KeyError):
-            message.text = "bad action type"
-            message.save()
-            return False
+		# determine target table
+		# this is evil TODO: change it to if/elif/else
+		try:
+			target_table = {"tail": Character,
+							"investigate": Location,
+							"check": Description,
+							"misInfo": None,
+							"recruit": None,
+							"apprehend": Character,
+							"research": None,
+							"terminate": Agent}[acttype]
+		except (KeyError):
+			message.text = "bad action type"
+			message.save()
+			return False
 
 
-        if target_table is not None:
-            targets = target_table.objects.filter(pk=acttarget)
-            # should only match one target
-            if len(targets) == 1:
-                target = targets[0]
-                # is the target in the scenario for this game
-                events = self.scenario.event_set.all()
-                if target_table == Character:
-                    # find events involving the character in this game
-                    event_qset = events.filter(
-                        involved=Involved.objects.filter(
-                            character=target
-                        )
-                    )
-                elif target_table == Location:
-                    # find events happenedat the location in this game
-                    event_qset = events.filter(
-                        happenedat=HappenedAt.objects.filter(
-                            location=target
-                        )
-                    )
-                elif target_table == Description:
-                    # find events describedby the description in this game
-                    event_qset = events.filter(
-                        describedby=DescribedBy.objects.filter(
-                            description=target
-                            )
-                    )
-                elif target_table == Agent:
-                    # find agents in this game
-                    agent_qset = Agent.objects.filter(
-                        player__in=self.player_set.all()
-                    )
-                    if target in agent_qset.all():
-                        return True
-                    else:
-                        message.text = "Agent not found"
-                        message.save()
-                        return False
-                else:  # pragma: no cover
-                    message.text = "target table not found"
-                    messave.save()
-                    return False
+		if target_table is not None:
+			targets = target_table.objects.filter(pk=acttarget)
+			# should only match one target
+			if len(targets) == 1:
+				target = targets[0]
+				# is the target in the scenario for this game
+				events = self.scenario.event_set.all()
+				if target_table == Character:
+					# find events involving the character in this game
+					event_qset = events.filter(
+						involved=Involved.objects.filter(
+							character=target
+						)
+					)
+				elif target_table == Location:
+					# find events happenedat the location in this game
+					event_qset = events.filter(
+						happenedat=HappenedAt.objects.filter(
+							location=target
+						)
+					)
+				elif target_table == Description:
+					# find events describedby the description in this game
+					event_qset = events.filter(
+						describedby=DescribedBy.objects.filter(
+							description=target
+							)
+					)
+				elif target_table == Agent:
+					# find agents in this game
+					agent_qset = Agent.objects.filter(
+						player__in=self.player_set.all()
+					)
+					if target in agent_qset.all():
+						return True
+					else:
+						message.text = "Agent not found"
+						message.save()
+						return False
+				else:  # pragma: no cover
+					message.text = "target table not found"
+					messave.save()
+					return False
 
-                if len(event_qset) != 0:
-                    return True
-                else:
-                    message.text = "Event not found"
-                    message.save()
-                    return False
-            else:  # pragma: no cover
-                message.text = "ambiguous target pk"
-                message.save()
-                return False
-        else:
-            if acttype == "misInfo":
-                events = self.scenario.event_set.all()
+				if len(event_qset) != 0:
+					return True
+				else:
+					message.text = "Event not found"
+					message.save()
+					return False
+			else:  # pragma: no cover
+				message.text = "ambiguous target pk"
+				message.save()
+				return False
+		else:
+			if acttype == "misInfo":
+				events = self.scenario.event_set.all()
 
-                actdict = json.loads(action.actdict)
-                if actdict["location"] == "":
-                    message.text = "misinf requires a location"
-                    message.save()
-                    return False
-                if actdict["character"] == "":
-                    message.text = "misinf requires a character"
-                    message.save()
-                    return False
-                character = Character.objects.filter(pk=actdict["character"])
-                location = Location.objects.filter(pk=actdict["location"])
-                text = actdict["description"]
+				actdict = json.loads(action.actdict)
+				if actdict["location"] == "":
+					message.text = "misinf requires a location"
+					message.save()
+					return False
+				if actdict["character"] == "":
+					message.text = "misinf requires a character"
+					message.save()
+					return False
+				character = Character.objects.filter(pk=actdict["character"])
+				location = Location.objects.filter(pk=actdict["location"])
+				text = actdict["description"]
 
-                # character/location exists
-                if len(character) == 1 and len(location) == 1:
-                    # in scenario
-                    character_qset = events.filter(
-                        involved=Involved.objects.filter(
-                            character=character
-                        )
-                    )
-                    location_qset = events.filter(
-                        happenedat=HappenedAt.objects.filter(
-                            location=location
-                        )
-                    )
-                    if len(character_qset) != 0 and len(location_qset) != 0:
-                        return True
-                    else:
-                        message.text = "Character or location not in scenario"
-                        message.save()
-                        return False
-                else:
-                    message.text = "Character or location does not exist"
-                    message.save()
-                    return False
-            # any invalid acttype will throw a key error
-            # so dont worry about bad acttype
-            return True
+				# character/location exists
+				if len(character) == 1 and len(location) == 1:
+					# in scenario
+					character_qset = events.filter(
+						involved=Involved.objects.filter(
+							character=character
+						)
+					)
+					location_qset = events.filter(
+						happenedat=HappenedAt.objects.filter(
+							location=location
+						)
+					)
+					if len(character_qset) != 0 and len(location_qset) != 0:
+						return True
+					else:
+						message.text = "Character or location not in scenario"
+						message.save()
+						return False
+				else:
+					message.text = "Character or location does not exist"
+					message.save()
+					return False
+			# any invalid acttype will throw a key error
+			# so dont worry about bad acttype
+			return True
 
-    '''
-    start_next_turn
-        I:
-        O:  increment turn counter, proccess actions, produce snippets,
-            set next turn time
-    '''
-    def start_next_turn(self):
+	'''
+	start_next_turn
+		I:
+		O:  increment turn counter, proccess actions, produce snippets,
+			set next turn time
+	'''
+	def start_next_turn(self):
 		if (self.gameOver == True):
 			#Destroy the game
-	
-        # next turn
-        self.turn += 1
 
-        # process actions
-        agents_to_proc = []
-        for player in self.player_set.all():
-            # add agents to list
-            agents_to_proc += Agent.objects.filter(player=player, alive=True)
+		# next turn
+		self.turn += 1
 
-        #TODO: decide on order of agents?
-        for agent in agents_to_proc:
-            acttype = agent.action.acttype
-            if acttype in self.ACTION_COSTS.keys():
-                #can player afford it?
-                #TODO: player with multiple agents - can they afford
-                #       all actions? if not how to decide?
-                #       first (agent) come first served?
-                if agent.player.points >= self.ACTION_COSTS[acttype]:
-                    #is the target valid?
-                    if self.is_target_valid(agent.action):
-                        self.perform_action(agent.action)
-                    else:
-                        #action target invalid
-                        #message generated by is_target_valid
-                        pass
-                else:
-                    #player has too few points
-                    message = Message(player=agent.player, turn=self.turn,
-                                      text="too few points to perform %s"%(agent.action))
-                    message.save()
-            else:
-                #action does not exist
-                message = Message(player=agent.player, turn=self.turn,
-                                  text="action %s does not exist"%(agent.action))
-                message.text = "action doesnt exist"
-                message.save()
+		# process actions
+		agents_to_proc = []
+		for player in self.player_set.all():
+			# add agents to list
+			agents_to_proc += Agent.objects.filter(player=player, alive=True)
+
+		#TODO: decide on order of agents?
+		for agent in agents_to_proc:
+			acttype = agent.action.acttype
+			if acttype in self.ACTION_COSTS.keys():
+				#can player afford it?
+				#TODO: player with multiple agents - can they afford
+				#       all actions? if not how to decide?
+				#       first (agent) come first served?
+				if agent.player.points >= self.ACTION_COSTS[acttype]:
+					#is the target valid?
+					if self.is_target_valid(agent.action):
+						self.perform_action(agent.action)
+					else:
+						#action target invalid
+						#message generated by is_target_valid
+						pass
+				else:
+					#player has too few points
+					message = Message(player=agent.player, turn=self.turn,
+									  text="too few points to perform %s"%(agent.action))
+					message.save()
+			else:
+				#action does not exist
+				message = Message(player=agent.player, turn=self.turn,
+								  text="action %s does not exist"%(agent.action))
+				message.text = "action doesnt exist"
+				message.save()
 		
 		#determine if the game is over or not
 		if ((self.turn > self.maxTurns) && (self.gameOver == False)): #the players ran out of turns to catch the key character
@@ -352,141 +352,141 @@ class Game(models.Model):
 			
 		self.next_turn = self.next_turn + self.turn_length
 		
-        #store in db
-        self.save()
+		#store in db
+		self.save()
 
-    '''
-    perform_action
-        I:  an action that has been verified
-        O:  action performed, knowledge created,
-            side effects effected
+	'''
+	perform_action
+		I:  an action that has been verified
+		O:  action performed, knowledge created,
+			side effects effected
 
-        If the action is valid (assumed) then the action will
-        succeed (oh hello hubris)
+		If the action is valid (assumed) then the action will
+		succeed (oh hello hubris)
 
-        TODO: tail, investigate, checInfomisinf, apprehend, terminate
-    '''
-    def perform_action(self, action):
-        player = action.agent_set.all()[0].player
+		TODO: tail, investigate, checInfomisinf, apprehend, terminate
+	'''
+	def perform_action(self, action):
+		player = action.agent_set.all()[0].player
 
-        message = Message()
-        message.player = player
-        message.turn = self.turn
-        if action.acttype == "tail":
-            involveds = Involved.objects.filter(
-                character__id=action.acttarget
-            )
-            for involved in involveds.all():
-                if involved.event.turn <= self.turn:
-                    knowledge = Knowledge(player=player, turn=self.turn,
-                                          event=involved.event)
-                    knowledge.save()
-                    describedbys = DescribedBy.objects.filter(
-                        event=involved.event
-                    )
-                    for describedby in describedbys.all():
-                        if describedby.description.hidden:
-                            #TODO fix this
-                            message.text = "Tailing %s discovered that %s"%(
-                                Character.objects.get(pk=action.acttarget),
-                                describedby.description
-                            )
-                        else:
-                            message.text = "Tailing %s discovered nothing"%(
-                                Character.objects.get(pk=action.acttarget)
-                            )
-                        message.save()
-        elif action.acttype == "investigate":
-            happenedats = HappenedAt.objects.filter(
-                location__id=action.acttarget
-            )
-            for happenedat in happenedats:
-                if happenedat.event.turn <= self.turn:
-                    knowledge = Knowledge(player=player, turn=self.turn,
-                                          event=happenedat.event)
-                    knowledge.save()
-                    describedbys = DescribedBy.objects.filter(
-                        event=happenedat.event
-                    )
-                    for describedby in describedbys.all():
-                        if describedby.description.hidden:
-                            #TODO fix this
-                            message.text = "Investigation into %s discovered that %s"%(
-                                Location.objects.get(pk=action.acttarget),
-                                describedby.description
-                            )
-                        else:
-                            message.text = "Investigation into %s discovered nothing"%(
-                                Location.objects.get(pk=action.acttarget)
-                            )
-                        message.save()
-        elif action.acttype == "check":
-            describedby = DescribedBy.objects.get(
-                description__id=action.acttarget
-            )
-            if describedby.event.turn <= self.turn:
-                knowledge = Knowledge(player=player, turn=self.turn,
-                                      event=describedby.event)
-                knowledge.save()
-                if describedby.event.misinf:
-                    #TODO: fix this
-                    message.text = "The informationt that '%s' has been proven to be false"%(
-                        Description.objects.get(pk=action.acttarget)
-                    )
-                else:
-                    message.text = "The infomration that '%s' has been provent to be true"%(
-                        Description.objects.get(pk=action.acttarget)
-                    )
-                message.save()
-        elif action.acttype == "misInfo":
-            target_dict = json.loads(action.actdict)
-            character_id = target_dict["character"]
-            location_id = target_dict["location"]
-            description_text = target_dict["description"]
+		message = Message()
+		message.player = player
+		message.turn = self.turn
+		if action.acttype == "tail":
+			involveds = Involved.objects.filter(
+				character__id=action.acttarget
+			)
+			for involved in involveds.all():
+				if involved.event.turn <= self.turn:
+					knowledge = Knowledge(player=player, turn=self.turn,
+										  event=involved.event)
+					knowledge.save()
+					describedbys = DescribedBy.objects.filter(
+						event=involved.event
+					)
+					for describedby in describedbys.all():
+						if describedby.description.hidden:
+							#TODO fix this
+							message.text = "Tailing %s discovered that %s"%(
+								Character.objects.get(pk=action.acttarget),
+								describedby.description
+							)
+						else:
+							message.text = "Tailing %s discovered nothing"%(
+								Character.objects.get(pk=action.acttarget)
+							)
+						message.save()
+		elif action.acttype == "investigate":
+			happenedats = HappenedAt.objects.filter(
+				location__id=action.acttarget
+			)
+			for happenedat in happenedats:
+				if happenedat.event.turn <= self.turn:
+					knowledge = Knowledge(player=player, turn=self.turn,
+										  event=happenedat.event)
+					knowledge.save()
+					describedbys = DescribedBy.objects.filter(
+						event=happenedat.event
+					)
+					for describedby in describedbys.all():
+						if describedby.description.hidden:
+							#TODO fix this
+							message.text = "Investigation into %s discovered that %s"%(
+								Location.objects.get(pk=action.acttarget),
+								describedby.description
+							)
+						else:
+							message.text = "Investigation into %s discovered nothing"%(
+								Location.objects.get(pk=action.acttarget)
+							)
+						message.save()
+		elif action.acttype == "check":
+			describedby = DescribedBy.objects.get(
+				description__id=action.acttarget
+			)
+			if describedby.event.turn <= self.turn:
+				knowledge = Knowledge(player=player, turn=self.turn,
+									  event=describedby.event)
+				knowledge.save()
+				if describedby.event.misinf:
+					#TODO: fix this
+					message.text = "The informationt that '%s' has been proven to be false"%(
+						Description.objects.get(pk=action.acttarget)
+					)
+				else:
+					message.text = "The infomration that '%s' has been provent to be true"%(
+						Description.objects.get(pk=action.acttarget)
+					)
+				message.save()
+		elif action.acttype == "misInfo":
+			target_dict = json.loads(action.actdict)
+			character_id = target_dict["character"]
+			location_id = target_dict["location"]
+			description_text = target_dict["description"]
 
-            ## -1 fixes timing
-            event = Event(turn=self.turn, misinf=True)
-            event.scenario = self.scenario
-            event.save()
+			## -1 fixes timing
+			event = Event(turn=self.turn, misinf=True)
+			event.scenario = self.scenario
+			event.save()
 
-            description = Description(text=description_text,
-                                      key=False,
-                                      hidden=False)
-            description.save()
+			description = Description(text=description_text,
+									  key=False,
+									  hidden=False)
+			description.save()
 
-            happenedat = HappenedAt(event=event,
-                                    location_id=location_id)
-            happenedat.save()
-            involved = Involved(event=event,
-                                character_id=character_id)
-            involved.save()
-            describedby = DescribedBy(event=event,
-                                      description=description)
-            describedby.save()
-            knowledge = Knowledge(player=player, turn=self.turn,
-                                  event=event)
-            knowledge.save()
-            misinfo = Misinformation(game=self, event=event)
-            misinfo.save()
+			happenedat = HappenedAt(event=event,
+									location_id=location_id)
+			happenedat.save()
+			involved = Involved(event=event,
+								character_id=character_id)
+			involved.save()
+			describedby = DescribedBy(event=event,
+									  description=description)
+			describedby.save()
+			knowledge = Knowledge(player=player, turn=self.turn,
+								  event=event)
+			knowledge.save()
+			misinfo = Misinformation(game=self, event=event)
+			misinfo.save()
 
-            message.text = "Misinformation that '%s' succesfully diseminated"%(
-                description_text
-            )
-            message.save()
-        elif action.acttype == "recruit":
-            #player gets another agent
-            #TODO: test to ensure new agents cant act
-            #       also that dummy action created has no side effects
-            #       (should just be recorded as an invalid action by
-            #        game.Game.start_next_turn)
-            player.add_agent()
-            message.text = "Agent recruited"
-            message.save()
-        elif action.acttype == "apprehend":
-            character = Character.objects.get(pk=action.acttarget)
-            if (random() < self.ACTION_SUCC_RATE[action.acttype]):
-                if character.key:
-                    #TODO better endgame handling
+			message.text = "Misinformation that '%s' succesfully diseminated"%(
+				description_text
+			)
+			message.save()
+		elif action.acttype == "recruit":
+			#player gets another agent
+			#TODO: test to ensure new agents cant act
+			#       also that dummy action created has no side effects
+			#       (should just be recorded as an invalid action by
+			#        game.Game.start_next_turn)
+			player.add_agent()
+			message.text = "Agent recruited"
+			message.save()
+		elif action.acttype == "apprehend":
+			character = Character.objects.get(pk=action.acttarget)
+			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
+				if character.key:
+					#TODO better endgame handling
 					
 					#Loop through the other players, telling them that they lost.
 					
@@ -503,80 +503,80 @@ class Game(models.Model):
 											text="Another player has captured the key target. You lose.")
 							loseMessage.save()
 					self.gameOver = True		
-                else:
-                    message.text = "%s captured. They are not part of the plot"%(
-                        character
-                    )
-            else:
-                message.text = "%s escaped capture attempt"%(character)
-            message.save()
-        elif action.acttype == "research":
-            #only need to sub (negative) action cost from player
-            pass
-        elif action.acttype == "terminate":
-            if (random() < self.ACTION_SUCC_RATE[action.acttype]):
-                message.text = "Opposing agent terminated"
-                agent = Agent.objects.get(pk=action.acttarget)
-                agent.alive = False
-            else:
-                message.text = "Opposing agent not terminated"
-            message.save()
-        player.points -= self.ACTION_COSTS[action.acttype]
-        player.save()
+				else:
+					message.text = "%s captured. They are not part of the plot"%(
+						character
+					)
+			else:
+				message.text = "%s escaped capture attempt"%(character)
+			message.save()
+		elif action.acttype == "research":
+			#only need to sub (negative) action cost from player
+			pass
+		elif action.acttype == "terminate":
+			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
+				message.text = "Opposing agent terminated"
+				agent = Agent.objects.get(pk=action.acttarget)
+				agent.alive = False
+			else:
+				message.text = "Opposing agent not terminated"
+			message.save()
+		player.points -= self.ACTION_COSTS[action.acttype]
+		player.save()
 
-    '''
-    start
-        I:
-        O:  started becomes true
-            sideffects: players are initialized, start_next_turn used to
-            make next turn environment (turn counter, actions, snippets)
-            initial agents are created, max turns for the game is set
-    '''
-    def start(self):
-        #init players
-        for player in self.player_set.all():
-            #all players get an agent
-            player.add_agent()
+	'''
+	start
+		I:
+		O:  started becomes true
+			sideffects: players are initialized, start_next_turn used to
+			make next turn environment (turn counter, actions, snippets)
+			initial agents are created, max turns for the game is set
+	'''
+	def start(self):
+		#init players
+		for player in self.player_set.all():
+			#all players get an agent
+			player.add_agent()
 
-        #init game
-        self.started = True
-        self.next_turn = make_aware(datetime.now())
+		#init game
+		self.started = True
+		self.next_turn = make_aware(datetime.now())
 		self.maxTurns = self.scenario.turn_num
-        self.save()
+		self.save()
 
-        #init first turn 
-        self.start_next_turn()
+		#init first turn 
+		self.start_next_turn()
 
-    '''
-    get_snippets
-    '''
-    def get_snippets(self):
-        events = Event.objects.filter(scenario=self.scenario,
-                                      turn__lt=self.turn+1)
-        misinf = Misinformation.objects.filter(game=self)
-        misinfevents = [mis.event for mis in misinf]
-        ##build presented events
-        present = []
-        for event in events:
-            if event.misinf:
-                if event in misinfevents:
-                    present.append(event)
-            else:
-                present.append(event)
-        return present
+	'''
+	get_snippets
+	'''
+	def get_snippets(self):
+		events = Event.objects.filter(scenario=self.scenario,
+									  turn__lt=self.turn+1)
+		misinf = Misinformation.objects.filter(game=self)
+		misinfevents = [mis.event for mis in misinf]
+		##build presented events
+		present = []
+		for event in events:
+			if event.misinf:
+				if event in misinfevents:
+					present.append(event)
+			else:
+				present.append(event)
+		return present
 
-    '''
-    check_game
-        I:
-        O:
-    '''
-    def check_game(self):
-        current_time = make_aware(datetime.now())
-        if current_time > self.next_turn:
-            if self.started:
-                self.start_next_turn()
-            else:
-                self.start()
+	'''
+	check_game
+		I:
+		O:
+	'''
+	def check_game(self):
+		current_time = make_aware(datetime.now())
+		if current_time > self.next_turn:
+			if self.started:
+				self.start_next_turn()
+			else:
+				self.start()
 
 '''
 Action
