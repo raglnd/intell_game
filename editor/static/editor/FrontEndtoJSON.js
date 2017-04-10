@@ -1070,6 +1070,31 @@ function toJSONClass() {
 		save(filename, fileUpload);
     }
 	
+	// Adds an event and snippets. EventData becomes empty.
+	this.addEventObject = function(EventData) {
+		// eventName, isKey, isSecret, eventSnip, secretSnip, tagTurn
+		if (EventData.length == 0) {
+			// Left intentionally empty.
+		}
+		else if (EventData.length == 1){
+			this._add_event(EventData[0].pk, false, false, "", "", EventData[0].fields.turn);
+			
+			EventData.pop();
+		}
+		else if (EventData.length == 3){
+			this._add_event(EventData[0].pk, false, false, EventData[2].fields.text, "", EventData[0].fields.turn);
+			
+			EventData.reduce();
+			EventData.pop();
+		}
+		else if (EventData.length == 5){
+			this._add_event(EventData[0].pk, false, true, EventData[2].fields.text, EventData[4].fields.text, EventData[0].fields.turn);
+			
+			EventData.reduce();
+			EventData.pop();
+		}
+	}
+	
 	this.processJSON = function(JSONObj) {
 
 		// Need to reset the current data
@@ -1116,6 +1141,8 @@ function toJSONClass() {
 		for (var key in JSONobj)
 		{
 			try {
+				var EventData = [];
+				
 				console.log(key);
 				console.log(JSONobj[key]);
 				console.log("next");
@@ -1141,31 +1168,35 @@ function toJSONClass() {
 					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
 				}
 				else if (JSONobj[key].model == "editor.event") {
-					this._add_event("", false, false, "", "", JSONobj[key].fields.turn);
-				}
-				else if (JSONobj[key].model == "editor.description") {
+					this.addEventObject(EventData);
 					
+					EventData.push(JSONobj[key]);
+				}
+				else if (JSONobj[key].model == "editor.description") { // Always followed by a described by
+					EventData.push(JSONobj[key]);
 					// Do something with these.
-					JSONobj[key].fields.text;
-					JSONobj[key].fields.hidden;
+					// JSONobj[key].fields.text;
+					// JSONobj[key].fields.hidden;
 				}
 				else if (JSONobj[key].model == "editor.describedby") {
 					
 					// Do something with these.
-					JSONobj[key].fields.event_id;
-					JSONobj[key].fields.description_id;
+					// JSONobj[key].fields.event_id;
+					// JSONobj[key].fields.description_id;
 				}
 				else if (JSONobj[key].model == "editor.involved") {
+					this.addEventObject(EventData);
 					this._add_eventTag(0, JSONobj[key].fields.character_id-1);
 					// Do something with these.
-					JSONobj[key].fields.event_id;
-					JSONobj[key].fields.character_id;
+					//JSONobj[key].fields.event_id;
+					//JSONobj[key].fields.character_id;
 				}
 				else if (JSONobj[key].model == "editor.happenedat") {
+					this.addEventObject(EventData);
 					this._add_eventTag(1, JSONobj[key].fields.location_id-1);
 					// Do something with these.
-					JSONobj[key].fields.event_id;
-					JSONobj[key].fields.location_id;
+					//JSONobj[key].fields.event_id;
+					//JSONobj[key].fields.location_id;
 				}
 			}
 			catch(err) {
