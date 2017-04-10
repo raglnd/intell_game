@@ -1145,7 +1145,7 @@ function toJSONClass() {
 					document.getElementById('pointSpin').value = this.point_num;
 				}
 				else if (JSONobj[key].model == "editor.character") {
-					this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes;);
+					this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes);
 				}
 				else if (JSONobj[key].model == "editor.location") {
 					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
