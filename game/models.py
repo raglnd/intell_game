@@ -340,7 +340,7 @@ class Game(models.Model):
 								  text="action %s does not exist"%(agent.action))
 				message.text = "action doesnt exist"
 				message.save()
-		
+
 		#determine if the game is over or not
 		if ((self.turn > self.maxTurns) && (self.gameOver == False)): #the players ran out of turns to catch the key character
 			#display a message to all players informing them that they lost
@@ -351,7 +351,7 @@ class Game(models.Model):
 			self.gameOver = True
 			
 		self.next_turn = self.next_turn + self.turn_length
-		
+
 		#store in db
 		self.save()
 
