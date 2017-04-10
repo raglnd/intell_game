@@ -1082,14 +1082,14 @@ function toJSONClass() {
 			EventData.pop();
 		}
 		else if (EventData.length == 3){
-			this._add_event(EventData[0].pk, false, false, EventData[2].fields.text, "", EventData[0].fields.turn);
+			this._add_event(EventData[0].pk, false, false, EventData[1].fields.text, "", EventData[0].fields.turn);
 			
 			EventData.pop();
 			EventData.pop();
 			EventData.pop();
 		}
 		else if (EventData.length == 5){
-			this._add_event(EventData[0].pk, false, true, EventData[2].fields.text, EventData[4].fields.text, EventData[0].fields.turn);
+			this._add_event(EventData[0].pk, false, true, EventData[1].fields.text, EventData[3].fields.text, EventData[0].fields.turn);
 			
 			EventData.pop();
 			EventData.pop();
