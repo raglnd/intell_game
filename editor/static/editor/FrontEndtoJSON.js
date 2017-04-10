@@ -1070,11 +1070,11 @@ function toJSONClass() {
 		save(filename, fileUpload);
     }
 	
-	this.processJSON = function(file) {
+	this.loadFile = function(file) {
 		console.log(file);
 		
 		fr = new FileReader();
-		fr.onload = function().apply(this) {
+		fr.onload = (function(cla) {
 			try {
 				JSONobj = JSON.parse(fr.result);
 			}
@@ -1083,107 +1083,109 @@ function toJSONClass() {
 				return false;
 			}
 			
-			// Need to reset the current data
-			// Currently possibly a mem leak
-			//Scenario properties
-			this.name = 'NULL';
-			this.turn_num = 20;
-			this.point_num = 20;
-			this.author = 'NULL';
-
-			//Unique keys for each of the tabs to uniquely identify objects in the 
-			//hashJSON structure
-			this.hashKey = 0;
-			this.charKey = 0;
-			this.eventKey = 0;
-			this.locKey = 0;
-
-			//need event related keys as well...
-			this.descKey = 0;
-			this.descbyKey = 0;
-			this.happatKey = 0;
-			this.involvKey = 0;
-			this.tagKey = 0;
-			
-			//Used for the event listeners 
-			this.currSelObj = {};
-			this.currSelTag = {};
-
-			//Collection of event tags that will be stored in an event object
-			this.eventTags = [];
-
-			//key hashing arrays for the tab keys so that they can be used in the hashJSON structure
-			this.charHash = [];
-			this.eventHash = [];
-			this.locHash = [];
-			
-			//hashMap to contain input received from the user  
-			this.hashJSON = [];
-			
-			
-			// Need to go thtough the loaded file, adding chars, locs, events, etc.
-			// Look at the various add_char functions for what to do.
-			// Possibly rewrite them for code reuse.
-			for (var key in JSONobj)
-			{
-				console.log(key);
-				console.log(JSONobj[key]);
-				console.log("next");
-				
-				// Need to grab the pk probably. Can ignore, assuming they are in order...
-				// Actually will need to subtract 1 from each id.
-				if (JSONobj[key].model == "editor.scenario") {
-					
-					// Possibly something with the author needs to be done.
-
-					this.name = JSONobj[key].fields.name;
-					this.turn_num = JSONobj[key].fields.turn_num;
-					this.point_num = JSONobj[key].fields.point_num;
-					
-					document.getElementById('titleBox').value = this.name;
-					document.getElementById('turnSpin').value = this.turn_num;
-					document.getElementById('pointSpin').value = this.point_num;
-				}
-				else if (JSONobj[key].model == "editor.character") {
-					this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes);
-				}
-				else if (JSONobj[key].model == "editor.location") {
-					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
-				}
-				else if (JSONobj[key].model == "editor.event") {
-					this._add_event("", false, false, "", "", JSONobj[key].fields.turn);
-				}
-				else if (JSONobj[key].model == "editor.description") {
-					
-					// Do something with these.
-					JSONobj[key].fields.text;
-					JSONobj[key].fields.hidden;
-				}
-				else if (JSONobj[key].model == "editor.describedby") {
-					
-					// Do something with these.
-					JSONobj[key].fields.event_id;
-					JSONobj[key].fields.description_id;
-				}
-				else if (JSONobj[key].model == "editor.involved") {
-					this._add_eventTag(0, JSONobj[key].fields.character_id-1);
-					// Do something with these.
-					JSONobj[key].fields.event_id;
-					JSONobj[key].fields.character_id;
-				}
-				else if (JSONobj[key].model == "editor.happenedat") {
-					this._add_eventTag(1, JSONobj[key].fields.location_id-1);
-					// Do something with these.
-					JSONobj[key].fields.event_id;
-					JSONobj[key].fields.location_id;
-				}
-			}
-		};
+			cla.processJSON(JSONobj);
+		})(this);
+		
 		fr.readAsText(file);
-				
+	}
+	
+	this.processJSON = function(JSONObj) {
 
+		// Need to reset the current data
+		// Currently possibly a mem leak
+		//Scenario properties
+		this.name = 'NULL';
+		this.turn_num = 20;
+		this.point_num = 20;
+		this.author = 'NULL';
+
+		//Unique keys for each of the tabs to uniquely identify objects in the 
+		//hashJSON structure
+		this.hashKey = 0;
+		this.charKey = 0;
+		this.eventKey = 0;
+		this.locKey = 0;
+
+		//need event related keys as well...
+		this.descKey = 0;
+		this.descbyKey = 0;
+		this.happatKey = 0;
+		this.involvKey = 0;
+		this.tagKey = 0;
+		
+		//Used for the event listeners 
+		this.currSelObj = {};
+		this.currSelTag = {};
+
+		//Collection of event tags that will be stored in an event object
+		this.eventTags = [];
+
+		//key hashing arrays for the tab keys so that they can be used in the hashJSON structure
+		this.charHash = [];
+		this.eventHash = [];
+		this.locHash = [];
+		
+		//hashMap to contain input received from the user  
+		this.hashJSON = [];
 		
 		
+		// Need to go thtough the loaded file, adding chars, locs, events, etc.
+		// Look at the various add_char functions for what to do.
+		// Possibly rewrite them for code reuse.
+		for (var key in JSONobj)
+		{
+			console.log(key);
+			console.log(JSONobj[key]);
+			console.log("next");
+			
+			// Need to grab the pk probably. Can ignore, assuming they are in order...
+			// Actually will need to subtract 1 from each id.
+			if (JSONobj[key].model == "editor.scenario") {
+				
+				// Possibly something with the author needs to be done.
+
+				this.name = JSONobj[key].fields.name;
+				this.turn_num = JSONobj[key].fields.turn_num;
+				this.point_num = JSONobj[key].fields.point_num;
+				
+				document.getElementById('titleBox').value = this.name;
+				document.getElementById('turnSpin').value = this.turn_num;
+				document.getElementById('pointSpin').value = this.point_num;
+			}
+			else if (JSONobj[key].model == "editor.character") {
+				this._add_char(JSONobj[key].fields.name, JSONobj[key].fields.key, JSONobj[key].fields.notes);
+			}
+			else if (JSONobj[key].model == "editor.location") {
+				this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
+			}
+			else if (JSONobj[key].model == "editor.event") {
+				this._add_event("", false, false, "", "", JSONobj[key].fields.turn);
+			}
+			else if (JSONobj[key].model == "editor.description") {
+				
+				// Do something with these.
+				JSONobj[key].fields.text;
+				JSONobj[key].fields.hidden;
+			}
+			else if (JSONobj[key].model == "editor.describedby") {
+				
+				// Do something with these.
+				JSONobj[key].fields.event_id;
+				JSONobj[key].fields.description_id;
+			}
+			else if (JSONobj[key].model == "editor.involved") {
+				this._add_eventTag(0, JSONobj[key].fields.character_id-1);
+				// Do something with these.
+				JSONobj[key].fields.event_id;
+				JSONobj[key].fields.character_id;
+			}
+			else if (JSONobj[key].model == "editor.happenedat") {
+				this._add_eventTag(1, JSONobj[key].fields.location_id-1);
+				// Do something with these.
+				JSONobj[key].fields.event_id;
+				JSONobj[key].fields.location_id;
+			}
+		}
 	}
 
 	this.loadJSON = function(){
@@ -1191,7 +1193,7 @@ function toJSONClass() {
 		// Need to figure out how to load a file from user localName   
         this.input.trigger('click');
 		
-		loop(this.input, this.processJSON);
+		loop(this.input, this.loadFile);
 		
 		function loop(inputVar, callback) {
 		
