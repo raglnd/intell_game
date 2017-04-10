@@ -85,10 +85,14 @@ Game
     started - indicates if the game has started or not. Used to
                 determine if players may join and where to put
                 the game in the game list view
+	gameOver - Flags when the game should delete itself on the next
+				turn after either a player has won or all players have
+				lost
     creator - User who configured the game. They should have the
                 ability to manage it (down the line. at this point
                 they will not)
     turn - current turn
+	maxTurns - Maximum number of turns for the game
     next_turn - datetime of the next turn. When this time is reached
                 the game should generate the next round of snippets
                 and allow players to access them. Also proccess any
@@ -106,8 +110,10 @@ methods
 class Game(models.Model):
     scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
     started = models.BooleanField(default=False)
+	gameOver = models.BooleanField(default=False)
     creator = models.ForeignKey(User, null=True)
     turn = models.IntegerField(default=0)
+	maxTurns = models.IntegerField(default=20)
     next_turn = models.DateTimeField(null=True)
     turn_length = models.DurationField(default=timedelta(days=1))
 
@@ -117,7 +123,7 @@ class Game(models.Model):
                     "recruit": 3, "apprehend": 5, "terminate": 5,
                     "research": -2}
     ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-                        "recruit": 1, "apprehend": .5, "terminate": .5,
+                        "recruit": 1, "apprehend": .85, "terminate": .7,
                         "research": 1}
 
     def __str__(self):
@@ -295,6 +301,9 @@ class Game(models.Model):
             set next turn time
     '''
     def start_next_turn(self):
+		if (self.gameOver == True):
+			#Destroy the game
+	
         # next turn
         self.turn += 1
 
@@ -331,10 +340,18 @@ class Game(models.Model):
                                   text="action %s does not exist"%(agent.action))
                 message.text = "action doesnt exist"
                 message.save()
-
-        #next turn time
-        self.next_turn = self.next_turn + self.turn_length
-
+		
+		#determine if the game is over or not
+		if ((self.turn > self.maxTurns) && (self.gameOver == False)): #the players ran out of turns to catch the key character
+			#display a message to all players informing them that they lost
+			for player in self.player_set.all():
+				loseMessage = Message(player=player, turn=self.turn,
+									text="The game has exceeded the maximum number of turns. The target has succeeded in their goal. You lose.")
+				loseMessage.save()
+			self.gameOver = True
+			
+		self.next_turn = self.next_turn + self.turn_length
+		
         #store in db
         self.save()
 
@@ -394,7 +411,7 @@ class Game(models.Model):
                     for describedby in describedbys.all():
                         if describedby.description.hidden:
                             #TODO fix this
-                            message.text = "Ivestigation into %s discovered that %s"%(
+                            message.text = "Investigation into %s discovered that %s"%(
                                 Location.objects.get(pk=action.acttarget),
                                 describedby.description
                             )
@@ -470,7 +487,22 @@ class Game(models.Model):
             if (random() < self.ACTION_SUCC_RATE[action.acttype]):
                 if character.key:
                     #TODO better endgame handling
-                    message.text = "%s captured. You win!"%(character)
+					
+					#Loop through the other players, telling them that they lost.
+					
+					#NOTE: What should happen if multiple players catch the key character on the same turn?
+					#Currently, it'll tell each of the winners that they won, as well as (winners - 1) times that they lost.
+					#This needs to be fixed later.
+					for allPlayers in self.player_set.all():
+						if player == allPlayers:
+							#winning player
+							message.text = "%s captured. You win!"%(character)
+						else:
+							#losing players
+							loseMessage = Message(player=allPlayers, turn=self.turn,
+											text="Another player has captured the key target. You lose.")
+							loseMessage.save()
+					self.gameOver = True		
                 else:
                     message.text = "%s captured. They are not part of the plot"%(
                         character
@@ -498,7 +530,7 @@ class Game(models.Model):
         O:  started becomes true
             sideffects: players are initialized, start_next_turn used to
             make next turn environment (turn counter, actions, snippets)
-            initial agents are created
+            initial agents are created, max turns for the game is set
     '''
     def start(self):
         #init players
@@ -509,6 +541,7 @@ class Game(models.Model):
         #init game
         self.started = True
         self.next_turn = make_aware(datetime.now())
+		self.maxTurns = self.scenario.turn_num
         self.save()
 
         #init first turn 
