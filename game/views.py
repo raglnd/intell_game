@@ -401,8 +401,11 @@ def get_own_agents(request, pk):
     if request.user in game.get_users():
         data = []
         for agent in game.player_set.get(user=request.user).agent_set.all():
-            data.append({"pk":agent.pk,"name":agent.name,
-                         "action":agent.action.acttype})
+			#Spring 2017
+			#Only add living agents to the list.
+			if (agent.alive == True):
+				data.append({"pk":agent.pk,"name":agent.name,
+							"action":agent.action.acttype})
         return HttpResponse(json.dumps(data), content_type="application_json")
 
 '''

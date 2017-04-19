@@ -495,6 +495,12 @@ class Game(models.Model):
 				message.text = "Opposing agent terminated"
 				agent = Agent.objects.get(pk=action.acttarget)
 				agent.alive = False
+				
+				#Spring 2017
+				#Alert the player of the terminated agent that their agent is dead.
+				assassinateMessage = Message(player=agent.player, turn=self.turn,
+												text="One of your agents was assassinated by an enemy player!")
+				assassinateMessage.save()
 			else:
 				message.text = "Opposing agent not terminated"
 			message.save()

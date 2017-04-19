@@ -112,7 +112,6 @@
                   <p id="agentWarn" class="bg-danger"></p>
                   <div class="col-sm-5">
                     <select class="form-control" id="agentSel">
-                      <option value="none"></option>
                       {% for agent in agents %}
                       <option value="{{ agent.id }}">{{ agent }}</option>
                       {% empty %}
