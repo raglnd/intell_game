@@ -31,9 +31,7 @@ var Status = (function () {
     check: 0,
     timer: null,
     turn: null,
-	id: null,
 	maxTurn: null,
-	gameOver: null,
     points: null,
     messages: null,
     nextturn: null,
@@ -82,9 +80,7 @@ var Status = (function () {
     xhttp.send();
     var statusJSON = JSON.parse(xhttp.responseText);
     settings.turn = statusJSON.turn;
-	settings.id = statusJSON.id;
 	settings.maxTurn = statusJSON.maxTurn;
-	settings.gameOver = statusJSON.gameOver;
     settings.points = statusJSON.points;
     settings.timer = statusJSON.timer;
     settings.messages = JSON.parse(statusJSON.messages);
@@ -106,31 +102,9 @@ var Status = (function () {
       //TODO: make sure this is sufficient for catching updates (query till
       //        one appears?
       if (settings.check == 1) {
-		if (settings.gameOver == true)
-		{
-			//Spring 2017
-			//Delete the game
-			var key = settings.id;
-			var xhttp = new XMLHttpRequest();
-			xhttp.open("GET", "/game/games/"+key+"/end/", false);
-			xhttp.send();
-			response = JSON.parse(xhttp.responseText);
-			
-			if (response.deleted)
-			{
-				//It worked
-			}
-			else
-			{
-				alert(response.message);
-			}
-		}
-		else
-		{
-			updateStatus();
-			Snippets.update();
-			Actions.update()
-		}
+		updateStatus();
+		Snippets.update();
+		Actions.update()
       }
       settings.check = (settings.check+1)%2;
     } else {

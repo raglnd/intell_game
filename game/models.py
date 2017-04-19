@@ -267,6 +267,12 @@ class Game(models.Model):
 			set next turn time
 	'''
 	def start_next_turn(self):
+		#Spring 2017
+		#Delete game if gameOver was set by the last turn
+		if (self.gameOver == True):
+			self.delete()
+			return
+		
 		# next turn
 		self.turn += 1
 
@@ -550,11 +556,7 @@ class Game(models.Model):
 		current_time = make_aware(datetime.now())
 		if current_time > self.next_turn:
 			if self.started:
-				if (self.gameOver == False):
-					self.start_next_turn()
-				else:
-					#Do nothing. The game will delete itself soon.
-					pass
+				self.start_next_turn()
 			else:
 				self.start()
 

@@ -254,15 +254,11 @@ def get_status(request, pk):
     game.check_game()
     if request.user in game.get_users():
         player = game.player_set.get(user=request.user)
-		id = game.id
-		gameOver = game.gameOver
         points = player.points
         turn = game.turn
 		maxTurn = game.maxTurn
         messages = Message.objects.filter(player=player)
         data = {"points": points,
-				"id": id,
-				"gameOver": gameOver,
                 "turn": turn,
 				"maxTurn": maxTurn,
                 "timer": game.time_till(),
