@@ -36,6 +36,7 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
+	researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -110,10 +111,10 @@ methods
 class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 	started = models.BooleanField(default=False)
-	# gameOver = models.BooleanField(default=False)
 	gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
+	maxTurn = scenario.turn_num
 	next_turn = models.DateTimeField(null=True)
 	turn_length = models.DurationField(default=timedelta(days=1))
 
@@ -252,44 +253,9 @@ class Game(models.Model):
 				return False
 		else:
 			if acttype == "misInfo":
-				events = self.scenario.event_set.all()
-
-				actdict = json.loads(action.actdict)
-				if actdict["location"] == "":
-					message.text = "misinf requires a location"
-					message.save()
-					return False
-				if actdict["character"] == "":
-					message.text = "misinf requires a character"
-					message.save()
-					return False
-				character = Character.objects.filter(pk=actdict["character"])
-				location = Location.objects.filter(pk=actdict["location"])
-				text = actdict["description"]
-
-				# character/location exists
-				if len(character) == 1 and len(location) == 1:
-					# in scenario
-					character_qset = events.filter(
-						involved=Involved.objects.filter(
-							character=character
-						)
-					)
-					location_qset = events.filter(
-						happenedat=HappenedAt.objects.filter(
-							location=location
-						)
-					)
-					if len(character_qset) != 0 and len(location_qset) != 0:
-						return True
-					else:
-						message.text = "Character or location not in scenario"
-						message.save()
-						return False
-				else:
-					message.text = "Character or location does not exist"
-					message.save()
-					return False
+				#Spring 2017 - Removed unncessary references to character and location.
+				#Misinform has no target.
+				pass
 			# any invalid acttype will throw a key error
 			# so dont worry about bad acttype
 			return True
@@ -301,10 +267,12 @@ class Game(models.Model):
 			set next turn time
 	'''
 	def start_next_turn(self):
+		#Spring 2017
+		#Delete game if gameOver was set by the last turn
 		if (self.gameOver == True):
-			#Destroy the game
-			pass
-
+			self.delete()
+			return
+		
 		# next turn
 		self.turn += 1
 
@@ -337,17 +305,28 @@ class Game(models.Model):
 					message.save()
 			else:
 				#action does not exist
-				message = Message(player=agent.player, turn=self.turn,
-								  text="action %s does not exist"%(agent.action))
-				message.text = "action doesnt exist"
-				message.save()
+				#message = Message(player=agent.player, turn=self.turn,
+				#				  text="action %s does not exist"%(agent.action))
+				#message.text = "action doesnt exist"
+				#message.save()
+				
+				#Spring 2017
+				#Instead, make research the default action and preform it.
+				agent.action.acttype = "research"
+				self.perform_action(agent.action)
 
+		#Spring 2017
+		#reset all player's researchedThisTurn to false
+		for player in self.player_set.all():
+			player.researchedThisTurn = False
+
+		#Spring 2017
 		#determine if the game is over or not
-		if ((self.turn > self.scenario.turn_num) and (self.gameOver == False)): #the players ran out of turns to catch the key character
+		if ((self.turn > self.maxTurn) and (self.gameOver == False)): #the players ran out of turns to catch the key character
 			#display a message to all players informing them that they lost
 			for player in self.player_set.all():
 				loseMessage = Message(player=player, turn=self.turn,
-									text="The game has exceeded the maximum number of turns. The target has succeeded in their goal. You lose.")
+									text="The game has exceeded the maximum number of turns. The target has succeeded in their goal. You lose. The game will end shortly.")
 				loseMessage.save()
 			self.gameOver = True
 			
@@ -440,9 +419,8 @@ class Game(models.Model):
 					)
 				message.save()
 		elif action.acttype == "misInfo":
+			#Spring 2017 - Removed unnecessary references to character and location.
 			target_dict = json.loads(action.actdict)
-			character_id = target_dict["character"]
-			location_id = target_dict["location"]
 			description_text = target_dict["description"]
 
 			## -1 fixes timing
@@ -454,13 +432,6 @@ class Game(models.Model):
 									  key=False,
 									  hidden=False)
 			description.save()
-
-			happenedat = HappenedAt(event=event,
-									location_id=location_id)
-			happenedat.save()
-			involved = Involved(event=event,
-								character_id=character_id)
-			involved.save()
 			describedby = DescribedBy(event=event,
 									  description=description)
 			describedby.save()
@@ -497,11 +468,11 @@ class Game(models.Model):
 					for allPlayers in self.player_set.all():
 						if player == allPlayers:
 							#winning player
-							message.text = "%s captured. You win!"%(character)
+							message.text = "%s captured. You win! The game will end shortly."%(character)
 						else:
 							#losing players
 							loseMessage = Message(player=allPlayers, turn=self.turn,
-											text="Another player has captured the key target. You lose.")
+											text="Another player has captured the key target. You lose. The game will end shortly.")
 							loseMessage.save()
 					self.gameOver = True		
 				else:
@@ -512,8 +483,13 @@ class Game(models.Model):
 				message.text = "%s escaped capture attempt"%(character)
 			message.save()
 		elif action.acttype == "research":
-			#only need to sub (negative) action cost from player
-			pass
+			#only need to sub (negative) action cost from player if they haven't researched yet
+			
+			#Spring 2017
+			if (player.researchedThisTurn == True):
+				player.points += self.ACTION_COSTS[action.acttype]; #add back the points gained from researching
+			else:
+				player.researchedThisTurn = True
 		elif action.acttype == "terminate":
 			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
 				message.text = "Opposing agent terminated"
@@ -538,6 +514,11 @@ class Game(models.Model):
 		for player in self.player_set.all():
 			#all players get an agent
 			player.add_agent()
+			
+			#Spring 2017
+			#remove the number of points generated by research, as a research is
+			#performed automatically at the start of the game
+			player.points += self.ACTION_COSTS["research"]
 
 		#init game
 		self.started = True

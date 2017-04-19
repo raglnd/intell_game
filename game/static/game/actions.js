@@ -277,26 +277,6 @@ var Actions = (function () {
   };
   function misinf () {
     if (verifyAgentSelected()) {
-      var characters = Snippets.getCharacters();
-      var locations = Snippets.getLocations();
-      var option;
-      var i;
-
-      clearSelect(settings.misinfCharSel);
-      for (i = 0; i < characters.length; i+=1) {
-        option = document.createElement("option");
-        option.text = characters[i].fields.name;
-        option.value = characters[i].pk;
-        settings.misinfCharSel.add(option);
-      }
-
-      clearSelect(settings.misinfLocSel);
-      for (i = 0; i < locations.length; i+=1) {
-        option = document.createElement("option");
-        option.text = locations[i].fields.name;
-        option.value = locations[i].pk;
-        settings.misinfLocSel.add(option);
-      }
       $("#misinfModal").modal();
     }
   };
