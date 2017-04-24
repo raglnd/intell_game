@@ -436,14 +436,14 @@ class Game(models.Model):
 									  key=False,
 									  hidden=False)
 			description.save()
-			
+
 			happenedat = HappenedAt(event=event,		
- 									location_id=location_id)		
- 			happenedat.save()		
- 			involved = Involved(event=event,		
- 								character_id=character_id)		
- 			involved.save()
-			
+									location_id=location_id)		
+			happenedat.save()		
+			involved = Involved(event=event,		
+								character_id=character_id)		
+			involved.save()
+
 			describedby = DescribedBy(event=event,
 									  description=description)
 			describedby.save()
