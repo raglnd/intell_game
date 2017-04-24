@@ -36,7 +36,8 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
-	researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
+    researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
+    caughtKeyCharacter = False  #tracks if this player caught the key character, used to determine how many players won when the key character was caught
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -93,7 +94,7 @@ Game
                 ability to manage it (down the line. at this point
                 they will not)
     turn - current turn
-	maxTurns - Maximum number of turns for the game
+	maxTurn - Maximum number of turns for the game
     next_turn - datetime of the next turn. When this time is reached
                 the game should generate the next round of snippets
                 and allow players to access them. Also proccess any
@@ -114,7 +115,7 @@ class Game(models.Model):
 	gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
-	maxTurn = scenario.turn_num
+	maxTurn = 20
 	next_turn = models.DateTimeField(null=True)
 	turn_length = models.DurationField(default=timedelta(days=1))
 
@@ -254,8 +255,9 @@ class Game(models.Model):
 		else:
 			if acttype == "misInfo":
 				#Spring 2017 - Removed unncessary references to character and location.
-				#Misinform has no target.
-				pass
+				actdict = json.loads(action.actdict)
+				text = actdict["description"]
+				return True
 			# any invalid acttype will throw a key error
 			# so dont worry about bad acttype
 			return True
@@ -304,21 +306,33 @@ class Game(models.Model):
 									  text="too few points to perform %s"%(agent.action))
 					message.save()
 			else:
-				#action does not exist
-				#message = Message(player=agent.player, turn=self.turn,
-				#				  text="action %s does not exist"%(agent.action))
-				#message.text = "action doesnt exist"
-				#message.save()
-				
 				#Spring 2017
-				#Instead, make research the default action and preform it.
+				#If the action doesn't exist, make it a research action.
 				agent.action.acttype = "research"
 				self.perform_action(agent.action)
+			
+			#After preforming the action, set the default action for next turn to research.
+			agent.action.acttype = "research"
+			agent.save()
 
 		#Spring 2017
 		#reset all player's researchedThisTurn to false
 		for player in self.player_set.all():
 			player.researchedThisTurn = False
+		
+		#Spring 2017
+		#If gameOver = True at this point, then that means that a player has caught the key character.
+		#Loop over all players and tell those who caught the key character that they won. Everyone else lost.
+		if self.gameOver = True:
+			for player in self.player_set.all():
+				if player.caughtKeyCharacter = True:
+					winMessage = Message(player=player, turn=self.turn,
+											text="You captured the key character! You win! The game will end shortly.")
+					winMessage.save()
+				else:
+					loseMessage = Message(player=allPlayers, turn=self.turn,
+											text="Another player has captured the key target. You lose. The game will end shortly.")
+					loseMessage.save()
 
 		#Spring 2017
 		#determine if the game is over or not
@@ -432,16 +446,19 @@ class Game(models.Model):
 									  key=False,
 									  hidden=False)
 			description.save()
+			
 			describedby = DescribedBy(event=event,
 									  description=description)
 			describedby.save()
+			
 			knowledge = Knowledge(player=player, turn=self.turn,
 								  event=event)
 			knowledge.save()
+			
 			misinfo = Misinformation(game=self, event=event)
 			misinfo.save()
 
-			message.text = "Misinformation that '%s' succesfully diseminated"%(
+			message.text = "Misinformation that '%s' succesfully disseminated"%(
 				description_text
 			)
 			message.save()
@@ -458,25 +475,12 @@ class Game(models.Model):
 			character = Character.objects.get(pk=action.acttarget)
 			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
 				if character.key:
-					#TODO better endgame handling
-					
-					#Loop through the other players, telling them that they lost.
-					
-					#NOTE: What should happen if multiple players catch the key character on the same turn?
-					#Currently, it'll tell each of the winners that they won, as well as (winners - 1) times that they lost.
-					#This needs to be fixed later.
-					for allPlayers in self.player_set.all():
-						if player == allPlayers:
-							#winning player
-							message.text = "%s captured. You win! The game will end shortly."%(character)
-						else:
-							#losing players
-							loseMessage = Message(player=allPlayers, turn=self.turn,
-											text="Another player has captured the key target. You lose. The game will end shortly.")
-							loseMessage.save()
+					#Flag the player as having caught the key character. Check after all agents
+					#have gone through this point to see how many winning players there are.
+					player.caughtKeyCharacter = True
 					self.gameOver = True		
 				else:
-					message.text = "%s captured. They are not part of the plot"%(
+					message.text = "%s captured. They are not part of the plot, so they were released."%(
 						character
 					)
 			else:
@@ -488,6 +492,7 @@ class Game(models.Model):
 			#Spring 2017
 			if (player.researchedThisTurn == True):
 				player.points += self.ACTION_COSTS[action.acttype]; #add back the points gained from researching
+				player.save()
 			else:
 				player.researchedThisTurn = True
 		elif action.acttype == "terminate":
@@ -519,11 +524,13 @@ class Game(models.Model):
 			#remove the number of points generated by research, as a research is
 			#performed automatically at the start of the game
 			player.points += self.ACTION_COSTS["research"]
+			player.save()
 
 		#init game
 		self.started = True
 		self.next_turn = make_aware(datetime.now())
-		self.maxTurns = self.scenario.turn_num
+		self.maxTurn = self.scenario.turn_num
+		self.gameOver = False
 		self.save()
 
 		#init first turn 
