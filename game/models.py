@@ -425,7 +425,7 @@ class Game(models.Model):
 			target_dict = json.loads(action.actdict)
 			description_text = target_dict["description"]
 			character_id = 0		
- 			location_id = 0
+			location_id = 0
 
 			## -1 fixes timing
 			event = Event(turn=self.turn, misinf=True)
