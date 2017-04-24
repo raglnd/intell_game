@@ -110,6 +110,7 @@ methods
 '''
 class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+	print(scenario)
 	started = models.BooleanField(default=False)
 	gameOver = False
 	creator = models.ForeignKey(User, null=True)
