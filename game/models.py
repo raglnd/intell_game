@@ -36,7 +36,7 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
-	researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
+    researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
