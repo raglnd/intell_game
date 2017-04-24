@@ -253,9 +253,10 @@ class Game(models.Model):
 				return False
 		else:
 			if acttype == "misInfo":
-				#Spring 2017 - Removed unncessary references to character and location.
-				#Misinform has no target.
-				pass
+				actdict = json.loads(action.actdict)
+				text = actdict["description"]
+				return True
+				
 			# any invalid acttype will throw a key error
 			# so dont worry about bad acttype
 			return True
@@ -432,6 +433,7 @@ class Game(models.Model):
 									  key=False,
 									  hidden=False)
 			description.save()
+
 			describedby = DescribedBy(event=event,
 									  description=description)
 			describedby.save()
@@ -441,7 +443,7 @@ class Game(models.Model):
 			misinfo = Misinformation(game=self, event=event)
 			misinfo.save()
 
-			message.text = "Misinformation that '%s' succesfully diseminated"%(
+			message.text = "Misinformation that '%s' succesfully disseminated"%(
 				description_text
 			)
 			message.save()
