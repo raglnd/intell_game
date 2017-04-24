@@ -529,7 +529,7 @@ class Game(models.Model):
 		#init game
 		self.started = True
 		self.next_turn = make_aware(datetime.now())
-		self.maxTurns = self.scenario.turn_num
+		self.maxTurns = Scenario.turn_num
 		self.save()
 
 		#init first turn 
