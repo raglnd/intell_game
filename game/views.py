@@ -256,9 +256,11 @@ def get_status(request, pk):
         player = game.player_set.get(user=request.user)
         points = player.points
         turn = game.turn
+		maxTurn = game.maxTurn
         messages = Message.objects.filter(player=player)
-        data = {"points": points, 
-                "turn": turn, 
+        data = {"points": points,
+                "turn": turn,
+				"maxTurn": maxTurn,
                 "timer": game.time_till(),
                 "next_turn_at": int(game.next_turn.timestamp()),
                 "messages": serializers.serialize("json", messages)}
@@ -399,8 +401,11 @@ def get_own_agents(request, pk):
     if request.user in game.get_users():
         data = []
         for agent in game.player_set.get(user=request.user).agent_set.all():
-            data.append({"pk":agent.pk,"name":agent.name,
-                         "action":agent.action.acttype})
+			#Spring 2017
+			#Only add living agents to the list.
+			if (agent.alive == True):
+				data.append({"pk":agent.pk,"name":agent.name,
+							"action":agent.action.acttype})
         return HttpResponse(json.dumps(data), content_type="application_json")
 
 '''

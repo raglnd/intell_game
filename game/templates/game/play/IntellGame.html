@@ -112,7 +112,6 @@
                   <p id="agentWarn" class="bg-danger"></p>
                   <div class="col-sm-5">
                     <select class="form-control" id="agentSel">
-                      <option value="none"></option>
                       {% for agent in agents %}
                       <option value="{{ agent.id }}">{{ agent }}</option>
                       {% empty %}
@@ -279,12 +278,6 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="misinfChar">Select a character</label>
-            <select class="form-control" id="misinfCharSel">
-            </select>
-            <label for="misinfLoc">Select a location</label>
-            <select class="form-control" id="misinfLocSel">
-            </select>
             <label for="misinfDesc">Provide a description</label>
             <textarea class="form-control" rows="4" id="misinfDescText"></textarea>
             <button type="submit" class="btn btn-default" id="confirmMisinf"

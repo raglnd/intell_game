@@ -31,6 +31,7 @@ var Status = (function () {
     check: 0,
     timer: null,
     turn: null,
+	maxTurn: null,
     points: null,
     messages: null,
     nextturn: null,
@@ -50,7 +51,7 @@ var Status = (function () {
    */
   function updateStatus () {
     getStatus();
-    settings.turnDisplay.innerHTML = settings.turn;
+    settings.turnDisplay.innerHTML = settings.turn + "/" + settings.maxTurn;
     settings.pointsDisplay.innerHTML = settings.points;
     settings.timerDisplay.timer = settings.timer;
     //populate the message table
@@ -79,6 +80,7 @@ var Status = (function () {
     xhttp.send();
     var statusJSON = JSON.parse(xhttp.responseText);
     settings.turn = statusJSON.turn;
+	settings.maxTurn = statusJSON.maxTurn;
     settings.points = statusJSON.points;
     settings.timer = statusJSON.timer;
     settings.messages = JSON.parse(statusJSON.messages);
@@ -100,9 +102,9 @@ var Status = (function () {
       //TODO: make sure this is sufficient for catching updates (query till
       //        one appears?
       if (settings.check == 1) {
-        updateStatus();
-        Snippets.update();
-        Actions.update()
+		updateStatus();
+		Snippets.update();
+		Actions.update()
       }
       settings.check = (settings.check+1)%2;
     } else {
