@@ -128,9 +128,7 @@ var Actions = (function () {
       sendAction();
     });
     settings.buttons.confirmMisinf.addEventListener("click", function() {
-      settings.actionTarget = {"location": settings.misinfLocSel.value,
-                               "character": settings.misinfCharSel.value,
-                               "description": settings.misinfDescText.value};
+      settings.actionTarget = {"description": settings.misinfDescText.value};
       sendAction();
     });
     settings.buttons.confirmRecruit.addEventListener("click", function() {
