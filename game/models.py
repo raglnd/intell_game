@@ -111,10 +111,10 @@ methods
 class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 	started = models.BooleanField(default=False)
-	self.gameOver = False
+	gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
-	self.maxTurn = Scenario.turn_num
+	maxTurn = Scenario.turn_num
 	next_turn = models.DateTimeField(null=True)
 	turn_length = models.DurationField(default=timedelta(days=1))
 
