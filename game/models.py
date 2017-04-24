@@ -36,7 +36,7 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
-	researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
+    researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -114,7 +114,7 @@ class Game(models.Model):
 	gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
-	maxTurn = scenario.turn_num
+	maxTurn = 20
 	next_turn = models.DateTimeField(null=True)
 	turn_length = models.DurationField(default=timedelta(days=1))
 
@@ -529,7 +529,8 @@ class Game(models.Model):
 		#init game
 		self.started = True
 		self.next_turn = make_aware(datetime.now())
-		self.maxTurns = self.scenario.turn_num
+		self.maxTurn = self.scenario.turn_num
+		self.gameOver = False
 		self.save()
 
 		#init first turn 
