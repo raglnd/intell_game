@@ -396,17 +396,17 @@ get_own_agents
 '''
 @login_required
 def get_own_agents(request, pk):
-    game = Game.objects.get(pk=pk)
-    game.check_game()
-    if request.user in game.get_users():
-        data = []
-        for agent in game.player_set.get(user=request.user).agent_set.all():
+	game = Game.objects.get(pk=pk)
+	game.check_game()
+	if request.user in game.get_users():
+		data = []
+		for agent in game.player_set.get(user=request.user).agent_set.all():
 			#Spring 2017
 			#Only add living agents to the list.
 			if (agent.alive == True):
 				data.append({"pk":agent.pk,"name":agent.name,
 							"action":agent.action.acttype})
-        return HttpResponse(json.dumps(data), content_type="application_json")
+		return HttpResponse(json.dumps(data), content_type="application_json")
 
 '''
 end
