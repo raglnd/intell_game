@@ -253,11 +253,10 @@ class Game(models.Model):
 				return False
 		else:
 			if acttype == "misInfo":
+				events = self.scenario.event_set.all()
 				actdict = json.loads(action.actdict)
-	
-				text = actdict["description"]		
-	
-				return True		
+				text = actdict["description"]
+				return True
 				
 			# any invalid acttype will throw a key error
 			# so dont worry about bad acttype
@@ -425,6 +424,8 @@ class Game(models.Model):
 			#Spring 2017 - Removed unnecessary references to character and location.
 			target_dict = json.loads(action.actdict)
 			description_text = target_dict["description"]
+			character_id = 0		
+ 			location_id = 0
 
 			## -1 fixes timing
 			event = Event(turn=self.turn, misinf=True)
@@ -435,6 +436,14 @@ class Game(models.Model):
 									  key=False,
 									  hidden=False)
 			description.save()
+			
+			happenedat = HappenedAt(event=event,		
+ 									location_id=location_id)		
+ 			happenedat.save()		
+ 			involved = Involved(event=event,		
+ 								character_id=character_id)		
+ 			involved.save()
+			
 			describedby = DescribedBy(event=event,
 									  description=description)
 			describedby.save()
