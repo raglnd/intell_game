@@ -114,7 +114,7 @@ class Game(models.Model):
 	gameOver = False
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
-	# maxTurn = scenario.turn_num
+	maxTurn = 20
 	next_turn = models.DateTimeField(null=True)
 	turn_length = models.DurationField(default=timedelta(days=1))
 
