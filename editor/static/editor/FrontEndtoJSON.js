@@ -137,25 +137,30 @@ function toJSONClass() {
 */
     this.get_sugChar = function() {  
 
-        //Fetch the desired attribute (charName) from the database
+        /* //Fetch the desired attribute (charName) from the database
 	// Coded with help from http://www.tutorialspoint.com/ajax/ajax_database.htm
 	var ajaxRequest;
         ajaxRequest = new XMLHttpRequest();
 
-	var charName = document.getElementById('charNameBox');
-	charName.value = ajaxRequest.responseText;
+	var charName = document.getElementById('charNameBox').value;
+	//charName.value = ajaxRequest.responseText;
 	var isKey = document.getElementById('keyCharBox').checked = false; // default
 	var charNotes = document.getElementById('charComment').value = ""; // default
 
-	ajaxRequest.open("GET", "../../static/editor/databaseAccess.php", true);
-	ajaxRequest.send(); // this db section not currently functional
+	//ajaxRequest.open("GET", "../../static/editor/databaseAccess.php", true);
+	//ajaxRequest.send(); // this db section not currently functional*/
+
+	var charName = document.getElementById('charNameBox').value;
+        var isKey = document.getElementById('keyCharBox').checked = false;
+        var charNotes = document.getElementById('charComment').value = "";
 
         //Create a character object to be used when selSugChar (below) is run
         var charObj = {
             model:"editor.character",
             pk:this.CharKey, 
             fields:{
-                name: charName.value,
+		name: charName,
+                //name: charName.value,
                 key: isKey,
                 notes: charNotes
             }
@@ -176,7 +181,8 @@ function toJSONClass() {
 	}
         var newCharElement = document.getElementById("sugCharsTableBody").insertRow(0);
         cell = newCharElement.insertCell(0);
-        cell.innerHTML = charName.value;
+	cell.innerHTML = charName;
+        //cell.innerHTML = charName.value;
 
         //EventListener used when a row in the character table is selected 
         newCharElement.addEventListener("click", function(){selSugChar(charObj);});

@@ -394,7 +394,7 @@ class Game(models.Model):
                     for describedby in describedbys.all():
                         if describedby.description.hidden:
                             #TODO fix this
-                            message.text = "Ivestigation into %s discovered that %s"%(
+                            message.text = "Investigation into %s discovered that %s"%(
                                 Location.objects.get(pk=action.acttarget),
                                 describedby.description
                             )
@@ -413,11 +413,11 @@ class Game(models.Model):
                 knowledge.save()
                 if describedby.event.misinf:
                     #TODO: fix this
-                    message.text = "The informationt that '%s' has been proven to be false"%(
+                    message.text = "The information that '%s' has been proven to be false"%(
                         Description.objects.get(pk=action.acttarget)
                     )
                 else:
-                    message.text = "The infomration that '%s' has been provent to be true"%(
+                    message.text = "The information that '%s' has been proven to be true"%(
                         Description.objects.get(pk=action.acttarget)
                     )
                 message.save()
