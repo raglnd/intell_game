@@ -324,7 +324,7 @@ class Game(models.Model):
 		#Spring 2017
 		#If gameOver = True at this point, then that means that a player has caught the key character.
 		#Loop over all players and tell those who caught the key character that they won. Everyone else lost.
-		if self.gameOver = True:
+		if self.gameOver:
 			for player in self.player_set.all():
 				if player.caughtKeyCharacter:
 					winMessage = Message(player=player, turn=self.turn,
