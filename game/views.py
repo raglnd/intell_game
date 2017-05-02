@@ -198,7 +198,7 @@ def submit_action(request, pk):
 				#what action
 				actionName = actionDict["action"]
 				#Spring 2017 - Check if player has enough points to perform action.
-				if player.points >= game.ACTION_COSTS[actionName]:
+				if agent.player.points >= self.ACTION_COSTS[actionName]:
 					action = Action(acttype=actionName)
 					if actionName == "misInfo":
 						target_dict = actionDict["target"]
@@ -210,7 +210,7 @@ def submit_action(request, pk):
 				else:
 					#set the action to research and warn the player
 					action = Action(acttype="research")
-					message = Message(player=player, turn=self.turn,
+					message = Message(player=agent.player, turn=self.turn,
 										text="Too few points to perform %s, researching instead."%(actionName))
 					message.save()
 				action.save()
