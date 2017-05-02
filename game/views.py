@@ -185,42 +185,34 @@ submit_action
 '''
 @login_required
 def submit_action(request, pk):
-	if request.method == "POST":
-		#route to player
-		game = Game.objects.get(pk=pk)
-		if request.user in game.get_users():
-			player = game.player_set.get(user=request.user)
-			actionDict = json.loads(str(request.body)[2:-1])
+    if request.method == "POST":
+        #route to player
+        game = Game.objects.get(pk=pk)
+        if request.user in game.get_users():
+            player = game.player_set.get(user=request.user)
+            actionDict = json.loads(str(request.body)[2:-1])
 
-			#does player control?
-			agent = Agent.objects.get(pk=actionDict["agent"])
-			if agent in player.agent_set.all():
-				#what action
-				actionName = actionDict["action"]
-				#Spring 2017 - Check if player has enough points to perform action.
-				if agent.player.points >= self.ACTION_COSTS[acttype]:
-					action = Action(acttype=actionName)
-					if actionName == "misInfo":
-						target_dict = actionDict["target"]
-						action.actdict = json.dumps(target_dict)
-					elif actionName not in ["recruit", "research"]:
-						#(what target)
-						targetKey = actionDict["target"]
-						action.acttarget = targetKey
-				else:
-					#set the action to research and warn the player
-					action = Action(acttype="research")
-					message = Message(player=agent.player, turn=self.turn,
-										text="Too few points to perform %s, researching instead."%(actionName))
-					message.save()
-				action.save()
-				agent.action = action
-				agent.save()
+            #does player control?
+            agent = Agent.objects.get(pk=actionDict["agent"])
+            if agent in player.agent_set.all():
+                #what action
+                actionName = actionDict["action"]
+                action = Action(acttype=actionName)
+                if actionName == "misInfo":
+                    target_dict = actionDict["target"]
+                    action.actdict = json.dumps(target_dict)
+                elif actionName not in ["recruit", "research"]:
+                    #(what target)
+                    targetKey = actionDict["target"]
+                    action.acttarget = targetKey
+                action.save()
+                agent.action = action
+                agent.save()
 
-		context = {"response": request.body}
-	elif request.method == "GET":
-		context = {"response": ""}
-	return render(request, "game/play/submit_action.html", context)
+        context = {"response": request.body}
+    elif request.method == "GET":
+        context = {"response": ""}
+    return render(request, "game/play/submit_action.html", context)
 
 '''
 play

@@ -305,15 +305,14 @@ class Game(models.Model):
 						pass
 				else:
 					#player has too few points, perform research instead
-					#message = Message(player=agent.player, turn=self.turn,
-					#				  text="Too few points to perform %s, researching instead."%(agent.action))
-					#message.save()
-					#action = Action(acttype="research")
-					#action.save()
-					#agent.action = action
-					#agent.save()
-					#self.perform_action(agent.action)
-					pass
+					message = Message(player=agent.player, turn=self.turn,
+									  text="Too few points to perform %s, researching instead."%(agent.action))
+					message.save()
+					action = Action(acttype="research")
+					action.save()
+					agent.action = action
+					agent.save()
+					self.perform_action(agent.action)
 			else:
 				#Spring 2017
 				#If the action doesn't exist, make it a research action.
@@ -344,7 +343,7 @@ class Game(models.Model):
 					pass
 				else:
 					loseMessage = Message(player=allPlayers, turn=self.turn,
-											text="Another player has captured the key target. You lose. The game will be deleted on the next turn.")
+											text="Another player has captured the key target. You lose. The game will end shortly.")
 					loseMessage.save()
 
 		#Spring 2017
@@ -353,7 +352,7 @@ class Game(models.Model):
 			#display a message to all players informing them that they lost
 			for player in self.player_set.all():
 				loseMessage = Message(player=player, turn=self.turn,
-									text="The game has exceeded the maximum number of turns. The target has succeeded in their goal. You lose. The game will be deleted on the next turn.")
+									text="The game has exceeded the maximum number of turns. The target has succeeded in their goal. You lose. The game will end shortly.")
 				loseMessage.save()
 			self.gameOver = True
 			
@@ -490,8 +489,7 @@ class Game(models.Model):
 				if character.key:
 					#Flag the player as having caught the key character. Check after all agents
 					#have gone through this point to see how many winning players there are.
-					message.text = "You captured %s! You win! The game will be deleted on the next turn."%(character)
-
+					message.text = "You captured %s! You win! The game will end shortly."%(character)
 					player.caughtKeyCharacter = True
 					self.gameOver = True
 					self.save()
