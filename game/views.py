@@ -389,8 +389,8 @@ def get_agents(request, pk):
         for player in game.player_set.all():
             if player.user != request.user:
                 #data += player.agent_set.all()
-				#Spring 2017 - Dead agents shouldn't show up in the list of targets
-				data += Agent.objects.filter(player=player, alive=True)
+                #Spring 2017 - Dead agents shouldn't show up in the list of targets
+                data += Agent.objects.filter(player=player, alive=True)
         json = serializers.serialize("json", data)
         return HttpResponse(json, content_type="application_json")
 
