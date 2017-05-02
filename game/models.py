@@ -271,6 +271,10 @@ class Game(models.Model):
 		#Spring 2017
 		#Delete game if gameOver was set by the last turn
 		if (self.gameOver == True):
+			for player in self.player_set.all():
+				message = Message(player=player, turn=self.turn,
+									  text="The game has now ended. Please exit at your convenience.")
+				message.save()
 			self.delete()
 			return
 		
@@ -487,6 +491,7 @@ class Game(models.Model):
 					#Flag the player as having caught the key character. Check after all agents
 					#have gone through this point to see how many winning players there are.
 					message.text = "You captured %s! You win! The game will be deleted on the next turn."%(character)
+
 					player.caughtKeyCharacter = True
 					self.gameOver = True
 					self.save()
