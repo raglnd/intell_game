@@ -332,6 +332,7 @@ class Game(models.Model):
 		#reset all player's researchedThisTurn to false
 		for player in self.player_set.all():
 			player.researchedThisTurn = False
+			player.save()
 		
 		#Spring 2017
 		#If gameOver = True at this point, then that means that a player has caught the key character.
