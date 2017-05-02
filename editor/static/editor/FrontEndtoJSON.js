@@ -369,15 +369,16 @@ function toJSONClass() {
                 turn: tagTurn
             },
 
+            // descKey++ seems bad. - 5/2/17
             description:{
                 descmodel:'editor.description',
-                descpk:this.descKey ++,
+                descpk:this.descKey++,
                 key: isKey,
                 secret: false,
                 snippet: eventSnip,
                 describedby:{
                     descbymodel:'editor.describedby',
-                    descbypk:this.descbyKey ++
+                    descbypk:this.descbyKey++
                 }
             },
 			
@@ -395,6 +396,7 @@ function toJSONClass() {
                 }
 			},
 
+            // All of eventTags.
             tags:this.eventTags.slice()
         };
 
@@ -428,6 +430,7 @@ function toJSONClass() {
         this.descbyKey++;
 			
 		this.tagKey = 0;
+        // Empties out eventTags.
 		this.eventTags.splice(0,this.eventTags.length);
 	}
 	
@@ -491,6 +494,8 @@ function toJSONClass() {
 		editTarget.secretDescription.key = isKey;
 		editTarget.secretDescription.secret = isSecret;
 		editTarget.secretDescription.snippet = secretSnip;
+        
+        // All of eventTags.
 		editTarget.tags = this.eventTags.slice();
 		
 		var table = document.getElementById('eventsTableBody');
@@ -518,7 +523,9 @@ function toJSONClass() {
 		
 		$('#secretCollapse').collapse('hide');
 		
+        // Empties out eventTags.
 		this.eventTags.splice(0,this.eventTags.length);
+        
 		//Enable the edit/delete buttons and highlight the selected row
 		document.getElementById('eventEditBtn').disabled = true;
 		document.getElementById('eventDelBtn').disabled = true;
@@ -1256,6 +1263,7 @@ function toJSONClass() {
 		
 
 		var EventData = [];
+        var eventNum = -1;
 		
 		// Need to go thtough the loaded file, adding chars, locs, events, etc.
 		// Look at the various add_char functions for what to do.
@@ -1288,8 +1296,9 @@ function toJSONClass() {
 					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
 				}
 				else if (JSONobj[key].model == "editor.event") {
-					this.addEventObject(EventData);
-					
+                    eventNum = JSONobj[key].pk;
+                    this.addEventObject(EventData);
+                    
 					EventData.push(JSONobj[key]);
 				}
 				else if (JSONobj[key].model == "editor.description") { // Always followed by a described by
@@ -1305,15 +1314,19 @@ function toJSONClass() {
 					// JSONobj[key].fields.description_id;
 				}
 				else if (JSONobj[key].model == "editor.involved") {
-					this.addEventObject(EventData);
-					this._add_eventTag(0, JSONobj[key].fields.character_id-1);
+					if (eventNum != JSONobj[key].fields.event_id) {
+                        this.addEventObject(EventData);
+                    }
+                    
+					this._add_eventTag(0, JSONobj[key].fields.character_id - 1);
 					// Do something with these.
-					//JSONobj[key].fields.event_id;
 					//JSONobj[key].fields.character_id;
 				}
 				else if (JSONobj[key].model == "editor.happenedat") {
-					this.addEventObject(EventData);
-					this._add_eventTag(1, JSONobj[key].fields.location_id-1);
+                    if (eventNum != JSONobj[key].fields.event_id) {
+                        this.addEventObject(EventData);
+                    }
+					this._add_eventTag(1, JSONobj[key].fields.location_id - 1);
 					// Do something with these.
 					//JSONobj[key].fields.event_id;
 					//JSONobj[key].fields.location_id;
