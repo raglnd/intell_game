@@ -38,6 +38,7 @@ class Player(models.Model):
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
     researchedThisTurn = models.BooleanField(default=False)	#tracks if a research has been done yet for the given turn or not
     caughtKeyCharacter = models.BooleanField(default=False) #tracks if this player caught the key character, used to determine how many players won when the key character was caught
+	numOfLivingAgents = models.IntegerField(default=0) #tracks how many agents the player has left. Increased by one when adding an agent, decreased by one when an agent is assassinated
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -60,6 +61,8 @@ class Player(models.Model):
                       action=action, 
                       player=self)
         agent.save()
+		self.numOfLivingAgents += 1
+		self.save()
 
     '''
     get_knowledge
@@ -285,7 +288,23 @@ class Game(models.Model):
 		agents_to_proc = []
 		for player in self.player_set.all():
 			# add agents to list
-			agents_to_proc += Agent.objects.filter(player=player, alive=True)
+			# Spring 2017 - If the player has no living agents left, they must research until they have the points to recruit an agent.
+			if (player.numOfLivingAgents == 0):
+				if (player.points >= self.ACTION_COSTS["recruit"]):
+					#Recruit a new agent for the player
+					self.perform_action(Action(acttype="recruit"))
+					message = Message(player=player, turn=self.turn,
+									  text="Automatically recruiting an agent this turn.")
+					message.save()
+				else:
+					#Research for the player
+					self.perform_action(Action(acttype="research"))
+					message = Message(player=player, turn=self.turn,
+									  text="Automatically researching this turn.")
+					message.save()
+			else:
+				#Player has at least one agent.
+				agents_to_proc += Agent.objects.filter(player=player, alive=True)
 
 		#TODO: decide on order of agents?
 		for agent in agents_to_proc:
@@ -516,9 +535,20 @@ class Game(models.Model):
 				agent.alive = False
 				
 				#Spring 2017
-				#Alert the player of the terminated agent that their agent is dead.
-				assassinateMessage = Message(player=agent.player, turn=self.turn,
-												text="One of your agents was assassinated by an enemy player!")
+				#Make it so that when players run out of agents, they are forced to recruit a new one ASAP.
+				agent.player.numOfLivingAgents -= 1
+				agent.save()
+				agent.player.save()
+				
+				#Spring 2017
+				#Alert the player of the terminated agent that their agent is dead. If they hve no more agents,
+				#they are told that they must research until they have the points to recruit an agent.
+				if (agent.player.numOfLivingAgents == 0):
+					assassinateMessage = Message(player=agent.player, turn=self.turn,
+													text="Your last agent was assassinated by another player! Until you have the points to recruit another agent, you will research every turn.")
+				else:
+					assassinateMessage = Message(player=agent.player, turn=self.turn,
+													text="One of your agents was assassinated by an enemy player!")
 				assassinateMessage.save()
 			else:
 				message.text = "Opposing agent not terminated"
