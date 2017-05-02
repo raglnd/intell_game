@@ -280,50 +280,50 @@ get_snippets
 '''
 @login_required
 def get_snippets(request, pk):
-    game = Game.objects.get(pk=pk)
-    game.check_game()
-    if request.user in game.get_users():
-        events = game.get_snippets()
-        data = []
-        player = game.player_set.filter(user=request.user)
-        player_knowledge = Knowledge.objects.filter(player=player)
+	game = Game.objects.get(pk=pk)
+	game.check_game()
+	if request.user in game.get_users():
+		events = game.get_snippets()
+		data = []
+		player = game.player_set.filter(user=request.user)
+		player_knowledge = Knowledge.objects.filter(player=player)
 
-        known_events = []
-        for knowledge in player_knowledge.all():
-            if knowledge.event not in known_events:
-                known_events += [knowledge.event]
+		known_events = []
+		for knowledge in player_knowledge.all():
+			if knowledge.event not in known_events:
+				known_events += [knowledge.event]
 
-        for event in events:
-            describedbys = event.describedby_set.all()
-            for describedby in describedbys:
-                edict = {}
-                #check if player knowledge should be relayed
-                if not describedby.description.hidden:
-                    if describedby.event.misinf and \
-                       describedby.event in known_events:
-                        edict["misinf"] = True
-                    else:
-                        edict["misinf"] = False
-                    edict["secret"] = False
-                    edict["text"] = describedby.description.text
-                    edict["turn"] = event.turn
-                    edict["pk"] = describedby.description.pk
-                    data += [edict]
-                else:
-                    edict["misinf"] = False
-                    if describedby.event in known_events:
-                        edict["secret"] = True
-                        edict["text"] = describedby.description.text
-                        edict["turn"] = event.turn
-                        edict["pk"] = describedby.description.pk
-                        data += [edict]
-                    else:
-                        edict["secret"] = False
+		for event in events:
+			describedbys = event.describedby_set.all()
+			for describedby in describedbys:
+				edict = {}
+				#check if player knowledge should be relayed
+				if not describedby.description.hidden:
+					if describedby.event.misinf and \
+						describedby.event in known_events:
+						edict["misinf"] = True
+					else:
+						edict["misinf"] = False
+					edict["secret"] = False
+					edict["text"] = describedby.description.text
+					edict["turn"] = event.turn
+					edict["pk"] = describedby.description.pk
+					data += [edict]
+				else:
+					edict["misinf"] = False
+					if describedby.event in known_events:
+						edict["secret"] = True
+						edict["text"] = describedby.description.text
+						edict["turn"] = event.turn
+						edict["pk"] = describedby.description.pk
+						data += [edict]
+					else:
+						edict["secret"] = False
 
-        ## sort by turn
-        data.sort(key=lambda snippet: snippet["turn"])
-        data = json.dumps(data)
-        return HttpResponse(data, content_type="application_json")
+		## sort by turn
+		data.sort(key=lambda snippet: snippet["turn"])
+		data = json.dumps(data)
+		return HttpResponse(data, content_type="application_json")
 
 '''
 get_characters
@@ -334,20 +334,20 @@ get_characters
 '''
 @login_required
 def get_characters(request, pk):
-    game  = Game.objects.get(pk=pk)
-    game.check_game()
-    if request.user in game.get_users():
-        events = game.get_snippets()
-        data = []
-        pks = []
-        for event in events:
-            involveds = event.involved_set.all()
-            for involved in involveds:
-                if involved.character.pk not in pks:
-                    pks += [involved.character.pk]
-                    data += [involved.character]
-        json = serializers.serialize("json", data)
-        return HttpResponse(json, content_type="application_json")
+	game = Game.objects.get(pk=pk)
+	game.check_game()
+	if request.user in game.get_users():
+		events = game.get_snippets()
+		data = []
+		pks = []
+		for event in events:
+			involveds = event.involved_set.all()
+			for involved in involveds:
+				if involved.character.pk not in pks:
+					pks += [involved.character.pk]
+					data += [involved.character]
+		json = serializers.serialize("json", data)
+		return HttpResponse(json, content_type="application_json")
 
 '''
 get_locations
@@ -358,20 +358,20 @@ get_locations
 '''
 @login_required
 def get_locations(request, pk):
-    game = Game.objects.get(pk=pk)
-    game.check_game()
-    if request.user in game.get_users():
-        events = game.get_snippets()
-        data = []
-        pks = []
-        for event in events:
-            happenedats = event.happenedat_set.all()
-            for happenedat in happenedats:
-                if happenedat.location.pk not in pks:
-                    pks += [happenedat.location.pk]
-                    data += [happenedat.location]
-        json = serializers.serialize("json", data)
-        return HttpResponse(json, content_type="application_json")
+	game = Game.objects.get(pk=pk)
+	game.check_game()
+	if request.user in game.get_users():
+		events = game.get_snippets()
+		data = []
+		pks = []
+		for event in events:
+			happenedats = event.happenedat_set.all()
+			for happenedat in happenedats:
+				if happenedat.location.pk not in pks:
+					pks += [happenedat.location.pk]
+					data += [happenedat.location]
+		json = serializers.serialize("json", data)
+		return HttpResponse(json, content_type="application_json")
 
 '''
 get_agents
@@ -382,17 +382,17 @@ get_agents
 '''
 @login_required
 def get_agents(request, pk):
-    game = Game.objects.get(pk=pk)
-    game.check_game()
-    if request.user in game.get_users():
-        data = []
-        for player in game.player_set.all():
-            if player.user != request.user:
-                #data += player.agent_set.all()
-                #Spring 2017 - Dead agents shouldn't show up in the list of targets
-                data += Agent.objects.filter(player=player, alive=True)
-        json = serializers.serialize("json", data)
-        return HttpResponse(json, content_type="application_json")
+	game = Game.objects.get(pk=pk)
+	game.check_game()
+	if request.user in game.get_users():
+		data = []
+		for player in game.player_set.all():
+			if player.user != request.user:
+				#data += player.agent_set.all()
+				#Spring 2017 - Dead agents shouldn't show up in the list of targets
+				data += Agent.objects.filter(player=player, alive=True)
+		json = serializers.serialize("json", data)
+		return HttpResponse(json, content_type="application_json")
 
 '''
 get_own_agents
@@ -423,11 +423,11 @@ end
 '''
 @login_required
 def end(request, pk):
-    game = Game.objects.get(pk=pk)
-    if request.user == game.creator:
-        game.delete()
-        data = {"deleted": True, "message": "deleted"}
-    else:
-        data = {"deleted": False, "message": "can only delete owned games"}
-    return HttpResponse(json.dumps(data), content_type="application_json")
+	game = Game.objects.get(pk=pk)
+	if request.user == game.creator:
+		game.delete()
+		data = {"deleted": True, "message": "deleted"}
+	else:
+		data = {"deleted": False, "message": "can only delete owned games"}
+	return HttpResponse(json.dumps(data), content_type="application_json")
 
