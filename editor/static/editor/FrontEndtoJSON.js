@@ -369,15 +369,16 @@ function toJSONClass() {
                 turn: tagTurn
             },
 
+            // descKey++ seems bad. - 5/2/17
             description:{
                 descmodel:'editor.description',
-                descpk:this.descKey ++,
+                descpk:this.descKey,
                 key: isKey,
                 secret: false,
                 snippet: eventSnip,
                 describedby:{
                     descbymodel:'editor.describedby',
-                    descbypk:this.descbyKey ++
+                    descbypk:this.descbyKey
                 }
             },
 			
