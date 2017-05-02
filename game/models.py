@@ -36,9 +36,8 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
-    researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
-    caughtKeyCharacter = False  #tracks if this player caught the key character, used to determine how many players won when the key character was caught
-
+    researchedThisTurn = models.BooleanField(default=False)	#tracks if a research has been done yet for the given turn or not
+    caughtKeyCharacter = models.BooleanField(default=False) #tracks if this player caught the key character, used to determine how many players won when the key character was caught
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -113,7 +112,7 @@ methods
 class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 	started = models.BooleanField(default=False)
-	gameOver = False
+	gameOver = models.BooleanField(default=False)
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
 	maxTurn = 20
@@ -325,9 +324,9 @@ class Game(models.Model):
 		#Spring 2017
 		#If gameOver = True at this point, then that means that a player has caught the key character.
 		#Loop over all players and tell those who caught the key character that they won. Everyone else lost.
-		if self.gameOver = True:
+		if self.gameOver:
 			for player in self.player_set.all():
-				if player.caughtKeyCharacter = True:
+				if player.caughtKeyCharacter:
 					winMessage = Message(player=player, turn=self.turn,
 											text="You captured the key character! You win! The game will end shortly.")
 					winMessage.save()
@@ -492,11 +491,10 @@ class Game(models.Model):
 			#only need to sub (negative) action cost from player if they haven't researched yet
 			
 			#Spring 2017
-			if (player.researchedThisTurn == True):
+			if (not player.researchedThisTurn):
 				player.points += self.ACTION_COSTS[action.acttype]; #add back the points gained from researching
-				player.save()
-			else:
 				player.researchedThisTurn = True
+				player.save()
 		elif action.acttype == "terminate":
 			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
 				message.text = "Opposing agent terminated"
