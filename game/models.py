@@ -36,7 +36,8 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
-    researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
+    #researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
+    researchedThisTurn = models.BooleanField(default=False)	#tracks if a research has been done yet for the given turn or not
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -111,7 +112,7 @@ methods
 class Game(models.Model):
 	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
 	started = models.BooleanField(default=False)
-	gameOver = False
+	gameOver = models.BooleanField(default=False)
 	creator = models.ForeignKey(User, null=True)
 	turn = models.IntegerField(default=0)
 	maxTurn = 20
@@ -488,9 +489,8 @@ class Game(models.Model):
 			#only need to sub (negative) action cost from player if they haven't researched yet
 			
 			#Spring 2017
-			if (player.researchedThisTurn == True):
+			if (not player.researchedThisTurn):
 				player.points += self.ACTION_COSTS[action.acttype]; #add back the points gained from researching
-			else:
 				player.researchedThisTurn = True
 		elif action.acttype == "terminate":
 			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
