@@ -256,7 +256,7 @@ def get_status(request, pk):
         player = game.player_set.get(user=request.user)
         points = player.points
         turn = game.turn
-        maxTurn = game.maxTurn
+        maxTurn = game.scenario.turn_num
         messages = Message.objects.filter(player=player)
         data = {"points": points,
                 "turn": turn,
