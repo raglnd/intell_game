@@ -36,9 +36,8 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     names = ["Smith", "Brown", "Jones", "Bond", "Bourne", "Elam", "O'Kane",
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
-    #researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
     researchedThisTurn = models.BooleanField(default=False)	#tracks if a research has been done yet for the given turn or not
-    caughtKeyCharacter = False  #tracks if this player caught the key character, used to determine how many players won when the key character was caught
+    caughtKeyCharacter = models.BooleanField(default=False) #tracks if this player caught the key character, used to determine how many players won when the key character was caught
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
@@ -327,7 +326,7 @@ class Game(models.Model):
 		#Loop over all players and tell those who caught the key character that they won. Everyone else lost.
 		if self.gameOver = True:
 			for player in self.player_set.all():
-				if player.caughtKeyCharacter = True:
+				if player.caughtKeyCharacter:
 					winMessage = Message(player=player, turn=self.turn,
 											text="You captured the key character! You win! The game will end shortly.")
 					winMessage.save()
