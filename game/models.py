@@ -292,16 +292,18 @@ class Game(models.Model):
 			if (player.numOfLivingAgents == 0):
 				if (player.points >= self.ACTION_COSTS["recruit"]):
 					#Recruit a new agent for the player
-					self.perform_action(Action(acttype="recruit"))
+					player.add_agent()
+					player.points -= self.ACTION_COSTS["recruit"]
 					message = Message(player=player, turn=self.turn,
 									  text="Automatically recruiting an agent this turn.")
 					message.save()
 				else:
 					#Research for the player
-					self.perform_action(Action(acttype="research"))
+					player.points -= self.ACTION_COSTS["research"]
 					message = Message(player=player, turn=self.turn,
 									  text="Automatically researching this turn.")
 					message.save()
+				player.save()
 			else:
 				#Player has at least one agent.
 				agents_to_proc += Agent.objects.filter(player=player, alive=True)
