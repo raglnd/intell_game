@@ -61,8 +61,8 @@ class Player(models.Model):
                       action=action, 
                       player=self)
         agent.save()
-		self.numOfLivingAgents += 1
-		self.save()
+        self.numOfLivingAgents += 1
+        self.save()
 
     '''
     get_knowledge
