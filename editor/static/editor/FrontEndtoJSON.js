@@ -1645,7 +1645,7 @@ function selEvent(eventObj) {
 			tagTargetCell.innerHTML = this.currEdit.hashJSON[this.currEdit.charHash[eventObj.tags[i].targetpk]].fields.name;
 		}
 		else if(eventObj.tags[i].tagmodel == "editor.happenedat"){
-			tagTypeCell.innerHTML = "Happend At";
+			tagTypeCell.innerHTML = "Happened At";
 			tagTargetCell.innerHTML = this.currEdit.hashJSON[this.currEdit.locHash[eventObj.tags[i].targetpk]].fields.name;
 		}
 		//enable row selection 
