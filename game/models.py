@@ -38,7 +38,7 @@ class Player(models.Model):
              "Wright", "Campbell", "Fullington", "Washington", "Piwowarski"]
     researchedThisTurn = models.BooleanField(default=False)	#tracks if a research has been done yet for the given turn or not
     caughtKeyCharacter = models.BooleanField(default=False) #tracks if this player caught the key character, used to determine how many players won when the key character was caught
-	numOfLivingAgents = models.IntegerField(default=0) #tracks how many agents the player has left. Increased by one when adding an agent, decreased by one when an agent is assassinated
+    numOfLivingAgents = models.IntegerField(default=0) #tracks how many agents the player has left. Increased by one when adding an agent, decreased by one when an agent is assassinated
 
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
