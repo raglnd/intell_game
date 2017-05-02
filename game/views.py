@@ -198,7 +198,7 @@ def submit_action(request, pk):
 				#what action
 				actionName = actionDict["action"]
 				#Spring 2017 - Check if player has enough points to perform action.
-				if agent.player.points >= self.ACTION_COSTS[actionName]:
+				if agent.player.points >= self.ACTION_COSTS[acttype]:
 					action = Action(acttype=actionName)
 					if actionName == "misInfo":
 						target_dict = actionDict["target"]
