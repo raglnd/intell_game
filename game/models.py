@@ -39,6 +39,7 @@ class Player(models.Model):
     researchedThisTurn = False	#tracks if a research has been done yet for the given turn or not
     caughtKeyCharacter = False  #tracks if this player caught the key character, used to determine how many players won when the key character was caught
 
+
     def __str__(self):
         return "player controlled by %s"%(self.user.username)
 
@@ -258,6 +259,7 @@ class Game(models.Model):
 				actdict = json.loads(action.actdict)
 				text = actdict["description"]
 				return True
+
 			# any invalid acttype will throw a key error
 			# so dont worry about bad acttype
 			return True
@@ -424,11 +426,11 @@ class Game(models.Model):
 				knowledge.save()
 				if describedby.event.misinf:
 					#TODO: fix this
-					message.text = "The informationt that '%s' has been proven to be false"%(
+					message.text = "The information that '%s' has been proven to be false"%(
 						Description.objects.get(pk=action.acttarget)
 					)
 				else:
-					message.text = "The infomration that '%s' has been provent to be true"%(
+					message.text = "The information that '%s' has been proven to be true"%(
 						Description.objects.get(pk=action.acttarget)
 					)
 				message.save()
@@ -446,7 +448,7 @@ class Game(models.Model):
 									  key=False,
 									  hidden=False)
 			description.save()
-			
+
 			describedby = DescribedBy(event=event,
 									  description=description)
 			describedby.save()
@@ -500,6 +502,12 @@ class Game(models.Model):
 				message.text = "Opposing agent terminated"
 				agent = Agent.objects.get(pk=action.acttarget)
 				agent.alive = False
+				
+				#Spring 2017
+				#Alert the player of the terminated agent that their agent is dead.
+				assassinateMessage = Message(player=agent.player, turn=self.turn,
+												text="One of your agents was assassinated by an enemy player!")
+				assassinateMessage.save()
 			else:
 				message.text = "Opposing agent not terminated"
 			message.save()

@@ -405,7 +405,7 @@ def get_own_agents(request, pk):
 			#Only add living agents to the list.
 			if (agent.alive == True):
 				data.append({"pk":agent.pk,"name":agent.name,
-								"action":agent.action.acttype})
+							"action":agent.action.acttype})
 		return HttpResponse(json.dumps(data), content_type="application_json")
 
 '''
