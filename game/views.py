@@ -191,28 +191,28 @@ def submit_action(request, pk):
         if request.user in game.get_users():
             player = game.player_set.get(user=request.user)
             
-			#Spring 2017 - Check if player has any agents. If not, do nothing.
-			if (player.numOfLivingAgents == 0):
-				pass
-			else:
-				actionDict = json.loads(str(request.body)[2:-1])
+            #Spring 2017 - Check if player has any agents. If not, do nothing.
+            if (player.numOfLivingAgents == 0):
+                pass
+            else:
+                actionDict = json.loads(str(request.body)[2:-1])
 
-				#does player control?
-				agent = Agent.objects.get(pk=actionDict["agent"])
-				if agent in player.agent_set.all():
-					#what action
-					actionName = actionDict["action"]
-					action = Action(acttype=actionName)
-					if actionName == "misInfo":
-						target_dict = actionDict["target"]
-						action.actdict = json.dumps(target_dict)
-					elif actionName not in ["recruit", "research"]:
-						#(what target)
-						targetKey = actionDict["target"]
-						action.acttarget = targetKey
-					action.save()
-					agent.action = action
-					agent.save()
+                #does player control?
+                agent = Agent.objects.get(pk=actionDict["agent"])
+                if agent in player.agent_set.all():
+                    #what action
+                    actionName = actionDict["action"]
+                    action = Action(acttype=actionName)
+                    if actionName == "misInfo":
+                        target_dict = actionDict["target"]
+                        action.actdict = json.dumps(target_dict)
+                    elif actionName not in ["recruit", "research"]:
+                        #(what target)
+                        targetKey = actionDict["target"]
+                        action.acttarget = targetKey
+                    action.save()
+                    agent.action = action
+                    agent.save()
 
         context = {"response": request.body}
     elif request.method == "GET":
