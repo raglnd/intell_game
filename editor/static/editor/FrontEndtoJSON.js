@@ -372,13 +372,13 @@ function toJSONClass() {
             // descKey++ seems bad. - 5/2/17
             description:{
                 descmodel:'editor.description',
-                descpk:this.descKey,
+                descpk:this.descKey++,
                 key: isKey,
                 secret: false,
                 snippet: eventSnip,
                 describedby:{
                     descbymodel:'editor.describedby',
-                    descbypk:this.descbyKey
+                    descbypk:this.descbyKey++
                 }
             },
 			
@@ -1307,14 +1307,14 @@ function toJSONClass() {
 				}
 				else if (JSONobj[key].model == "editor.involved") {
 					this.addEventObject(EventData);
-					this._add_eventTag(0, JSONobj[key].fields.character_id-1);
+					this._add_eventTag(0, JSONobj[key].fields.character_id);//-1);
 					// Do something with these.
 					//JSONobj[key].fields.event_id;
 					//JSONobj[key].fields.character_id;
 				}
 				else if (JSONobj[key].model == "editor.happenedat") {
 					this.addEventObject(EventData);
-					this._add_eventTag(1, JSONobj[key].fields.location_id-1);
+					this._add_eventTag(1, JSONobj[key].fields.location_id);//-1);
 					// Do something with these.
 					//JSONobj[key].fields.event_id;
 					//JSONobj[key].fields.location_id;
