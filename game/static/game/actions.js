@@ -213,6 +213,16 @@ var Actions = (function () {
       return false;
     } else {
       settings.agentWarn.innerHTML = "";
+      
+      var agents = Snippets.getOwnAgents();
+      for (i = 0; i < agents.length; i+=1) {
+        if (settings.agentSelect.value == agents[i]["name"]) {
+            setActiveButton(document.getElementById(agents[i]["action"] + "Btn"));
+            
+            break;
+        }
+      }
+      
       return true;
     }
   }

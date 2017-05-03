@@ -86,6 +86,21 @@ var Snippets = (function () {
     return snippets;
   }
 
+  /*  getOwnAgents
+   *    send ajax request to server requesting JSON
+   *    agents
+   */
+  function getOwnAgents () {
+    var csrftoken = Cookies.get("csrftoken");
+    var xhttp = new XMLHttpRequest();
+    //TODO: make async true
+    xhttp.open("GET", "get_own_agents/", false);
+    xhttp.send();
+    response = xhttp.responseText;
+    agents = JSON.parse(response);
+    return agents;
+  }
+  
   /*  getCharacters
    *    send ajax request to server requesting JSON
    *    characters
@@ -123,6 +138,7 @@ var Snippets = (function () {
      */
     getCharacters: getCharacters,
     getLocations: getLocations,
+    getOwnAgents: getOwnAgents,
     getDescriptions: getSnippets,
     init: function () {
       bindUIActions();
