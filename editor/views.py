@@ -65,6 +65,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import Http404
 import json
+from django.http import JsonResponse
 
 # Create your views here.
 '''
@@ -93,6 +94,13 @@ class CharacterList(ListView):
         context = super(CharacterList, self).get_context_data(**kwargs)
         context["tablename"]="character"
         return context
+# added by (added by YJ - Spring 2017) 
+def get_sugCharName(request):
+    character = Character.objects.all().order_by('?')[0];
+    data = {
+	"name": str(character.name),	 
+    }
+    return JsonResponse(data)
 
 class LocationCreate(CreateView):
     template_name = "editor/edit/create_form.html"
@@ -113,6 +121,15 @@ class LocationList(ListView):
         context = super(LocationList, self).get_context_data(**kwargs)
         context["tablename"]="location"
         return context
+# added by (added by YJ - Spring 2017) 
+def get_sugLocInfo(request):
+    location = Location.objects.all().order_by('?')[0];
+    data = {
+	"name": str(location.name),
+	"x": str(location.x),
+	"y": str(location.y),	 
+    }
+    return JsonResponse(data)
 
 class DescriptionCreate(CreateView):
     template_name = "editor/edit/create_form.html"
