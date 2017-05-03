@@ -1277,14 +1277,7 @@ function toJSONClass() {
 		//hashMap to contain input received from the user  
 		this.hashJSON = [];
 		
-		
-
-		var EventData = [];
-        var eventNum = -1;
-		
-		// Need to go thtough the loaded file, adding chars, locs, events, etc.
-		// Look at the various add_char functions for what to do.
-		// Possibly rewrite them for code reuse.
+		// Need to add scenario, chars, and locs first.
 		for (var key in JSONobj)
 		{
 			try {
@@ -1312,7 +1305,25 @@ function toJSONClass() {
 				else if (JSONobj[key].model == "editor.location") {
 					this._add_loc(JSONobj[key].fields.name, JSONobj[key].fields.x, JSONobj[key].fields.y);
 				}
-				else if (JSONobj[key].model == "editor.event") {
+			}
+			catch(err) {
+				console.log(err);
+			}
+		}
+        
+        var EventData = [];
+        var eventNum = -1;
+        
+        // Need to add event data.
+        for (var key in JSONobj)
+		{
+			try {
+				console.log(key);
+				console.log(JSONobj[key]);
+				console.log("next");
+				
+				
+				if (JSONobj[key].model == "editor.event") {
                     eventNum = JSONobj[key].pk;
                     this.addEventObject(EventData);
                     
@@ -1353,6 +1364,9 @@ function toJSONClass() {
 				console.log(err);
 			}
 		}
+        
+        // Add last event if exists.
+        this.addEventObject(EventData);
 	}
 
 	this.loadFile = function(file) {
