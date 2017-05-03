@@ -1,0 +1,1 @@
+[{"model":"editor.scenario","pk":null,"fields":{"name":"","turn_num":"20","point_num":"25"}},{"model":"editor.location","pk":1,"fields":{"name":"Loca","x":"45","y":"343"}},{"model":"editor.location","pk":2,"fields":{"name":"Locb","x":"3432","y":"32525"}},{"model":"editor.location","pk":3,"fields":{"name":"Locc","x":"46","y":"46"}}]

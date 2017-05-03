@@ -146,33 +146,36 @@ function toJSONClass() {
     this.input.attr("type", "file");   
 
 /*
-  	Suggested Characters (added by YJ) 
+  	Suggested Characters (added by YJ - Spring 2017) 
 		Functions like add_char, but with edits
 
 	This function, when run, will add one suggested character
 	name from the database into the character name field.
 */
     this.get_sugChar = function() {  
+	
+	var charName; // AJAX request to get suggested character name
+	$.ajax({ // Relies on get_sugCharName(request) in views.py
+        	url: '../character/get_sugCharName/', // url pattern in urls.py
+        	data: {
+          		'name': charName
+        	},
+        	dataType: 'json',
+		async: false, 
+        	success: function (data) {
+			charName = data["name"];
+        	}
+      	});
 
-        //Fetch the desired attribute (charName) from the database
-	// Coded with help from http://www.tutorialspoint.com/ajax/ajax_database.htm
-	var ajaxRequest;
-        ajaxRequest = new XMLHttpRequest();
-
-	var charName = document.getElementById('charNameBox');
-	charName.value = ajaxRequest.responseText;
-	var isKey = document.getElementById('keyCharBox').checked = false; // default
-	var charNotes = document.getElementById('charComment').value = ""; // default
-
-	ajaxRequest.open("GET", "../../static/editor/databaseAccess.php", true);
-	ajaxRequest.send(); // this db section not currently functional
+	var isKey = document.getElementById('keyCharBox').checked; // default
+	var charNotes = document.getElementById('charComment').value; // default
 
         //Create a character object to be used when selSugChar (below) is run
         var charObj = {
             model:"editor.character",
             pk:this.CharKey, 
             fields:{
-                name: charName.value,
+                name: charName,
                 key: isKey,
                 notes: charNotes
             }
@@ -193,7 +196,7 @@ function toJSONClass() {
 	}
         var newCharElement = document.getElementById("sugCharsTableBody").insertRow(0);
         cell = newCharElement.insertCell(0);
-        cell.innerHTML = charName.value;
+        cell.innerHTML = charName;
 
         //EventListener used when a row in the character table is selected 
         newCharElement.addEventListener("click", function(){selSugChar(charObj);});
@@ -793,11 +796,25 @@ function toJSONClass() {
     */
     this.get_sugLoc = function() {
 
-	// will eventually take this from the database but currently
-	// fills in info from user input boxes
-	var locName = document.getElementById('locNameInput').value;
-        var locCoordX = document.getElementById('locXinput').value;
-        var locCoordY = document.getElementById('locYinput').value;
+	var locName; 
+	var locCoordX;
+	var locCoordY;
+	// AJAX request to get suggested character name
+	$.ajax({ // Relies on get_sugLocInfo(request) in views.py
+        	url: '../location/get_sugLocInfo/', // url pattern in urls.py
+        	data: {
+          		'name': locName,
+			'x': locCoordX,
+			'y': locCoordY
+        	},
+        	dataType: 'json',
+		async: false, 
+        	success: function (data) {
+			locName = data["name"];
+			locCoordX = data["x"];
+			locCoordY = data["y"];
+        	}
+      	});
 
 	//Create a location object to be used by selSugLoc (below)
         var locObj = {
@@ -811,7 +828,7 @@ function toJSONClass() {
         };	
 
 	// Add suggestion location to table --> delete last suggested location
-	var totalRows = document.getElementById('sugLocsTableBody').rows.length-1;
+	var totalRows = document.getElementById('sugLocsTableBody').rows.length;
 	if(totalRows > 0){ // if table isn't empty
 		// modified from del_char function
 		//delete the table element
@@ -1420,39 +1437,31 @@ var prevLoc =0;
 var prevEvent=0;
 
 /*
-    Suggested Character Selection Highlight (added by YJ)
+    Suggested Character Selection Highlight (added by YJ - Spring 2017) 
 	Functions like selChar and selSugChar, but with edits
 
     When run, function will highlight the selected suggestion
     and show suggestion's information in input boxes
 */
 function selSugChar(charObj) {
-
-    //Store current/total rows in order to determine which row is hilighted
+    //Store current/total rows in order to determine which row is highlighted
     var currRow = charObj.pk;
-    var totalRows = document.getElementById('sugCharsTableBody').rows.length-1;
-    
-    //Need to account for case in which the previous character is deleted
-    if(this.prevChar>totalRows){
-        this.prevChar = totalRows;
-    }
     
     //Set fields to those associated with the selected object
     document.getElementById('charNameBox').value = charObj.fields.name;
     document.getElementById('keyCharBox').checked = charObj.fields.key;
     document.getElementById('charComment').value = charObj.fields.notes;
 
-    //Disable the edit/delete buttons and highlight the selected row
+    //Enable the edit/delete buttons and highlight the selected row
     document.getElementById('charEditBtn').disabled = true;
     document.getElementById('charDelBtn').disabled = true;
 
     //Highlight the currently selected item reseting the background of an object
     //that is no longer selected
-    document.getElementById('sugCharsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
-    if (this.prevChar != null && this.prevChar != currRow) {
-        document.getElementById('sugCharsTableBody').rows[totalRows-this.prevChar].cells[0].style.backgroundColor='white';
+    document.getElementById('sugCharsTableBody').rows[0].cells[0].style.backgroundColor='lightblue';
+    if(this.last != null) { // change highlight in character table
+	document.getElementById('charsTableBody').rows[this.last].cells[0].style.backgroundColor='white';
     }
-    this.prevChar = currRow;
 
     //set the current object to the currently selected one
     window.currSelObj = charObj;
@@ -1484,6 +1493,8 @@ function selChar(charObj) {
     //Highlight the currently selected item reseting the background of an object
     //that is no longer selected
     document.getElementById('charsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
+    this.last = totalRows-currRow; // added by YJ - Spring 2017
+    document.getElementById('sugCharsTableBody').rows[0].cells[0].style.backgroundColor='white'; 
     if (this.prevChar != null && this.prevChar != currRow) {
         document.getElementById('charsTableBody').rows[totalRows-this.prevChar].cells[0].style.backgroundColor='white';
     }
@@ -1504,14 +1515,8 @@ function selChar(charObj) {
     Doesn't currently work --> bug with lockey and rowCount
 */
 function selSugLoc(locObj) {
-    //Store current/total rows in order to determine which row is hilighted
+    //Store current/total rows in order to determine which row is highlighted
     var currRow = locObj.pk;
-    var totalRows = document.getElementById('sugLocsTableBody').rows.length -1;
-   
-    //Account the case where previous location was deleted
-    if(this.prevLoc>totalRows){
-        this.prevLoc = totalRows;
-    }
 
     //Set fields to those associated with the selected object
     document.getElementById('locNameInput').value = locObj.fields.name;
@@ -1524,16 +1529,16 @@ function selSugLoc(locObj) {
 
     //Highlight the currently selected item reseting the background of an object
     //that is no longer selected
-    document.getElementById('sugLocsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
-	document.getElementById('sugLocsTableBody').rows[totalRows-currRow].cells[1].style.backgroundColor='lightblue';
-	document.getElementById('sugLocsTableBody').rows[totalRows-currRow].cells[2].style.backgroundColor='lightblue';
-    if (this.prevLoc != null && this.prevLoc != currRow) {
-        document.getElementById('sugLocsTableBody').rows[totalRows-this.prevLoc].cells[0].style.backgroundColor='white';
-	document.getElementById('sugLocsTableBody').rows[totalRows-this.prevLoc].cells[1].style.backgroundColor='white';
-	document.getElementById('sugLocsTableBody').rows[totalRows-this.prevLoc].cells[2].style.backgroundColor='white';
+    document.getElementById('sugLocsTableBody').rows[0].cells[0].style.backgroundColor='lightblue';
+	document.getElementById('sugLocsTableBody').rows[0].cells[1].style.backgroundColor='lightblue';
+	document.getElementById('sugLocsTableBody').rows[0].cells[2].style.backgroundColor='lightblue';
+
+    if(this.last != null) { // change highlight in location table
+	document.getElementById('locsTableBody').rows[this.last].cells[0].style.backgroundColor='white';
+	document.getElementById('locsTableBody').rows[this.last].cells[1].style.backgroundColor='white';
+	document.getElementById('locsTableBody').rows[this.last].cells[2].style.backgroundColor='white';
     }
 
-    this.prevLoc = currRow;
     //set current object to the currently selected one
     window.currSelObj = locObj;
 }
@@ -1566,6 +1571,10 @@ function selLoc(locObj) {
     document.getElementById('locsTableBody').rows[totalRows-currRow].cells[0].style.backgroundColor='lightblue';
 	document.getElementById('locsTableBody').rows[totalRows-currRow].cells[1].style.backgroundColor='lightblue';
 	document.getElementById('locsTableBody').rows[totalRows-currRow].cells[2].style.backgroundColor='lightblue';
+    this.last = totalRows-currRow; // added by YJ - Spring 2017
+    document.getElementById('sugLocsTableBody').rows[0].cells[0].style.backgroundColor='white';
+	document.getElementById('sugLocsTableBody').rows[0].cells[1].style.backgroundColor='white';
+	document.getElementById('sugLocsTableBody').rows[0].cells[2].style.backgroundColor='white';
     if (this.prevLoc != null && this.prevLoc != currRow) {
         document.getElementById('locsTableBody').rows[totalRows-this.prevLoc].cells[0].style.backgroundColor='white';
 		document.getElementById('locsTableBody').rows[totalRows-this.prevLoc].cells[1].style.backgroundColor='white';

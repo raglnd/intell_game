@@ -31,12 +31,16 @@ urlpatterns = [
     url(r'^edit/character/add/$', views.CharacterCreate.as_view(), name="character-add"),
     url(r'^edit/character/(?P<pk>[0-9]+)/$', views.CharacterUpdate.as_view(), name="character-update"),
     url(r'^edit/character/(?P<pk>[0-9]+)/delete/$', views.CharacterDelete.as_view(), name="character-delete"),
+    # for suggested characters (added by YJ - Spring 2017) 
+    url(r'^character/get_sugCharName/$', views.get_sugCharName, name="get_sugCharName"),
 
     #manual html location pages
     url(r'^edit/location/$', views.LocationList.as_view(), name="character-view"),
     url(r'^edit/location/add/$', views.LocationCreate.as_view(), name="character-add"),
     url(r'^edit/location/(?P<pk>[0-9]+)/$', views.LocationUpdate.as_view(), name="character-update"),
     url(r'^edit/location/(?P<pk>[0-9]+)/delete/$', views.LocationDelete.as_view(), name="character-delete"),
+    # for suggested locations (added by YJ - Spring 2017) 
+    url(r'^location/get_sugLocInfo/$', views.get_sugLocInfo, name="get_sugLocInfo"),
     
     #manual html description pages
     url(r'^edit/description/$', views.DescriptionList.as_view(), name="character-view"),
