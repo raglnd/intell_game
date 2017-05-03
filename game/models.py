@@ -287,6 +287,14 @@ class Game(models.Model):
 		# process actions
 		agents_to_proc = []
 		for player in self.player_set.all():
+			for agent in player.agent_set.all():
+				agentMessage = Message(player=player, turn=self.turn,
+										text=agent.alive)
+				agentMessage.save()
+		
+		
+		
+		
 			# add agents to list
 			# Spring 2017 - If the player has no living agents left, they must research until they have the points to recruit an agent.
 			if (player.numOfLivingAgents == 0):
@@ -539,8 +547,8 @@ class Game(models.Model):
 				#Spring 2017
 				#Make it so that when players run out of agents, they are forced to recruit a new one ASAP.
 				agent.player.numOfLivingAgents -= 1
-				agent.save()
 				agent.player.save()
+				agent.save()
 				
 				#Spring 2017
 				#Alert the player of the terminated agent that their agent is dead. If they hve no more agents,
