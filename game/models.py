@@ -395,6 +395,13 @@ class Game(models.Model):
 	'''
 	def perform_action(self, action):
 		player = action.agent_set.all()[0].player
+		
+		debugMessage = Message(player=player, turn=self.turn,
+								text=str(action.agent_set.all()[0]))
+		debugMessage.save()
+		debugMessage2 = Message(player=player, turn=self.turn,
+								text=str(action.agent_set.all()[0].player))
+		debugMessage2.save()
 
 		message = Message()
 		message.player = player
@@ -534,16 +541,12 @@ class Game(models.Model):
 			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
 				message.text = "Opposing agent terminated"
 				agent = Agent.objects.get(pk=action.acttarget)
-				player = agent.player
+				terminatePlayer = agent.player
 				agent.alive = False
 				agent.save()
 				#Spring 2017 - Make it so that a player's number of agents is counted.
-				player.numOfLivingAgents -= 1
-				player.save()
-				
-				agentMessage = Message(player=player, turn=self.turn,
-										text="Agent ID: "+str(action.acttarget)+" Agent Name: "+str(agent.name)+" Agent Alive Status: "+str(agent.alive))
-				agentMessage.save()
+				terminatePlayer.numOfLivingAgents -= 1
+				terminatePlayer.save()
 				
 				#Spring 2017
 				#Alert the player of the terminated agent that their agent is dead. If they hve no more agents,
