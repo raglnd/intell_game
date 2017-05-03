@@ -126,7 +126,7 @@ class Game(models.Model):
 					"recruit": 3, "apprehend": 5, "terminate": 5,
 					"research": -2}
 	ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-						"recruit": 1, "apprehend": .85, "terminate": .7,
+						"recruit": 1, "apprehend": .85, "terminate": 1,
 						"research": 1}
 
 	def __str__(self):
@@ -537,7 +537,7 @@ class Game(models.Model):
 				agent.alive = False
 				
 				agentMessage = Message(player=player, turn=self.turn,
-										text="Agent ID: "+action.acttarget+" Agent Name: "+agent.name+" Agent Alive Status: "+agent.alive)
+										text="Agent ID: "+str(action.acttarget)+" Agent Name: "+str(agent.name)+" Agent Alive Status: "+str(agent.alive))
 				agentMessage.save()
 				
 				#Spring 2017
