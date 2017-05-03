@@ -1,0 +1,1 @@
+[{"model":"editor.scenario","pk":null,"fields":{"name":"","turn_num":"20","point_num":"25"}},{"model":"editor.character","pk":1,"fields":{"name":"Char1","key":true,"notes":"etwtew"}},{"model":"editor.character","pk":2,"fields":{"name":"Char2","key":false,"notes":"eyrtre"}},{"model":"editor.character","pk":3,"fields":{"name":"Char3","key":false,"notes":""}}]

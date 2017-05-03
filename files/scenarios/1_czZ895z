@@ -1,0 +1,1575 @@
+[
+    {
+        "model": "editor.scenario",
+        "fields": {
+            "name": "Fixture",
+            "turn_num": 25,
+            "point_num": 20
+        }
+    },
+
+    {
+        "model": "editor.character",
+        "pk": 1,
+        "fields": {
+            "name": "Ted Kaczynski",
+            "key": true
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 2,
+        "fields": {
+            "name": "Dr. Stefan Leader",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 3,
+        "fields": {
+            "name": "Mata Hari",
+            "key": true
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 4,
+        "fields": {
+            "name": "Timothy McVeigh",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 5,
+        "fields": {
+            "name": "Jonathan James",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 6,
+        "fields": {
+            "name": "Adrian Lamo",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 7,
+        "fields": {
+            "name": "Osama Bin Laden",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 8,
+        "fields": {
+            "name": "Abu Musab Al-Zarqawi",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 9,
+        "fields": {
+            "name": "Alexander Kalashov",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 10,
+        "fields": {
+            "name": "Fidel Castro",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 11,
+        "fields": {
+            "name": "Yasser Arafat",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 12,
+        "fields": {
+            "name": "Kim Jong-il",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 13,
+        "fields": {
+            "name": "Khalid Mash'al",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 14,
+        "fields": {
+            "name": "Hassan Nasrallah",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 15,
+        "fields": {
+            "name": "Michael McKevitt",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 16,
+        "fields": {
+            "name": "Eduardo Arellano Felix",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 17,
+        "fields": {
+            "name": "Pablo Escobar",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 18,
+        "fields": {
+            "name": "Adolf Hitler",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 19,
+        "fields": {
+            "name": "Joseph Stalin",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 20,
+        "fields": {
+            "name": "Pol Pot",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 21,
+        "fields": {
+            "name": "Idi Amin Dada",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 22,
+        "fields": {
+            "name": "Ayatollah Khomeini",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 23,
+        "fields": {
+            "name": "Pedro Alonso Lopez",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 24,
+        "fields": {
+            "name": "Henry Lee Lucas",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 25,
+        "fields": {
+            "name": "Nidal Malik Hassan",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 26,
+        "fields": {
+            "name": "Charles Whitman",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 27,
+        "fields": {
+            "name": "Patty Hearst",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 28,
+        "fields": {
+            "name": "Fusako Shigenobu",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.character",
+        "pk": 29,
+        "fields": {
+            "name": "Leida Khaled",
+            "key": false
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 1,
+        "fields": {
+            "name": "Seattle",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 2,
+        "fields": {
+            "name": "SanFrancisco",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 3,
+        "fields": {
+            "name": "Chicago",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 4,
+        "fields": {
+            "name": "Houston",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 5,
+        "fields": {
+            "name": "NewYork",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 6,
+        "fields": {
+            "name": "Wash.DC",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 7,
+        "fields": {
+            "name": "MexicoCity",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 8,
+        "fields": {
+            "name": "Bogota",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 9,
+        "fields": {
+            "name": "Lima",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 10,
+        "fields": {
+            "name": "BuenosAires",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 11,
+        "fields": {
+            "name": "SanPaulo",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 12,
+        "fields": {
+            "name": "Johannesburg",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 13,
+        "fields": {
+            "name": "Lagos",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 14,
+        "fields": {
+            "name": "Algiers",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 15,
+        "fields": {
+            "name": "Cairo",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 16,
+        "fields": {
+            "name": "Riyadh",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 17,
+        "fields": {
+            "name": "Baghdad",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 18,
+        "fields": {
+            "name": "Jerusalem",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 19,
+        "fields": {
+            "name": "Istanbul",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 20,
+        "fields": {
+            "name": "Rome",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 21,
+        "fields": {
+            "name": "Madrid",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 22,
+        "fields": {
+            "name": "Paris",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 23,
+        "fields": {
+            "name": "Berlin",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 24,
+        "fields": {
+            "name": "London",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 25,
+        "fields": {
+            "name": "Moscow",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 26,
+        "fields": {
+            "name": "Mumbai",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 27,
+        "fields": {
+            "name": "Bangkok",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 28,
+        "fields": {
+            "name": "Singapore",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 29,
+        "fields": {
+            "name": "HongKong",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 30,
+        "fields": {
+            "name": "Beijing",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 31,
+        "fields": {
+            "name": "Seoul",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 32,
+        "fields": {
+            "name": "Tokyo",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.location",
+        "pk": 33,
+        "fields": {
+            "name": "Sidney",
+            "x": 0,
+            "y": 0
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 1,
+        "fields": {
+            "turn":  1
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 1,
+        "fields": {
+            "text": "Correspondence levels increase between Idi Amin and Hassan Nasrallah",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 1,
+        "fields": {
+            "event_id": 1,
+            "description_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 1,
+        "fields": {
+            "event_id": 1,
+            "character_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 2,
+        "fields": {
+            "turn":  2
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 2,
+        "fields": {
+            "text": "Hassan Nasrallah corresponds with Mata Hari and Adof Hitler",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 2,
+        "fields": {
+            "event_id": 2,
+            "description_id": 2
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 2,
+        "fields": {
+            "event_id": 2,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 3,
+        "fields": {
+            "event_id": 2,
+            "character_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 3,
+        "fields": {
+            "turn":  3
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 3,
+        "fields": {
+            "text": "Major Arms sell occurs in Palestine and Syria",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 3,
+        "fields": {
+            "event_id": 3,
+            "description_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 4,
+        "fields": {
+            "turn":  4
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 4,
+        "fields": {
+            "text": "Major financial transaction occurs Iran to Idi Amin",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 4,
+        "fields": {
+            "event_id": 4,
+            "description_id": 4
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 5,
+        "fields": {
+            "turn":  5
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 5,
+        "fields": {
+            "text": "Hassan Nasrallah visits NYC and Idi Amin",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 5,
+        "fields": {
+            "event_id": 5,
+            "description_id": 5
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 4,
+        "fields": {
+            "event_id": 5,
+            "character_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 6,
+        "fields": {
+            "turn":  6
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 6,
+        "fields": {
+            "text": "Mata Hari travels to Seattle and meets with Hassan Nasrallah",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 6,
+        "fields": {
+            "event_id": 6,
+            "description_id": 6
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 5,
+        "fields": {
+            "event_id": 6,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 6,
+        "fields": {
+            "event_id": 6,
+            "character_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 1,
+        "fields": {
+            "event_id": 6,
+            "location_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 7,
+        "fields": {
+            "turn":  7
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 7,
+        "fields": {
+            "text": "Adolf Hitler travels to Seattle and meets with Hassan Nasrallah",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 7,
+        "fields": {
+            "event_id": 7,
+            "description_id": 7
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 7,
+        "fields": {
+            "event_id": 7,
+            "character_id": 18
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 8,
+        "fields": {
+            "event_id": 7,
+            "character_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 2,
+        "fields": {
+            "event_id": 7,
+            "location_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 8,
+        "fields": {
+            "turn":  8
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 8,
+        "fields": {
+            "text": "Mata Hari meets with Ted Kaczynski in Midway; Texas",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 8,
+        "fields": {
+            "event_id": 8,
+            "description_id": 8
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 9,
+        "fields": {
+            "event_id": 8,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 10,
+        "fields": {
+            "event_id": 8,
+            "character_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 9,
+        "fields": {
+            "turn":  9
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 9,
+        "fields": {
+            "text": "Adolf Hitler meets with Pol Pot in Houston",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 9,
+        "fields": {
+            "event_id": 9,
+            "description_id": 9
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 11,
+        "fields": {
+            "event_id": 9,
+            "character_id": 18
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 12,
+        "fields": {
+            "event_id": 9,
+            "character_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 3,
+        "fields": {
+            "event_id": 9,
+            "location_id": 4
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 10,
+        "fields": {
+            "turn":  10
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 10,
+        "fields": {
+            "text": "Pol Pot receives large transaction of funds into account",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 10,
+        "fields": {
+            "event_id": 10,
+            "description_id": 10
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 13,
+        "fields": {
+            "event_id": 10,
+            "character_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 11,
+        "fields": {
+            "turn":  11
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 11,
+        "fields": {
+            "text": "Ted Kaczynski travels to Dallas/Fort Worth and visits old friends in water systems",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 11,
+        "fields": {
+            "event_id": 11,
+            "description_id": 11
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 14,
+        "fields": {
+            "event_id": 11,
+            "character_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 12,
+        "fields": {
+            "turn":  12
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 12,
+        "fields": {
+            "text": "Pol Pot makes reservations for Indonesia (one way)",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 12,
+        "fields": {
+            "event_id": 12,
+            "description_id": 12
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 15,
+        "fields": {
+            "event_id": 12,
+            "character_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 13,
+        "fields": {
+            "turn":  13
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 13,
+        "fields": {
+            "text": "Ted Kaczynski travels to Houston and visits old friend  in water systems",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 13,
+        "fields": {
+            "event_id": 13,
+            "description_id": 13
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 16,
+        "fields": {
+            "event_id": 13,
+            "character_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 4,
+        "fields": {
+            "event_id": 13,
+            "location_id": 4
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 14,
+        "fields": {
+            "turn":  14
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 14,
+        "fields": {
+            "text": "Pol Pot steals Anthrax from GNL",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 14,
+        "fields": {
+            "event_id": 14,
+            "description_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 17,
+        "fields": {
+            "event_id": 14,
+            "character_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 15,
+        "fields": {
+            "turn":  15
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 15,
+        "fields": {
+            "text": "Pol Pot meets with Adolf Hitler in Houston",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 15,
+        "fields": {
+            "event_id": 15,
+            "description_id": 15
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 18,
+        "fields": {
+            "event_id": 15,
+            "character_id": 18
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 19,
+        "fields": {
+            "event_id": 15,
+            "character_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 5,
+        "fields": {
+            "event_id": 15,
+            "location_id": 4
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 16,
+        "fields": {
+            "turn":  16
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 16,
+        "fields": {
+            "text": "Pol Pot closes bank account and leaves country",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 16,
+        "fields": {
+            "event_id": 16,
+            "description_id": 16
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 20,
+        "fields": {
+            "event_id": 16,
+            "character_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 17,
+        "fields": {
+            "turn":  17
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 17,
+        "fields": {
+            "text": "Hassan Nasrallah corresponds with Mata Hari and Adolf Hitler",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 17,
+        "fields": {
+            "event_id": 17,
+            "description_id": 17
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 21,
+        "fields": {
+            "event_id": 17,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 22,
+        "fields": {
+            "event_id": 17,
+            "character_id": 18
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 23,
+        "fields": {
+            "event_id": 17,
+            "character_id": 14
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 18,
+        "fields": {
+            "turn":  18
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 18,
+        "fields": {
+            "text": "Mata Hari (via air); Adolf Hitler (drives) and Hassan (via air) travel to Denver",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 18,
+        "fields": {
+            "event_id": 18,
+            "description_id": 18
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 24,
+        "fields": {
+            "event_id": 18,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 25,
+        "fields": {
+            "event_id": 18,
+            "character_id": 18
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 19,
+        "fields": {
+            "turn":  19
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 19,
+        "fields": {
+            "text": "Hassan meets with Adolf (obtains Anthrax)",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 19,
+        "fields": {
+            "event_id": 19,
+            "description_id": 19
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 20,
+        "fields": {
+            "turn":  20
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 20,
+        "fields": {
+            "text": "Hassan meets with Mata Hari (transfers Anthrax)",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 20,
+        "fields": {
+            "event_id": 20,
+            "description_id": 20
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 26,
+        "fields": {
+            "event_id": 20,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 21,
+        "fields": {
+            "turn":  21
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 21,
+        "fields": {
+            "text": "Mata Hari drives back to Midway; Texas; Adolf and Hassan return via air",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 21,
+        "fields": {
+            "event_id": 21,
+            "description_id": 21
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 27,
+        "fields": {
+            "event_id": 21,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 22,
+        "fields": {
+            "turn":  22
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 22,
+        "fields": {
+            "text": "Mata Hari meets with Ted Kaczynski (transfers Anthrax)",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 22,
+        "fields": {
+            "event_id": 22,
+            "description_id": 22
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 28,
+        "fields": {
+            "event_id": 22,
+            "character_id": 3
+        }
+    },
+    
+    {
+        "model": "editor.involved",
+        "pk": 29,
+        "fields": {
+            "event_id": 22,
+            "character_id": 1
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 23,
+        "fields": {
+            "turn":  23
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 23,
+        "fields": {
+            "text": "Ted travels to Dallas/Fort Worth (contaminates water supply)",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 23,
+        "fields": {
+            "event_id": 23,
+            "description_id": 23
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 24,
+        "fields": {
+            "turn":  24
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 24,
+        "fields": {
+            "text": "Ted travels to Houston (contaminates water supply)",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 24,
+        "fields": {
+            "event_id": 24,
+            "description_id": 24
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 6,
+        "fields": {
+            "event_id": 24,
+            "location_id": 4
+        }
+    },
+    
+    {
+        "model": "editor.event",
+        "pk": 25,
+        "fields": {
+            "turn":  25
+        }
+    },
+
+    {
+        "model": "editor.description",
+        "pk": 25,
+        "fields": {
+            "text": "ata Hari makes reservations for Cairo; Egypt",
+            "hidden":  false
+        }
+    },
+
+    {
+        "model": "editor.describedby",
+        "pk": 25,
+        "fields": {
+            "event_id": 25,
+            "description_id": 25
+        }
+    },
+    
+    {
+        "model": "editor.happenedat",
+        "pk": 7,
+        "fields": {
+            "event_id": 25,
+            "location_id": 15
+        }
+    }
+    ]
