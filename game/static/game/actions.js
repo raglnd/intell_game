@@ -128,9 +128,7 @@ var Actions = (function () {
       sendAction();
     });
     settings.buttons.confirmMisinf.addEventListener("click", function() {
-      settings.actionTarget = {"location": settings.misinfLocSel.value,
-                               "character": settings.misinfCharSel.value,
-                               "description": settings.misinfDescText.value};
+      settings.actionTarget = {"description": settings.misinfDescText.value};
       sendAction();
     });
     settings.buttons.confirmRecruit.addEventListener("click", function() {
@@ -277,26 +275,6 @@ var Actions = (function () {
   };
   function misinf () {
     if (verifyAgentSelected()) {
-      var characters = Snippets.getCharacters();
-      var locations = Snippets.getLocations();
-      var option;
-      var i;
-
-      clearSelect(settings.misinfCharSel);
-      for (i = 0; i < characters.length; i+=1) {
-        option = document.createElement("option");
-        option.text = characters[i].fields.name;
-        option.value = characters[i].pk;
-        settings.misinfCharSel.add(option);
-      }
-
-      clearSelect(settings.misinfLocSel);
-      for (i = 0; i < locations.length; i+=1) {
-        option = document.createElement("option");
-        option.text = locations[i].fields.name;
-        option.value = locations[i].pk;
-        settings.misinfLocSel.add(option);
-      }
       $("#misinfModal").modal();
     }
   };

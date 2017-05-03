@@ -453,7 +453,7 @@
                 <div class="col-sm-5">
                   <div id="charsTable" class="table-responsive">
                   <table class="table table-hover, table-bordered">
-                    <thead>
+                   <thead>
                       <tr>
                         <th>Characters</th>
                       </tr>
@@ -461,6 +461,18 @@
                     <tbody id="charsTableBody">
                     
                     </tbody>
+		    <!-- Suggested Characters (added by YJ - Spring 2017) -->
+                      <tr>
+                        <th></th>
+                      </tr>
+		    <thead>
+		      <tr>
+			<th>Suggested Characters</th>
+		      </tr>
+		    </thead>
+		    <tbody id="sugCharsTableBody">
+				<td><button id="charSugBtn" type="button" class="btn btn-block" onclick="currEdit.get_sugChar()">Get</button></td>							
+		    </tbody>
                   </table>
                   </div>
                 </div>
@@ -522,6 +534,14 @@
                 <div class="row"><!--Table-->
                 <div id="locsTable" class="table-responsive">
                 <table class="table table-hover, table-bordered">
+		    <thead> <!-- Suggested Locations (added by YJ) -->
+                    <tr>
+                      <th>Suggested Location</th>
+		      <td colspan="2"><button id="locSugBtn" type="button" class="btn btn-block" onclick="currEdit.get_sugLoc()">Get</button></td>
+                    </tr>
+                  </thead>
+                  <tbody id="sugLocsTableBody">
+                  </tbody>
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -532,6 +552,7 @@
                   <tbody id="locsTableBody">
                   
                   </tbody>
+		
                 </table>
                 </div>
                 </div>
@@ -578,29 +599,7 @@
 					  <div class="row">
                         <label class="control-label col-sm-2" for ="turnTagSel">Turn:</label>
                         <div class="col-sm-10">
-                          <select class="form-control" id="turnTagSel">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                            <option>13</option>
-                            <option>14</option>
-                            <option>15</option>
-                            <option>16</option>
-                            <option>17</option>
-                            <option>18</option>
-                            <option>19</option>
-                            <option>20</option>
-                          </select>
+                          <input type="number" min="0" class="form-control" id="turnTagSel">
                         </div>
                       </div>
                       <label for="snippet">Snippet:</label>
@@ -692,14 +691,17 @@
       <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
-          <div class="col-sm-4">
-            <button id="saveBtn" type="button" class="btn btn-block" onclick="currEdit.submitJSON()">Save</button>
+          <div class="col-sm-3">
+			<button id="backBtn" type="button" class="btn btn-block" onclick="javascript:window.location=history.back();">Back</button>
           </div>
-          <div class="col-sm-4">
-            <button id="openBtn" type="button" class="btn btn-block">Open</button>
+          <div class="col-sm-3">
+            <button id="openBtn" type="button" class="btn btn-block" onclick="currEdit.loadJSON()">Open</button>
           </div>
-          <div class="col-sm-4">
-            <button id="closeBtn" type="button" class="btn btn-block">Close</button>
+		  <div class="col-sm-3">
+            <button id="saveBtn" type="button" class="btn btn-block" onclick="currEdit.saveJSON()">Save</button>
+          </div>
+          <div class="col-sm-3">
+            <button id="submitBtn" type="button" class="btn btn-block" onclick="currEdit.submitJSON()">Submit</button>
           </div>
         </div>
       </div>
