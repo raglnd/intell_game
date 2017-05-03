@@ -535,15 +535,19 @@ class Game(models.Model):
 				message.text = "Opposing agent terminated"
 				agent = Agent.objects.get(pk=action.acttarget)
 				agent.alive = False
-				agentMessage = Message(player=player, turn=self.turn,
-										text=action.acttarget)
-				agentMessage.save()
 				
 				#Spring 2017
 				#Make it so that when players run out of agents, they are forced to recruit a new one ASAP.
 				agent.player.numOfLivingAgents -= 1
 				agent.player.save()
 				agent.save()
+				
+				
+				agentMessage = Message(player=player, turn=self.turn,
+										text=("Agent ID: " + action.acttarget + " Agent Name: " + agent.name + " Agent Alive Status: " + agent.alive))
+				agentMessage.save()
+				
+			
 				
 				#Spring 2017
 				#Alert the player of the terminated agent that their agent is dead. If they hve no more agents,
