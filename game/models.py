@@ -126,7 +126,7 @@ class Game(models.Model):
 					"recruit": 3, "apprehend": 5, "terminate": 5,
 					"research": -2}
 	ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-						"recruit": 1, "apprehend": .85, "terminate": .7,
+						"recruit": 1, "apprehend": .85, "terminate": 1,
 						"research": 1}
 
 	def __str__(self):
@@ -395,6 +395,13 @@ class Game(models.Model):
 	'''
 	def perform_action(self, action):
 		player = action.agent_set.all()[0].player
+		
+		debugMessage = Message(player=player, turn=self.turn,
+								text=str(action.agent_set.all()[0]))
+		debugMessage.save()
+		debugMessage2 = Message(player=player, turn=self.turn,
+								text=str(action.agent_set.all()[0].player))
+		debugMessage2.save()
 
 		message = Message()
 		message.player = player
@@ -534,13 +541,12 @@ class Game(models.Model):
 			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
 				message.text = "Opposing agent terminated"
 				agent = Agent.objects.get(pk=action.acttarget)
+				terminatePlayer = agent.player
 				agent.alive = False
-				
-				#Spring 2017
-				#Make it so that when players run out of agents, they are forced to recruit a new one ASAP.
-				agent.player.numOfLivingAgents -= 1
 				agent.save()
-				agent.player.save()
+				#Spring 2017 - Make it so that a player's number of agents is counted.
+				terminatePlayer.numOfLivingAgents -= 1
+				terminatePlayer.save()
 				
 				#Spring 2017
 				#Alert the player of the terminated agent that their agent is dead. If they hve no more agents,
