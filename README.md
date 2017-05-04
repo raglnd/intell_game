@@ -1,7 +1,7 @@
 # Senior Design Project
 
 ## Installation and Running
-Steps for the installation of the server are given for Ubuntu. You will need to run the following commands, but a script (`install.sh`) has been provided on this github repository.
+Steps for the installation of the server are given for Ubuntu. You will need to run the following commands, but a script `install.sh` has been provided on this github repository.
 
 ```bash
 sudo apt install -y python3-pip
@@ -47,4 +47,4 @@ Below are some steps for successful running of the server.
 # How to run server without interruption.
 # sudo nohup python3 cs499-intell-1.0/manage.py runserver 0.0.0.0:80 &
 ```
-Once the server is running, you will need to load in the official scenario. Log in to the website (using either the admin user you just created, or a new user), go to the scenario editor, click the open button, select Official Scenario.json, and then click the submit button. The official scenario is located in the home folder of the git repo.
+Once the server is running, you will need to load in the official scenario. Log in to the website (using either the admin user you just created, or a new user), go to the scenario editor, click the open button, select `Official Scenario.json`, and then click the submit button. The official scenario is located in the home folder of the git repo.
