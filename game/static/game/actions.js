@@ -82,7 +82,6 @@ var Actions = (function () {
   function bindUIActions () {
     //Agent selection
     settings.agentSelect.addEventListener("change", function() {
-        alert("CHANGE");
         setCorrectAction();
     });
     
