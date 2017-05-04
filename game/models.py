@@ -317,7 +317,7 @@ class Game(models.Model):
                             message.turn = self.turn
                             killedAgent = Agent.objects.get(pk=agent.action.acttarget)
                             if (killedAgent.alive == True):						#Refund points if target is dead already.
-                                if (random() < self.ACTION_SUCC_RATE[action.acttype]):
+                                if (random() < self.ACTION_SUCC_RATE[acttype]):
                                     message.text = "Opposing agent terminated"
                                     terminatePlayer = killedAgent.player
                                     killedAgent.alive = False
