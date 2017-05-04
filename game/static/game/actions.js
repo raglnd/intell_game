@@ -223,7 +223,7 @@ var Actions = (function () {
   }
   
   function setCorrectAction() {
-      var agents = getOwnAgents();
+      var agents = Snippets.getOwnAgents();
       for (i = 0; i < agents.length; i+=1) {
         if (settings.agentSelect.value == agents[i]["pk"]) {
             setActiveButton(document.getElementById(agents[i]["action"] + "Btn"));
