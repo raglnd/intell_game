@@ -322,8 +322,7 @@ class Game(models.Model):
 							if (random() < self.ACTION_SUCC_RATE[agent.action.acttype]):
 								message.text = "Opposing agent terminated"
 								terminatePlayer = killedAgent.player
-								killedAgent.alive = False
-								killedAgent.save()
+								killedAgent.kill()
 								#Spring 2017 - Make it so that a player's number of agents is counted.
 								terminatePlayer.numOfLivingAgents -= 1
 								terminatePlayer.save()
@@ -681,6 +680,10 @@ class Agent(models.Model):
 
     def __str__(self):
         return "Agent %s"%(str(self.name))
+		
+	def kill(self):
+		self.alive = False
+		self.save()
 
 '''
 Knowledge
