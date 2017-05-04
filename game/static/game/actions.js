@@ -216,10 +216,10 @@ var Actions = (function () {
       
       var agents = getOwnAgents();
       for (i = 0; i < agents.length; i+=1) {
-        alert(agents[i]["pk"] + "(" + agents[i]["name"] +") vs " + settings.agentSelect.value);
-        if (settings.agentSelect.value == agents[i]["name"]) {
+        
+        if (settings.agentSelect.value == agents[i]["pk"]) {
             setActiveButton(document.getElementById(agents[i]["action"] + "Btn"));
-            
+            alert(agents[i]["action"] + "Btn");
             break;
         }
       }
