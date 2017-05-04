@@ -112,157 +112,157 @@ methods
     start_next_turn - does turn proccessing
 '''
 class Game(models.Model):
-	scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
-	started = models.BooleanField(default=False)
-	gameOver = models.BooleanField(default=False)
-	creator = models.ForeignKey(User, null=True)
-	turn = models.IntegerField(default=0)
-	next_turn = models.DateTimeField(null=True)
-	turn_length = models.DurationField(default=timedelta(days=1))
+    scenario = models.ForeignKey(Scenario, on_delete=models.CASCADE)
+    started = models.BooleanField(default=False)
+    gameOver = models.BooleanField(default=False)
+    creator = models.ForeignKey(User, null=True)
+    turn = models.IntegerField(default=0)
+    next_turn = models.DateTimeField(null=True)
+    turn_length = models.DurationField(default=timedelta(days=1))
 
-	# TODO: make these configured in game create?
-	#       would require more fields default values are same
-	ACTION_COSTS = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-					"recruit": 3, "apprehend": 5, "terminate": 5,
-					"research": -2}
-	ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-						"recruit": 1, "apprehend": .85, "terminate": 1,
-						"research": 1}
+    # TODO: make these configured in game create?
+    #       would require more fields default values are same
+    ACTION_COSTS = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
+                    "recruit": 3, "apprehend": 5, "terminate": 5,
+                    "research": -2}
+    ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
+                        "recruit": 1, "apprehend": .85, "terminate": 1,
+                        "research": 1}
 
-	def __str__(self):
-		return "Game using scenario %s" % (self.scenario.name)
+    def __str__(self):
+        return "Game using scenario %s" % (self.scenario.name)
 
-	def detail_html(self):
-		return "scenario: "+str(self.scenario)
+    def detail_html(self):
+        return "scenario: "+str(self.scenario)
 
-	def get_users(self):
-		users = []
-		for player in self.player_set.all():
-			users += [player.user]
-		return users
-	'''
-	add_player
-		I: player - a user object
-		O: player created and
-			is added to the players field if the game has not started
-			and the player is not in the game already
-			otherwise no change
-	'''
-	def add_player(self, user):
-		if user not in self.get_users():
-			player = Player(user=user, 
-							game=self, 
-							points=self.scenario.point_num)
-			player.save()
+    def get_users(self):
+        users = []
+        for player in self.player_set.all():
+            users += [player.user]
+        return users
+    '''
+    add_player
+        I: player - a user object
+        O: player created and
+            is added to the players field if the game has not started
+            and the player is not in the game already
+            otherwise no change
+    '''
+    def add_player(self, user):
+        if user not in self.get_users():
+            player = Player(user=user, 
+                            game=self, 
+                            points=self.scenario.point_num)
+            player.save()
 
-	'''
-	time_till
-		I:
-		O:  if next_turn is defined then return the time till the first turn
-			or the time till the next turn
-	'''
-	def time_till(self):
-		now = make_aware(datetime.now())
-		if self.next_turn is not None:
-			# otherwise get large ugly number of seconds
-			till = self.next_turn - now
-			return till.seconds
+    '''
+    time_till
+        I:
+        O:  if next_turn is defined then return the time till the first turn
+            or the time till the next turn
+    '''
+    def time_till(self):
+        now = make_aware(datetime.now())
+        if self.next_turn is not None:
+            # otherwise get large ugly number of seconds
+            till = self.next_turn - now
+            return till.seconds
 
-	'''
-	is_target_valid
-		I:  an action
-		O:  bool representing if the action is valid (acttarget exists in
-			the appropriate table in the appropriate game
-			If an invalid action is sent generate a Message object for
-			the player
-	'''
-	def is_target_valid(self, action):
-		acttype = action.acttype
-		acttarget = action.acttarget
-		player = action.agent_set.all()[0].player
-		message = Message(player=player, turn=self.turn)
+    '''
+    is_target_valid
+        I:  an action
+        O:  bool representing if the action is valid (acttarget exists in
+            the appropriate table in the appropriate game
+            If an invalid action is sent generate a Message object for
+            the player
+    '''
+    def is_target_valid(self, action):
+        acttype = action.acttype
+        acttarget = action.acttarget
+        player = action.agent_set.all()[0].player
+        message = Message(player=player, turn=self.turn)
 
-		# determine target table
-		# this is evil TODO: change it to if/elif/else
-		try:
-			target_table = {"tail": Character,
-							"investigate": Location,
-							"check": Description,
-							"misInfo": None,
-							"recruit": None,
-							"apprehend": Character,
-							"research": None,
-							"terminate": Agent}[acttype]
-		except (KeyError):
-			message.text = "bad action type"
-			message.save()
-			return False
+        # determine target table
+        # this is evil TODO: change it to if/elif/else
+        try:
+            target_table = {"tail": Character,
+                            "investigate": Location,
+                            "check": Description,
+                            "misInfo": None,
+                            "recruit": None,
+                            "apprehend": Character,
+                            "research": None,
+                            "terminate": Agent}[acttype]
+        except (KeyError):
+            message.text = "bad action type"
+            message.save()
+            return False
 
 
-		if target_table is not None:
-			targets = target_table.objects.filter(pk=acttarget)
-			# should only match one target
-			if len(targets) == 1:
-				target = targets[0]
-				# is the target in the scenario for this game
-				events = self.scenario.event_set.all()
-				if target_table == Character:
-					# find events involving the character in this game
-					event_qset = events.filter(
-						involved=Involved.objects.filter(
-							character=target
-						)
-					)
-				elif target_table == Location:
-					# find events happenedat the location in this game
-					event_qset = events.filter(
-						happenedat=HappenedAt.objects.filter(
-							location=target
-						)
-					)
-				elif target_table == Description:
-					# find events describedby the description in this game
-					event_qset = events.filter(
-						describedby=DescribedBy.objects.filter(
-							description=target
-							)
-					)
-				elif target_table == Agent:
-					# find agents in this game
-					agent_qset = Agent.objects.filter(
-						player__in=self.player_set.all()
-					)
-					if target in agent_qset.all():
-						return True
-					else:
-						message.text = "Agent not found"
-						message.save()
-						return False
-				else:  # pragma: no cover
-					message.text = "target table not found"
-					messave.save()
-					return False
+        if target_table is not None:
+            targets = target_table.objects.filter(pk=acttarget)
+            # should only match one target
+            if len(targets) == 1:
+                target = targets[0]
+                # is the target in the scenario for this game
+                events = self.scenario.event_set.all()
+                if target_table == Character:
+                    # find events involving the character in this game
+                    event_qset = events.filter(
+                        involved=Involved.objects.filter(
+                            character=target
+                        )
+                    )
+                elif target_table == Location:
+                    # find events happenedat the location in this game
+                    event_qset = events.filter(
+                        happenedat=HappenedAt.objects.filter(
+                            location=target
+                        )
+                    )
+                elif target_table == Description:
+                    # find events describedby the description in this game
+                    event_qset = events.filter(
+                        describedby=DescribedBy.objects.filter(
+                            description=target
+                            )
+                    )
+                elif target_table == Agent:
+                    # find agents in this game
+                    agent_qset = Agent.objects.filter(
+                        player__in=self.player_set.all()
+                    )
+                    if target in agent_qset.all():
+                        return True
+                    else:
+                        message.text = "Agent not found"
+                        message.save()
+                        return False
+                else:  # pragma: no cover
+                    message.text = "target table not found"
+                    messave.save()
+                    return False
 
-				if len(event_qset) != 0:
-					return True
-				else:
-					message.text = "Event not found"
-					message.save()
-					return False
-			else:  # pragma: no cover
-				message.text = "ambiguous target pk"
-				message.save()
-				return False
-		else:
-			if acttype == "misInfo":
-				#Spring 2017 - Removed unncessary references to character and location.
-				actdict = json.loads(action.actdict)
-				text = actdict["description"]
-				return True
+                if len(event_qset) != 0:
+                    return True
+                else:
+                    message.text = "Event not found"
+                    message.save()
+                    return False
+            else:  # pragma: no cover
+                message.text = "ambiguous target pk"
+                message.save()
+                return False
+        else:
+            if acttype == "misInfo":
+                #Spring 2017 - Removed unncessary references to character and location.
+                actdict = json.loads(action.actdict)
+                text = actdict["description"]
+                return True
 
-			# any invalid acttype will throw a key error
-			# so dont worry about bad acttype
-			return True
+            # any invalid acttype will throw a key error
+            # so dont worry about bad acttype
+            return True
 
     '''
     start_next_turn
