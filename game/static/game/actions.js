@@ -81,7 +81,10 @@ var Actions = (function () {
    */
   function bindUIActions () {
     //Agent selection
-    settings.agentSelect.addEventListener("change", setCorrectAction());
+    settings.agentSelect.addEventListener("change", function() {
+        alert("CHANGE");
+        setCorrectAction();
+    });
     
     //buttons for opening a modal
     settings.buttons.tailButton.addEventListener("click", function() {
