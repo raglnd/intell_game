@@ -573,8 +573,10 @@ class Game(models.Model):
 		elif action.acttype == "terminate":
 			#Spring 2017 - Do this in the next_turn function instead of here to fix issues with only the first player who joins a game
 			#being able to have their agents killed. Add back the points that are about to be lost, since they were subtracted earlier.
-			player.points += self.ACTION_COSTS[action.acttype]
-			player.save()
+			#Spring 2017 - Termination seems to cause no loss of points.
+			#player.points += self.ACTION_COSTS[action.acttype]
+			#player.save()
+			pass
 		player.points -= self.ACTION_COSTS[action.acttype]
 		player.save()
 
