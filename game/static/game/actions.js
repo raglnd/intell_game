@@ -351,7 +351,6 @@ var Actions = (function () {
     xhttp.send();
     response = xhttp.responseText;
     agents = JSON.parse(response);
-    setCorrectAction();
     return agents;
   }
 
@@ -372,6 +371,7 @@ var Actions = (function () {
       option.innerHTML = agents[i].name;
       settings.agentSelect.add(option);
     }
+    setCorrectAction();
   }
   
   return {
