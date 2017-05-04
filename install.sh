@@ -23,12 +23,17 @@ sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update
 sudo apt-get install -y openjdk-7-jdk
 
-git clone https://github.com/Numorphan/INTELL_Game.git
+git clone https://github.com/raglnd/intell_game.git
 cp INTELL_Game/cs499-intell-1.0.tar.gz ./
 tar -xvf cs499-intell-1.0.tar.gz
 
 python3 cs499-intell-1.0/manage.py makemigrations
 python3 cs499-intell-1.0/manage.py migrate
+python3 cs499-intell-1.0/manage.py test
+
+# Steps for ease of use - must be run manually.
+# python3 cs499-intell-1.0/manage.py createsuperuser
+# python3 cs499-intell-1.0/manage.py crontab add
 
 # How to run server without interruption.
-# sudo nohup python3 manage.py runserver <external IP>:<port> &
+# sudo nohup python3 manage.py runserver 0.0.0.0:80 &
