@@ -271,43 +271,43 @@ class Game(models.Model):
 			set next turn time
 	'''
 	def start_next_turn(self):
-		#Spring 2017
-		#Delete game if gameOver was set by the last turn
-		if (self.gameOver == True):
-			for player in self.player_set.all():
-				message = Message(player=player, turn=self.turn,
-									  text="The game has now ended. Please exit at your convenience.")
-				message.save()
-			self.delete()
-			return
-		
-		# next turn
-		self.turn += 1
+        #Spring 2017
+        #Delete game if gameOver was set by the last turn
+        if (self.gameOver == True):
+            for player in self.player_set.all():
+                message = Message(player=player, turn=self.turn,
+                                      text="The game has now ended. Please exit at your convenience.")
+                message.save()
+            self.delete()
+            return
+        
+        # next turn
+        self.turn += 1
 
-		# process actions
-		agents_to_proc = []
-		check_for_assassinate = []
-		for player in self.player_set.all():
-			# add agents to list
-			# Spring 2017 - If the player has no living agents left, they must research until they have the points to recruit an agent.
-			if (player.numOfLivingAgents == 0):
-				if (player.points >= self.ACTION_COSTS["recruit"]):
-					#Recruit a new agent for the player
-					player.add_agent()
-					player.points -= self.ACTION_COSTS["recruit"]
-					message = Message(player=player, turn=self.turn,
-									  text="Automatically recruiting an agent this turn.")
-					message.save()
-				else:
-					#Research for the player
-					player.points -= self.ACTION_COSTS["research"]
-					message = Message(player=player, turn=self.turn,
-									  text="Automatically researching this turn.")
-					message.save()
-				player.save()
-			else:
-				#Spring 2017 - Do the assassinate actions here, to avoid the bug of only the first player who joins the game having killable agents.
-				check_for_assassinate = Agent.objects.filter(player=player, alive=True)
+        # process actions
+        agents_to_proc = []
+        check_for_assassinate = []
+        for player in self.player_set.all():
+            # add agents to list
+            # Spring 2017 - If the player has no living agents left, they must research until they have the points to recruit an agent.
+            if (player.numOfLivingAgents == 0):
+                if (player.points >= self.ACTION_COSTS["recruit"]):
+                    #Recruit a new agent for the player
+                    player.add_agent()
+                    player.points -= self.ACTION_COSTS["recruit"]
+                    message = Message(player=player, turn=self.turn,
+                                      text="Automatically recruiting an agent this turn.")
+                    message.save()
+                else:
+                    #Research for the player
+                    player.points -= self.ACTION_COSTS["research"]
+                    message = Message(player=player, turn=self.turn,
+                                      text="Automatically researching this turn.")
+                    message.save()
+                player.save()
+            else:
+                #Spring 2017 - Do the assassinate actions here, to avoid the bug of only the first player who joins the game having killable agents.
+                check_for_assassinate = Agent.objects.filter(player=player, alive=True)
                 for agent in check_for_assassinate:
                     acttype = agent.action.acttype
                     if acttype == "terminate":
