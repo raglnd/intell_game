@@ -216,7 +216,7 @@ var Actions = (function () {
       
       var agents = getOwnAgents();
       for (i = 0; i < agents.length; i+=1) {
-        alert(agents[i]);
+        alert(agents[i]["name"]);
         if (settings.agentSelect.value == agents[i]["name"]) {
             setActiveButton(document.getElementById(agents[i]["action"] + "Btn"));
             
