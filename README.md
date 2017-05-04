@@ -1,7 +1,7 @@
 # Senior Design Project
 
 ## Installation and Running
-Steps for the installation of the server are given for ubuntu. You will need to run the following commands, but a script (install.sh) has been provided on this github repository.
+Steps for the installation of the server are given for Ubuntu. You will need to run the following commands, but a script (`install.sh`) has been provided on this github repository.
 
 ```bash
 sudo apt install -y python3-pip
@@ -36,7 +36,7 @@ python3 cs499-intell-1.0/manage.py migrate
 python3 cs499-intell-1.0/manage.py test
 ```
 
-You will also need to modify some of the settings in intell/settings.py, namely whether or not DEBUG is True or False and what the ALLOWED_HOSTS are. (Allowed hosts would be your external IP or domain name, or something similar.)
+You will also need to modify some of the settings in `intell/settings.py`, namely whether or not `DEBUG` is True or False and what the `ALLOWED_HOSTS` are. (Allowed hosts would be your external IP or domain name, or something similar.)
 Below are some steps for successful running of the server.
 
 ```bash
