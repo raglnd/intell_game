@@ -80,6 +80,11 @@ var Actions = (function () {
    *    mainly used to attach event listeners to buttons
    */
   function bindUIActions () {
+    //Agent selection
+    settings.agentSelect.addEventListener("change", function() {
+        setCorrectAction();
+    });
+    
     //buttons for opening a modal
     settings.buttons.tailButton.addEventListener("click", function() {
       setActiveButton(settings.buttons.tailButton);
@@ -215,6 +220,16 @@ var Actions = (function () {
       settings.agentWarn.innerHTML = "";
       return true;
     }
+  }
+  
+  function setCorrectAction() {
+      var agents = Snippets.getOwnAgents();
+      for (i = 0; i < agents.length; i+=1) {
+        if (settings.agentSelect.value == agents[i]["pk"]) {
+            setActiveButton(document.getElementById(agents[i]["action"] + "Btn"));
+            break;
+        }
+      }
   }
 
   /*  button click handlers
@@ -356,6 +371,7 @@ var Actions = (function () {
       option.innerHTML = agents[i].name;
       settings.agentSelect.add(option);
     }
+    setCorrectAction();
   }
   
   return {

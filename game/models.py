@@ -126,7 +126,7 @@ class Game(models.Model):
 					"recruit": 3, "apprehend": 5, "terminate": 5,
 					"research": -2}
 	ACTION_SUCC_RATE = {"tail": 1, "investigate": 1, "misInfo": 1, "check": 1,
-						"recruit": 1, "apprehend": .85, "terminate": 1,
+						"recruit": 1, "apprehend": .85, "terminate": .7,
 						"research": 1}
 
 	def __str__(self):
@@ -284,16 +284,14 @@ class Game(models.Model):
 		# next turn
 		self.turn += 1
 
-		# process actions
-		agents_to_proc = []
 		for player in self.player_set.all():
-			# add agents to list
 			# Spring 2017 - If the player has no living agents left, they must research until they have the points to recruit an agent.
 			if (player.numOfLivingAgents == 0):
 				if (player.points >= self.ACTION_COSTS["recruit"]):
 					#Recruit a new agent for the player
 					player.add_agent()
-					player.points -= self.ACTION_COSTS["recruit"]
+					#Subtract the cost for recruitment, but also take away points gained from a research, since this agent will automatically do a research as well.
+					player.points -= (self.ACTION_COSTS["recruit"] - self.ACTION_COSTS["research"])
 					message = Message(player=player, turn=self.turn,
 									  text="Automatically recruiting an agent this turn.")
 					message.save()
@@ -304,9 +302,51 @@ class Game(models.Model):
 									  text="Automatically researching this turn.")
 					message.save()
 				player.save()
-			else:
-				#Player has at least one agent.
-				agents_to_proc += Agent.objects.filter(player=player, alive=True)
+
+		# process actions
+		agents_to_proc = []
+		check_for_assassinate = []
+		for player in self.player_set.all():
+			#Spring 2017 - Do assassinate here to avoid bug where only the first player's agents were killable. Also add agents to list for processing other actions.
+			check_for_assassinate = Agent.objects.filter(player=player, alive=True)
+			agents_to_proc += check_for_assassinate #Add agents to total group for processing later
+			for agent in check_for_assassinate:
+				acttype = agent.action.acttype
+				if acttype == "terminate":
+					if player.points >= self.ACTION_COSTS["terminate"]:
+						message = Message()
+						message.player = player
+						message.turn = self.turn
+						killedAgent = Agent.objects.get(pk=agent.action.acttarget)
+						if (killedAgent.alive == True):						#Refund points if target is dead already.
+							if (random() < self.ACTION_SUCC_RATE[agent.action.acttype]):
+								message.text = "Opposing agent terminated"
+								terminatePlayer = killedAgent.player
+								killedAgent.kill()
+								#Spring 2017 - Make it so that a player's number of agents is counted.
+								terminatePlayer.numOfLivingAgents -= 1
+								terminatePlayer.save()
+
+								#Spring 2017
+								#Alert the player of the terminated agent that their agent is dead. If they have no more agents,
+								#they are told that they must research until they have the points to recruit an agent.
+								if (terminatePlayer.numOfLivingAgents == 0):
+										assassinateMessage = Message(player=killedAgent.player, turn=self.turn,
+																		text="Your last agent was assassinated by another player! Until you have the points to recruit another agent, you will research every turn.")
+								else:
+										assassinateMessage = Message(player=killedAgent.player, turn=self.turn,
+																		text="One of your agents was assassinated by an enemy player!")
+								assassinateMessage.save()
+							else:
+								message.text = "Opposing agent not terminated"
+						else:
+							message.text = "The opposing agent was already killed. Refunding action points."
+							player.points += self.ACTION_COSTS["terminate"]
+							player.save()
+						message.save()
+					else:
+						#Do nothing. The message will be handled below.
+						pass
 
 		#TODO: decide on order of agents?
 		for agent in agents_to_proc:
@@ -396,13 +436,6 @@ class Game(models.Model):
 	def perform_action(self, action):
 		player = action.agent_set.all()[0].player
 		
-		debugMessage = Message(player=player, turn=self.turn,
-								text=str(action.agent_set.all()[0]))
-		debugMessage.save()
-		debugMessage2 = Message(player=player, turn=self.turn,
-								text=str(action.agent_set.all()[0].player))
-		debugMessage2.save()
-
 		message = Message()
 		message.player = player
 		message.turn = self.turn
@@ -538,29 +571,12 @@ class Game(models.Model):
 				player.researchedThisTurn = True
 			player.save()
 		elif action.acttype == "terminate":
-			if (random() < self.ACTION_SUCC_RATE[action.acttype]):
-				message.text = "Opposing agent terminated"
-				agent = Agent.objects.get(pk=action.acttarget)
-				terminatePlayer = agent.player
-				agent.alive = False
-				agent.save()
-				#Spring 2017 - Make it so that a player's number of agents is counted.
-				terminatePlayer.numOfLivingAgents -= 1
-				terminatePlayer.save()
-				
-				#Spring 2017
-				#Alert the player of the terminated agent that their agent is dead. If they hve no more agents,
-				#they are told that they must research until they have the points to recruit an agent.
-				if (agent.player.numOfLivingAgents == 0):
-					assassinateMessage = Message(player=agent.player, turn=self.turn,
-													text="Your last agent was assassinated by another player! Until you have the points to recruit another agent, you will research every turn.")
-				else:
-					assassinateMessage = Message(player=agent.player, turn=self.turn,
-													text="One of your agents was assassinated by an enemy player!")
-				assassinateMessage.save()
-			else:
-				message.text = "Opposing agent not terminated"
-			message.save()
+			#Spring 2017 - Do this in the next_turn function instead of here to fix issues with only the first player who joins a game
+			#being able to have their agents killed. Add back the points that are about to be lost, since they were subtracted earlier.
+			#Spring 2017 - Termination seems to cause no loss of points.
+			#player.points += self.ACTION_COSTS[action.acttype]
+			#player.save()
+			pass
 		player.points -= self.ACTION_COSTS[action.acttype]
 		player.save()
 
@@ -624,6 +640,7 @@ class Game(models.Model):
 			else:
 				self.start()
 
+
 '''
 Action
     model tracking an action's target(s)/info
@@ -654,17 +671,21 @@ Agent
     player  -   player controlling this agent
 '''
 class Agent(models.Model):
-    name = models.CharField(max_length=64)
-    action = models.ForeignKey(Action, on_delete=models.CASCADE)
-    alive = models.BooleanField(default=True)
-    location = models.ManyToManyField(Location)
-    #a null player is an orphaned
-    #   agent-they cant perform
-    #   actions
-    player = models.ForeignKey(Player, null=True, on_delete=models.CASCADE)
+	name = models.CharField(max_length=64)
+	action = models.ForeignKey(Action, on_delete=models.CASCADE)
+	alive = models.BooleanField(default=True)
+	location = models.ManyToManyField(Location)
+	#a null player is an orphaned
+	#   agent-they cant perform
+	#   actions
+	player = models.ForeignKey(Player, null=True, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return "Agent %s"%(str(self.name))
+	def __str__(self):
+		return "Agent %s"%(str(self.name))
+		
+	def kill(self):
+		self.alive = False
+		self.save()
 
 '''
 Knowledge
