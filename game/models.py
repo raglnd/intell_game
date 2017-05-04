@@ -669,17 +669,17 @@ Agent
     player  -   player controlling this agent
 '''
 class Agent(models.Model):
-    name = models.CharField(max_length=64)
-    action = models.ForeignKey(Action, on_delete=models.CASCADE)
-    alive = models.BooleanField(default=True)
-    location = models.ManyToManyField(Location)
-    #a null player is an orphaned
-    #   agent-they cant perform
-    #   actions
-    player = models.ForeignKey(Player, null=True, on_delete=models.CASCADE)
+	name = models.CharField(max_length=64)
+	action = models.ForeignKey(Action, on_delete=models.CASCADE)
+	alive = models.BooleanField(default=True)
+	location = models.ManyToManyField(Location)
+	#a null player is an orphaned
+	#   agent-they cant perform
+	#   actions
+	player = models.ForeignKey(Player, null=True, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return "Agent %s"%(str(self.name))
+	def __str__(self):
+		return "Agent %s"%(str(self.name))
 		
 	def kill(self):
 		self.alive = False
