@@ -29,3 +29,6 @@ tar -xvf cs499-intell-1.0.tar.gz
 
 python3 cs499-intell-1.0/manage.py makemigrations
 python3 cs499-intell-1.0/manage.py migrate
+
+# How to run server without interruption.
+# sudo nohup python3 manage.py runserver <external IP>:<port> &
