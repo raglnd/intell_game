@@ -264,13 +264,13 @@ class Game(models.Model):
 			# so dont worry about bad acttype
 			return True
 
-	'''
-	start_next_turn
-		I:
-		O:  increment turn counter, proccess actions, produce snippets,
-			set next turn time
-	'''
-	def start_next_turn(self):
+    '''
+    start_next_turn
+        I:
+        O:  increment turn counter, proccess actions, produce snippets,
+            set next turn time
+    '''
+    def start_next_turn(self):
         #Spring 2017
         #Delete game if gameOver was set by the last turn
         if (self.gameOver == True):
