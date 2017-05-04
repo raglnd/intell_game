@@ -351,6 +351,7 @@ var Actions = (function () {
     xhttp.send();
     response = xhttp.responseText;
     agents = JSON.parse(response);
+    setCorrectAction();
     return agents;
   }
 
